@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>document.documentElement.classList.add("js");</script>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='6.5' fill='%23f5b942'/><ellipse cx='16' cy='16' rx='13' ry='6' fill='none' stroke='%232a7d8c' stroke-width='2' transform='rotate(-24 16 16)'/></svg>" />
+  <title>Solar System — explore the worlds of our Sun</title>
+  <meta name="description" content="A live, interactive map of the Solar System. Focus any planet to preview it, then open its page for real, sourced data — sizes, distances, moons and more." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/planet.css" />
+  <link rel="stylesheet" href="css/sections.css" />
+  <link rel="stylesheet" href="css/journey.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+<!--
+  DIRECTION CONTRACT — Solar System landing (multi-section evolution of the pinned brief)
+  THESIS: The real Solar System is the interface. The orbital map is navigation.
+  FLOW (single scrolling page): Cinematic intro (scroll-scrubbed flight to Earth) →
+        Intro/About → MAIN MENU (hero + orrery) → The Sun → System statistics →
+        Missions → Conclusion. A visible "Skip to the map" pill lets any visitor
+        reach the orrery immediately. Each content section = one floating glass card
+        on the shared fixed cosmic field. "Explore the planets" opens an in-page
+        EXPLORER mode (map goes full-screen, text recedes) — no reload.
+  OWN-WORLD: deep teal / dark green-blue liquid glass; Sora display; amber Sun accent.
+  PRESERVE: the entire .hero/.orrery/#orreryStage/#sun/#readout/#selectorList markup +
+        IDs below is consumed by js/solar-system.js and js/liquid-chrome.js — do not rename.
+
+  CLASS CONTRACT (for the visual CSS in css/sections.css — authored separately):
+    .scroll                landing main; vertical flow of sections over the fixed .cosmos bg
+    .topbar / .topbar__inner   fixed glass nav across the scroll (brand · links · CTA)
+    .section (+ --intro/--menu/--sun/--stats/--missions/--outro)
+                           full landing band; centres one .panel card; ~min-100vh rhythm
+    .section__card         a .panel glass card (reuse .panel + .container)
+    .section__head / .section__title / .section__lead   section heading block
+    .reveal (+ [data-reveal-delay])   entrance target; js/reveal.js adds .is-visible in view
+    .journey__*            the cinematic intro beat (css/journey.css · js/journey.js)
+    .explorer / body.is-exploring     in-page Explorer mode (Phase 3 JS toggles the body class)
+  Shared widget primitives (.widget/.stat__value/.callout/.chips/.fact-list/.mission-list)
+  are reused from the planet dashboard; move them into components.css so both share them.
+-->
+  <div class="cosmos" aria-hidden="true">
+    <div class="cosmos__fallback"></div>
+    <canvas class="cosmos__canvas" id="bg"></canvas>
+    <div class="cosmos__stars"></div>
+  </div>
+
+  <a class="skip-link" href="#menu">Skip to the Solar System</a>
+
+  <!-- ── fixed nav (restrained; supports the map, doesn't replace it) ── -->
+  <header class="topbar">
+    <div class="topbar__inner container">
+      <a class="brand" href="#intro" aria-label="Solar System — home">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="26" height="26" fill="none">
+            <circle cx="16" cy="16" r="4" fill="currentColor"/>
+            <ellipse cx="16" cy="16" rx="13" ry="6.2" stroke="currentColor" stroke-width="1.3" opacity=".65" transform="rotate(-24 16 16)"/>
+            <circle cx="27" cy="10.2" r="1.9" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="brand__word">Solar&nbsp;System</span>
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="#menu">Explore</a>
+        <a href="#sun-section">The Sun</a>
+        <a href="#missions">Missions</a>
+        <a href="#about">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── 0 · Opening hero — an editorial, cinematic first frame built on ONE
+       focal object: Earth from space. An oversized headline bleeds toward the
+       planet; a slim glass bar anchors quick facts + the fast path to the map.
+       Composition adapted from Reference #4 (palette/type/theme stay ours).
+       Scroll drives a layered fly-in (js/journey.js); static + complete
+       without JS and under reduced motion. css/journey.css ── -->
+  <section class="journey" id="journey" aria-label="Earth from space — enter the interactive Solar System">
+    <div class="journey__stage">
+      <img class="journey__earth" src="assets/journey-earth.webp"
+           alt="Earth seen from space, the Sun cresting beyond its horizon."
+           decoding="async" fetchpriority="high" />
+      <div class="journey__veil" aria-hidden="true"></div>
+      <div class="journey__wedge" aria-hidden="true"></div>
+      <div class="journey__vignette" aria-hidden="true"></div>
+
+      <div class="journey__inner container">
+        <div class="journey__copy">
+          <p class="journey__title">Eight worlds.<br><span class="accent">One star.</span></p>
+          <p class="journey__sub">A living, interactive map of the Solar System — scroll in toward Earth, or skip straight to the map.</p>
+        </div>
+      </div>
+
+      <div class="journey__bar">
+        <p class="journey__meta"><span>8 planets</span><span>1 star</span><span>Real NASA data</span></p>
+        <a class="journey__enter" href="#menu">
+          Enter the map
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <main class="scroll">
+
+    <!-- ── 1 · Intro / About (context before the map) ── -->
+    <section class="section section--intro" id="intro" aria-labelledby="intro-title">
+      <div class="panel container section__card">
+        <h1 class="intro__title display reveal" id="intro-title" data-reveal-delay="1">
+          Explore the <span class="accent">worlds</span> of our Sun.
+        </h1>
+        <p class="intro__lead reveal" data-reveal-delay="2">
+          A living map of the Solar System, built as the way you navigate it. Focus any planet to
+          preview it, open its page for real, sourced data — sizes, distances, moons, atmospheres
+          and missions — and pick up facts worth keeping along the way.
+        </p>
+        <div class="intro__actions reveal" data-reveal-delay="3">
+          <a class="btn btn--primary btn--lg" href="#menu">
+            Enter the Solar System
+            <svg class="btn__chev" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="btn btn--ghost btn--lg" href="#about">What is this?</a>
+        </div>
+      </div>
+      <a class="scroll-cue" href="#menu" aria-label="Scroll to the map">
+        <span class="scroll-cue__dot"></span>
+      </a>
+    </section>
+
+    <!-- ── 2 · MAIN MENU — the redesigned hero (orrery dominant) ──
+         PRESERVED MARKUP: js/solar-system.js + js/liquid-chrome.js depend on the IDs below. -->
+    <section class="section section--menu" id="menu" aria-labelledby="menu-title">
+      <div class="panel container section__card">
+        <div class="hero">
+          <div class="hero__lede">
+            <h2 class="hero__title" id="menu-title">Choose a <span class="accent">world</span> to explore.</h2>
+            <p class="hero__sub">
+              A live map of the Solar System. Focus any planet to preview it, then dive into the
+              explorer or open its page for the real, sourced numbers.
+            </p>
+            <div class="hero__actions">
+              <a class="btn btn--primary btn--lg" id="primaryCta" href="#planets">
+                Explore the planets
+                <svg class="btn__chev" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+              <a class="btn btn--ghost btn--lg" href="#sun-section">Meet the Sun</a>
+            </div>
+          </div>
+
+          <div class="hero__orrery">
+            <div class="orrery">
+              <div class="orrery__stage" id="orreryStage" role="group" aria-label="Interactive map of the Solar System. Use the planet list below to open any planet.">
+                <button class="sun" id="sun" type="button" aria-label="The Sun — the star at the centre; focus for details">
+                  <span class="sun__core"></span>
+                </button>
+                <!-- orbit rings + planet links injected by js/solar-system.js -->
+              </div>
+
+              <!-- One shared preview panel for BOTH the menu map and Explorer mode.
+                   Compact here; body.is-exploring repositions it and reveals the
+                   fun-facts + Return control. IDs are consumed by js/solar-system.js
+                   (render) and js/explorer.js (mode). -->
+              <aside class="readout glass" id="readout" aria-live="polite">
+                <button class="readout__exit btn btn--ghost btn--sm" id="exitExplore" type="button" hidden>
+                  <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Back to the Solar System
+                </button>
+                <p class="readout__hint" id="readoutHint">Hover, tap, or tab a planet to preview it.</p>
+                <div class="readout__body" id="readoutBody" hidden>
+                  <div class="readout__head">
+                    <span class="readout__dot" id="readoutDot"></span>
+                    <span class="readout__name" id="readoutName">Earth</span>
+                    <span class="readout__type" id="readoutType">Terrestrial planet</span>
+                  </div>
+                  <p class="readout__fact" id="readoutFact"></p>
+                  <ul class="fact-list readout__facts" id="readoutFunFacts" hidden></ul>
+                  <a class="btn btn--ghost btn--sm readout__explore" id="readoutExplore" href="planet/earth.html">Open <span id="readoutExploreName">Earth</span> →</a>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+
+        <!-- Planet selector: the semantic + no-JS planet navigation (and Explorer's list) -->
+        <footer class="selector" id="planets">
+          <h3 class="selector__label">The eight planets</h3>
+          <ul class="selector__list" id="selectorList" aria-label="Open a planet page">
+            <li><a href="planet/mercury.html" data-planet="mercury">Mercury</a></li>
+            <li><a href="planet/venus.html"   data-planet="venus">Venus</a></li>
+            <li><a href="planet/earth.html"   data-planet="earth">Earth</a></li>
+            <li><a href="planet/mars.html"    data-planet="mars">Mars</a></li>
+            <li><a href="planet/jupiter.html" data-planet="jupiter">Jupiter</a></li>
+            <li><a href="planet/saturn.html"  data-planet="saturn">Saturn</a></li>
+            <li><a href="planet/uranus.html"  data-planet="uranus">Uranus</a></li>
+            <li><a href="planet/neptune.html" data-planet="neptune">Neptune</a></li>
+          </ul>
+          <span class="source-tag">
+            Data: <a href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/" target="_blank" rel="noopener">NASA</a>
+            · Illustrative scale
+          </span>
+        </footer>
+      </div>
+
+    </section>
+
+    <!-- ── 3 · The Sun ── -->
+    <section class="section section--sun" id="sun-section" aria-labelledby="sun-title">
+      <div class="panel container section__card">
+        <div class="section__head">
+          <h2 class="section__title serif reveal" id="sun-title">The Sun</h2>
+          <p class="section__lead reveal" data-reveal-delay="1" id="sunDesc"></p>
+        </div>
+        <div class="sun-feature reveal" data-reveal-delay="2">
+          <figure class="sun-feature__figure">
+            <div class="sun-visual" role="img" aria-label="The Sun — a churning yellow-white sphere of plasma.">
+              <span class="sun-visual__core"></span>
+            </div>
+          </figure>
+          <div class="sun-feature__data">
+            <div class="dash-grid" id="sunStats"></div>
+            <div class="callout callout--fact">
+              <h3>Did you know?</h3>
+              <ul class="fact-list" id="sunFunFacts"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 4 · Solar System statistics ── -->
+    <section class="section section--stats" id="stats" aria-labelledby="stats-title">
+      <div class="panel container section__card">
+        <div class="section__head">
+          <h2 class="section__title serif reveal" id="stats-title">The system at a glance</h2>
+          <p class="section__lead reveal" data-reveal-delay="1">Real numbers for the family of worlds orbiting our star.</p>
+        </div>
+        <div class="dash-grid reveal" id="statsGrid" data-reveal-delay="2"></div>
+      </div>
+    </section>
+
+    <!-- ── 5 · Missions / exploration ── -->
+    <section class="section section--missions" id="missions" aria-labelledby="missions-title">
+      <div class="panel container section__card">
+        <div class="section__head">
+          <h2 class="section__title serif reveal" id="missions-title">Landmark missions</h2>
+          <p class="section__lead reveal" data-reveal-delay="1">A few of the spacecraft that turned points of light into places.</p>
+        </div>
+        <div class="mission-list reveal" id="missionsList" data-reveal-delay="2"></div>
+      </div>
+    </section>
+
+    <!-- ── 6 · Educational conclusion ── -->
+    <section class="section section--outro" id="about" aria-labelledby="outro-title">
+      <div class="panel container section__card">
+        <h2 class="section__title serif reveal" id="outro-title">Keep looking up.</h2>
+        <p class="section__lead reveal" data-reveal-delay="1">
+          Every value here comes from public NASA data — no invented numbers. The map is a model,
+          not a photograph: orbit spacing and planet sizes are illustrative, not to true scale.
+          Pick a planet and see what you can learn.
+        </p>
+        <div class="intro__actions reveal" data-reveal-delay="2">
+          <a class="btn btn--primary btn--lg" href="#menu">Back to the map</a>
+        </div>
+        <span class="source-tag" id="creditTag">
+          Data: <a href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/" target="_blank" rel="noopener">NASA Planetary Fact Sheet</a>
+        </span>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/background.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/solar-system.js"></script>
+  <script src="js/sections.js"></script>
+  <script src="js/explorer.js"></script>
+  <script src="js/reveal.js"></script>
+  <script src="js/liquid-chrome.js"></script>
+  <script src="js/journey.js"></script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+/* ============================================================
+   Solar System — planet.css
+   Per-planet page: immersive hero + consistent data dashboard.
+   Inner pages use the serif display voice (Reference #3), recolored
+   into the teal palette. Each page sets --pc to its planet colour.
+   ============================================================ */
+
+/* ── top bar: return + neighbour nav ────────────────────── */
+.planet-topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.neighbors { display: flex; gap: 6px; }
+.neighbors a { display: inline-flex; align-items: center; gap: 6px; padding: 8px 13px; border-radius: var(--r-pill); font-size: .86rem; color: var(--text-mid); transition: color .2s, background .2s; }
+.neighbors a:hover { color: var(--text-hi); background: rgba(255,255,255,.05); }
+.neighbors .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--nc, var(--text-lo)); box-shadow: 0 0 8px var(--nc, transparent); flex: none; }
+
+/* ── hero ───────────────────────────────────────────────── */
+.planet-hero {
+  position: relative; display: grid; grid-template-columns: 1.05fr .95fr;
+  gap: clamp(24px, 4vw, 56px); align-items: center;
+  padding: clamp(26px, 4vw, 60px) 0 clamp(16px, 2vw, 28px);
+}
+.planet-hero::before { /* atmospheric glow in the planet's own colour */
+  content: ""; position: absolute; right: 4%; top: 50%; width: min(70%, 640px); aspect-ratio: 1;
+  transform: translateY(-50%); border-radius: 50%; pointer-events: none; z-index: 0;
+  background: radial-gradient(circle, var(--pc) 0%, transparent 62%); opacity: .18; filter: blur(20px);
+}
+.planet-hero > * { position: relative; z-index: 1; }
+.planet-hero__name { font-family: var(--font-serif); font-weight: 500; font-size: clamp(2.6rem, 6vw, 4.4rem); line-height: 1; letter-spacing: -.01em; }
+.planet-hero__type { margin-top: 14px; }
+.planet-hero__desc { margin-top: 18px; color: var(--text-mid); font-size: clamp(1rem, 1.2vw, 1.14rem); max-width: 46ch; }
+.planet-hero__cta { margin-top: 26px; display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* planet orb — hybrid shaded sphere: a real texture (assets/textures/<id>.jpg)
+   layered UNDER a spherical shading pass, with a graceful CSS-only fallback.
+   --tex defaults to `none`; if the .jpg is missing the browser simply paints
+   nothing for that layer and the gradient-only orb below shows through —
+   never a broken image, never a layout shift. */
+.planet-figure { display: grid; place-items: center; }
+.planet-orb {
+  /* shared element for the cross-document morph: the map dot the visitor
+     touched flies in and becomes this orb (see @view-transition in main.css).
+     One orb per page, so a static name is safe. */
+  view-transition-name: planet-morph;
+  --tex: none;
+  position: relative; width: min(76%, 340px); aspect-ratio: 1; border-radius: 50%;
+  background-image:
+    var(--tex),
+    radial-gradient(circle at 34% 30%, rgba(255,255,255,.6), rgba(255,255,255,0) 44%),
+    radial-gradient(circle at 70% 76%, rgba(0,0,0,.5), rgba(0,0,0,0) 62%);
+  background-size: cover, auto, auto;
+  background-position: center, 0 0, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-color: var(--pc);
+  box-shadow: 0 30px 80px -30px rgba(0,0,0,.8), 0 0 42px -16px var(--pc), 0 0 0 1px rgba(255,255,255,.08) inset;
+}
+/* spherical shading + soft terminator/atmosphere — always on top, so the
+   same lit-from-top-left, dark-limb read applies whether or not a texture
+   image is present underneath it. */
+.planet-orb::after {
+  content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+  background:
+    radial-gradient(circle at 30% 26%, rgba(255,255,255,.3), rgba(255,255,255,0) 38%),
+    radial-gradient(circle at 66% 40%, transparent 52%, rgba(0,0,0,.3) 78%, rgba(0,0,0,.58) 100%);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.08) inset;
+}
+.planet-orb--ringed::before {
+  content: ""; position: absolute; top: 50%; left: 50%; width: 200%; height: 58%;
+  transform: translate(-50%,-50%) rotate(-18deg); border-radius: 50%;
+  border: 6px solid rgba(230,206,150,.55); box-shadow: 0 0 20px rgba(230,206,150,.28);
+}
+.planet-orb__note { margin-top: 14px; text-align: center; }
+
+/* texture bindings — one per planet id (body[data-planet] is set by the
+   page generator). Swap/extend freely; any id without a matching .jpg
+   (or before assets/textures/ is populated) falls back cleanly above. */
+body[data-planet="mercury"] .planet-orb { --tex: url("../assets/textures/mercury.jpg"); }
+body[data-planet="venus"]   .planet-orb { --tex: url("../assets/textures/venus.jpg"); }
+body[data-planet="earth"]   .planet-orb { --tex: url("../assets/textures/earth.jpg"); }
+body[data-planet="mars"]    .planet-orb { --tex: url("../assets/textures/mars.jpg"); }
+body[data-planet="jupiter"] .planet-orb { --tex: url("../assets/textures/jupiter.jpg"); }
+body[data-planet="saturn"]  .planet-orb { --tex: url("../assets/textures/saturn.jpg"); }
+body[data-planet="uranus"]  .planet-orb { --tex: url("../assets/textures/uranus.jpg"); }
+body[data-planet="neptune"] .planet-orb { --tex: url("../assets/textures/neptune.jpg"); }
+
+/* ── dashboard ──────────────────────────────────────────── */
+.dash-section { margin-top: clamp(30px, 4vw, 56px); }
+.dash-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.dash-grid--wide { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+
+.widget {
+  background: var(--glass-fill); border: 1px solid var(--glass-brd); border-radius: var(--r-md);
+  padding: 20px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  display: flex; flex-direction: column; gap: 8px;
+  transition: transform .3s var(--ease), border-color .3s var(--ease), background .3s var(--ease);
+}
+.widget:hover { transform: translateY(-3px); border-color: var(--glass-brd-strong); background: rgba(255,255,255,.045); }
+.widget--span2 { grid-column: span 2; }
+
+/* stat tile: label → value → unit → context */
+.stat__value { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.5rem, 2.4vw, 2rem); letter-spacing: -.02em; line-height: 1; }
+.stat__value .unit { font-size: max(.6em, 11px); color: var(--text-mid); font-weight: 600; margin-left: 4px; }
+.stat__context { color: var(--text-lo); font-size: .84rem; margin-top: 2px; }
+
+/* comparison bar vs Earth */
+.cmp__head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.cmp__val { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; }
+.cmp__track { position: relative; height: 10px; border-radius: 999px; background: rgba(255,255,255,.06); overflow: hidden; margin-top: 6px; }
+.cmp__fill { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: linear-gradient(90deg, var(--teal-400), var(--pc)); box-shadow: 0 0 8px -4px var(--pc); }
+.cmp__earth { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--accent); box-shadow: 0 0 6px -1px var(--accent); }
+.cmp__scale { display: flex; justify-content: space-between; color: var(--text-lo); font-size: .72rem; margin-top: 6px; }
+
+/* callout (composition / did you know) */
+.callout { background: linear-gradient(160deg, rgba(20,70,80,.32), rgba(9,24,30,.4)); border: 1px solid var(--glass-brd); border-radius: var(--r-md); padding: 20px 22px; }
+.callout h3 { font-family: var(--font-display); font-weight: 600; font-size: .82rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-lo); margin-bottom: 8px; }
+.callout p { color: var(--text-mid); font-size: 1rem; }
+.callout--fact { border-color: var(--glass-brd-strong); }
+.callout--fact p { color: var(--text-hi); }
+
+/* notable chips (e.g. moon names) */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+.chip { display: inline-flex; align-items: center; padding: 4px 11px; border-radius: var(--r-pill); font-size: .8rem; color: var(--text-mid); background: var(--glass-fill); border: 1px solid var(--glass-brd); }
+
+/* notable-features list (inside a callout) */
+.feature-list { display: grid; gap: 6px; margin-top: 4px; }
+.feature-list li { position: relative; padding-left: 16px; color: var(--text-mid); font-size: .96rem; }
+.feature-list li::before { content: ""; position: absolute; left: 0; top: .62em; width: 6px; height: 6px; border-radius: 50%; background: var(--pc); }
+
+/* fun-facts list */
+.fact-list { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.fact-item {
+  position: relative; padding: 15px 18px 15px 40px; border-radius: var(--r-md);
+  background: var(--glass-fill); border: 1px solid var(--glass-brd);
+  color: var(--text-hi); font-size: .96rem; line-height: 1.5;
+}
+.fact-item::before {
+  content: ""; position: absolute; left: 17px; top: 21px; width: 9px; height: 9px;
+  border-radius: 50%; background: var(--pc);
+}
+
+/* exploration / missions list */
+.mission-list { display: grid; gap: 10px; }
+.mission-item {
+  display: grid; grid-template-columns: auto auto; justify-content: start; align-items: baseline;
+  gap: 3px 12px; padding: 14px 18px; border-radius: var(--r-md);
+  background: var(--glass-fill); border: 1px solid var(--glass-brd);
+  transition: border-color .3s var(--ease), background .3s var(--ease);
+}
+.mission-item:hover { border-color: var(--glass-brd-strong); background: rgba(255,255,255,.045); }
+.mission-item__name { font-family: var(--font-display); font-weight: 600; color: var(--text-hi); }
+.mission-item__years { color: var(--text-lo); font-size: .82rem; font-variant-numeric: tabular-nums; }
+.mission-item__note { grid-column: 1 / -1; color: var(--text-mid); font-size: .92rem; }
+
+/* page footer: source + back */
+.planet-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: clamp(28px, 4vw, 48px); padding-top: 22px; border-top: 1px solid rgba(150,205,210,.12); }
+
+/* entrance */
+.planet-hero { animation: rise .7s var(--ease) both; }
+.dash-section { animation: rise .7s var(--ease) both; }
+
+@media (max-width: 820px) {
+  .planet-hero { grid-template-columns: 1fr; text-align: left; }
+  .planet-figure { order: -1; }
+  .planet-orb { width: min(56%, 240px); }
+  .widget--span2 { grid-column: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .planet-hero, .dash-section { animation: none !important; }
+}
