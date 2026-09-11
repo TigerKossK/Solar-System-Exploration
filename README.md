@@ -4,7 +4,7 @@
 
 Explore Solar System Exploration directly from your browser:
 
-🚀 Open Solar System Exploration →
+🚀 Open Solar System Exploration → https://tigerkossk.github.io/Solar-System-Exploration/
 
 Discover the planets, the Sun, moons, space missions, and the incredible story of humanity's exploration of our Solar System.
 
