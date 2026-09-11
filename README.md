@@ -1,5 +1,13 @@
 # Solar System Exploration
 
+🌐 Visit the Website
+
+Explore Solar System Exploration directly from your browser:
+
+🚀 Open Solar System Exploration →
+
+Discover the planets, the Sun, moons, space missions, and the incredible story of humanity's exploration of our Solar System.
+
 **Solar System Exploration** is a modern, interactive website created to help people explore and understand our Solar System in an engaging and visually appealing way.
 
 The project combines a **cool, modern, and fresh design** with educational information about the worlds and objects that make up our cosmic neighborhood. It is built for anyone who wants to discover the Solar System — from curious beginners to people who already enjoy astronomy.
