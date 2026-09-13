@@ -67,6 +67,75 @@ At the same time, it highlights an important idea:
 
 From the Sun and the inner planets to the outer Solar System and its distant objects, **Solar System Exploration** brings our cosmic neighborhood together in one place.
 
+## 🚀 Recent Improvements and New Features
+
+The project has received a major update focused on **reliability, usability, educational content, and the depth of information available to users**.
+
+### 🛠️ Stability, Bug Fixes, and Improvements
+
+A comprehensive set of bug fixes, optimizations, and functional improvements has been implemented throughout the project. These changes aim to provide a more reliable, comfortable, and intuitive experience while using the website.
+
+The update includes both major and minor improvements, including solutions to previously identified issues, improvements to existing functionality, and refinements intended to make the overall experience smoother and more practical.
+
+While extensive testing has been performed, additional issues may still be discovered as the project continues to develop.
+
+### 📚 Expanded Educational Content
+
+The project now provides substantially more information for users who want to **learn about the Solar System, its formation, exploration, and the technologies used to study it**.
+
+#### 🌌 Formation
+
+A new **Formation** section explains how the Solar System formed and how its major components developed over time.
+
+It includes:
+
+* An overview of the formation of the Solar System
+* Explanations of the processes that shaped the Sun, planets, and other objects
+* NASA-sourced scientific information
+* Original NASA imagery and visual material
+
+#### 🔭 Instruments
+
+A new **Instruments** section introduces the scientific instruments, spacecraft, telescopes, and other technologies that have helped humanity study the Solar System.
+
+The section provides information such as:
+
+* The purpose and capabilities of different instruments
+* Technical specifications and important characteristics
+* Original photographs of the instruments and missions
+* Images and scientific observations captured using these technologies
+* Explanations of how these instruments contributed to our understanding of space
+
+#### 🚀 Exploration
+
+A new **Exploration** section presents the history of Solar System exploration over the past several decades.
+
+It covers major stages, missions, discoveries, and technological achievements that have expanded our knowledge of the planets and other objects in our cosmic neighborhood.
+
+The section also includes:
+
+* NASA-sourced historical and scientific information
+* Original NASA mission imagery
+* Important exploration milestones
+* Major spacecraft and missions
+* Discoveries and observations made during Solar System exploration
+
+### 🛰️ Missions, Landmarks, and Discoveries
+
+The project now contains more detailed information about **important missions, landmarks, discoveries, and scientific observations** associated with Solar System exploration.
+
+Users can learn not only about celestial objects themselves, but also about the missions and technologies that enabled scientists to study them.
+
+This provides additional historical and scientific context and helps connect individual discoveries with the missions and instruments responsible for them.
+
+### 🪐 Expanded Planet Information
+
+The **Explore Solar System** section has also been significantly expanded with additional information about the planets.
+
+Planet pages now provide a deeper exploration of their characteristics, properties, and scientific significance, giving users more opportunities to study and compare the worlds of our Solar System.
+
+The goal is to make the **Explore Solar System** section useful not only for exploration, but also as a convenient educational reference.
+
 **Explore. Discover. Learn. Look beyond Earth.** 🌌
 
 ---
