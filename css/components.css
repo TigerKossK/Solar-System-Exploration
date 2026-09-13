@@ -36,7 +36,10 @@
 .brand__word { font-size: 1.05rem; }
 .nav__links { display: flex; gap: 4px; }
 .nav__links a { padding: 8px 14px; border-radius: var(--r-pill); color: var(--text-mid); font-weight: 500; font-size: .94rem; transition: color .2s, background .2s; }
-.nav__links a:hover, .nav__links a[aria-current="true"] { color: var(--text-hi); background: rgba(255,255,255,.05); }
+/* attribute-presence, not ="true": js/reveal.js writes aria-current="true" on the
+   landing, while the article pages hand-author the semantically correct
+   aria-current="page". Matching only "true" left the current page unhighlighted. */
+.nav__links a:hover, .nav__links a[aria-current] { color: var(--text-hi); background: rgba(255,255,255,.05); }
 
 /* ── buttons / pills ────────────────────────────────────── */
 .btn {
@@ -92,7 +95,7 @@
   mix-blend-mode: overlay; opacity: .5;
   animation: sun-churn 22s linear infinite;
 }
-.sun:hover .sun__core, .sun:focus-visible .sun__core { box-shadow: 0 0 36px 8px rgba(245,185,66,.66), 0 0 110px 26px rgba(255,155,61,.32), inset 0 0 16px 2px rgba(154,74,16,.4); }
+.sun:hover .sun__core, .sun:focus-visible .sun__core, .sun.is-active .sun__core { box-shadow: 0 0 36px 8px rgba(245,185,66,.66), 0 0 110px 26px rgba(255,155,61,.32), inset 0 0 16px 2px rgba(154,74,16,.4); }
 @keyframes sun-pulse { 0%,100%{ transform: scale(1);} 50%{ transform: scale(1.045);} }
 @keyframes sun-churn { to { transform: rotate(360deg); } }
 
@@ -177,7 +180,7 @@
 .planet__label {
   position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 7px;
   white-space: nowrap; pointer-events: none;
-  font-family: var(--font-ui); font-weight: 600; font-size: .62rem; letter-spacing: .02em;
+  font-family: var(--font-ui); font-weight: 600; font-size: .72rem; letter-spacing: .02em;
   color: var(--text-mid); text-shadow: 0 1px 3px rgba(0,0,0,.72), 0 0 2px rgba(0,0,0,.6);
   opacity: .76; transition: opacity .25s var(--ease), color .25s var(--ease);
 }
@@ -288,6 +291,58 @@
 .panel { animation: rise .7s var(--ease) both; }
 .hero    { animation: rise .8s var(--ease) .05s both; }
 .selector { animation: rise .8s var(--ease) .12s both; }
+
+/* ── mission rows as buttons (landing only) ─────────────────
+   .mission-item itself lives in planet.css and stays a plain <div> on the planet
+   pages. These rules are element+class (0,1,1) so they win over that file's
+   class-only rules regardless of load order. */
+button.mission-item {
+  width: 100%; text-align: left; color: inherit; cursor: pointer;
+  grid-template-columns: auto auto 1fr;
+}
+button.mission-item:hover,
+button.mission-item:focus-visible {
+  border-color: var(--glass-brd-strong); background: rgba(255,255,255,.06);
+}
+.mission-item__more {
+  grid-column: 3; justify-self: end; align-self: center;
+  color: var(--accent); font-size: .8rem; font-weight: 600; white-space: nowrap;
+  opacity: .72; transition: opacity .2s var(--ease), transform .2s var(--ease);
+}
+button.mission-item:hover .mission-item__more,
+button.mission-item:focus-visible .mission-item__more { opacity: 1; transform: translateX(2px); }
+
+/* ── mission detail dialog ──────────────────────────────────
+   A native <dialog>: focus trapping, Escape, the backdrop and returning focus to
+   the trigger are all the browser's job here, not ours. */
+.mission-dialog {
+  width: min(620px, calc(100vw - 32px));
+  max-height: min(82vh, 760px);
+  padding: clamp(20px, 3vw, 32px);
+  border: 1px solid var(--glass-brd-strong);
+  border-radius: var(--r-card);
+  background: linear-gradient(155deg, rgba(18,65,74,.97), rgba(8,17,15,.99));
+  color: var(--text-hi);
+  box-shadow: var(--shadow-card);
+  overflow: auto;
+}
+.mission-dialog::backdrop { background: rgba(4,10,9,.72); backdrop-filter: blur(4px); }
+.mission-dialog__title {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(1.4rem, 3vw, 1.9rem); letter-spacing: -.025em;
+}
+.mission-dialog__meta {
+  margin-top: 7px; color: var(--accent); font-size: .8rem; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+.mission-dialog__note { margin-top: 14px; color: var(--text-mid); font-size: 1.02rem; }
+.mission-dialog__facts { margin-top: 18px; grid-template-columns: 1fr; }
+.mission-dialog__links {
+  margin-top: 20px; padding-top: 16px; display: grid; gap: 10px;
+  border-top: 1px solid rgba(150,205,210,.14);
+}
+.mission-dialog__linkrow { display: flex; flex-wrap: wrap; gap: 8px; }
+.mission-dialog__close { margin-top: 22px; }
 
 /* ── liquid-chrome primary CTA (JS-enhanced; amber pill otherwise) ── */
 .btn.has-liquid { position: relative; overflow: hidden; background: #0a1512; border-color: var(--glass-brd-strong); color: var(--text-hi); box-shadow: 0 10px 26px -12px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.05) inset; }

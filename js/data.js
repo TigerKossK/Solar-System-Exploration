@@ -495,15 +495,109 @@ const SOLAR_SYSTEM = {
       voyager1: "Voyager 1 is over 25 billion km away — the most distant human-made object.",
       asteroidBelt: "Millions of asteroids orbit between Mars and Jupiter; Ceres is the largest.",
     },
+    /* Landmark missions — rendered at runtime by js/sections.js (NOT baked into the
+       generated planet pages), so this array can be enriched without running the
+       generator. Each entry may carry:
+         status      one-line operational state
+         highlights  2-4 verifiable specifics, shown in the detail dialog
+         targets     planet ids this craft actually visited -> links to their pages
+         detail      anchor id of its hardware section on instruments.html
+       `targets` must only contain ids present in `planets` above; js/sections.js
+       resolves them via getPlanet() and silently skips anything unknown. */
     landmarkMissions: [
-      { name: "Voyager 1", agency: "NASA", year: 1977, note: "First spacecraft to reach interstellar space (2012)." },
-      { name: "Voyager 2", agency: "NASA", year: 1977, note: "The only craft to visit all four giant planets." },
-      { name: "Galileo", agency: "NASA", year: 1989, note: "Orbited Jupiter for 8 years; found signs of Europa's ocean." },
-      { name: "Cassini–Huygens", agency: "NASA / ESA / ASI", year: 1997, note: "Orbited Saturn; landed a probe on Titan." },
-      { name: "New Horizons", agency: "NASA", year: 2006, note: "First flyby of Pluto (2015); now exploring the Kuiper Belt." },
-      { name: "Juno", agency: "NASA", year: 2011, note: "Probing Jupiter's interior and magnetic field." },
-      { name: "Perseverance", agency: "NASA", year: 2020, note: "Caching Mars samples; flew the first helicopter on another world." },
-      { name: "Parker Solar Probe", agency: "NASA", year: 2018, note: "Flying through the Sun's outer atmosphere, faster than any craft." },
+      {
+        id: "voyager-1", name: "Voyager 1", agency: "NASA", year: 1977,
+        note: "First spacecraft to reach interstellar space (2012).",
+        status: "Still operating", detail: "voyager",
+        targets: ["jupiter", "saturn"],
+        highlights: [
+          "Crossed the heliopause into interstellar space in August 2012, the first human-made object to do so.",
+          "Photographed the Pale Blue Dot in 1990 from about six billion kilometres away.",
+          "Carries a gold-plated record with 116 images and greetings in 55 languages.",
+          "Power has fallen from roughly 470 watts at launch to around 220 watts; instruments are being retired one at a time.",
+        ],
+      },
+      {
+        id: "voyager-2", name: "Voyager 2", agency: "NASA", year: 1977,
+        note: "The only craft to visit all four giant planets.",
+        status: "Still operating", detail: "voyager",
+        targets: ["jupiter", "saturn", "uranus", "neptune"],
+        highlights: [
+          "The only spacecraft ever to visit Uranus (January 1986) and Neptune (August 1989).",
+          "Almost everything known about the ice giants comes from these two flybys.",
+          "Revealed Neptune's Great Dark Spot and the nitrogen geysers on Triton.",
+          "Entered interstellar space in November 2018, six years after Voyager 1.",
+        ],
+      },
+      {
+        id: "galileo", name: "Galileo", agency: "NASA", year: 1989,
+        note: "Orbited Jupiter for 8 years; found signs of Europa's ocean.",
+        status: "Ended 2003", detail: "galileo",
+        targets: ["jupiter"],
+        highlights: [
+          "First spacecraft to orbit a gas giant, arriving at Jupiter in December 1995.",
+          "Dropped a probe into Jupiter's atmosphere — the only direct measurement ever made there.",
+          "Magnetometer readings at Europa remain the strongest evidence for a salty ocean beneath its ice.",
+          "Deliberately flown into Jupiter in September 2003 so it could never contaminate Europa.",
+        ],
+      },
+      {
+        id: "cassini-huygens", name: "Cassini–Huygens", agency: "NASA / ESA / ASI", year: 1997,
+        note: "Orbited Saturn; landed a probe on Titan.",
+        status: "Ended 2017", detail: "cassini",
+        targets: ["saturn"],
+        highlights: [
+          "Completed 294 orbits of Saturn over thirteen years.",
+          "ESA's Huygens probe landed on Titan in January 2005 — the only landing ever made in the outer Solar System.",
+          "Found seas of liquid methane on Titan and water-ice geysers venting from Enceladus.",
+          "Destroyed in Saturn's atmosphere in September 2017 to protect its potentially habitable moons.",
+        ],
+      },
+      {
+        id: "new-horizons", name: "New Horizons", agency: "NASA", year: 2006,
+        note: "First flyby of Pluto (2015); now exploring the Kuiper Belt.",
+        status: "Still operating",
+        targets: ["jupiter"],
+        highlights: [
+          "Used a Jupiter gravity assist in 2007 to shorten the journey to Pluto by three years.",
+          "Flew past Pluto in July 2015, revealing nitrogen-ice plains and water-ice mountains.",
+          "Went on to the Kuiper Belt object Arrokoth in 2019, the most distant object ever visited up close.",
+        ],
+      },
+      {
+        id: "juno", name: "Juno", agency: "NASA", year: 2011,
+        note: "Probing Jupiter's interior and magnetic field.",
+        status: "Still operating",
+        targets: ["jupiter"],
+        highlights: [
+          "In orbit around Jupiter since July 2016, on a looping polar path that dives between the planet and its radiation belts.",
+          "Found that Jupiter's core is 'fuzzy' and diffuse rather than a sharp rocky centre.",
+          "Mapped the strongest planetary magnetic field in the Solar System.",
+        ],
+      },
+      {
+        id: "parker-solar-probe", name: "Parker Solar Probe", agency: "NASA", year: 2018,
+        note: "Flying through the Sun's outer atmosphere, faster than any craft.",
+        status: "Still operating", detail: "parker",
+        targets: [],
+        highlights: [
+          "The fastest object ever built, reaching roughly 192 km/s.",
+          "Came within about 6.1 million km of the Sun's surface in December 2024.",
+          "A 4.24 m carbon shield holds around 1,400 K on its front face while the instruments behind stay near room temperature.",
+          "Flying through the corona to work out why it is hundreds of times hotter than the surface below it.",
+        ],
+      },
+      {
+        id: "perseverance", name: "Perseverance", agency: "NASA", year: 2020,
+        note: "Caching Mars samples; flew the first helicopter on another world.",
+        status: "Still operating",
+        targets: ["mars"],
+        highlights: [
+          "Landed in Jezero crater in February 2021, a site that once held a river delta.",
+          "Caching sealed rock samples for a future mission to bring back to Earth.",
+          "Carried Ingenuity, the first aircraft to fly on another world, which managed 72 flights.",
+        ],
+      },
     ],
     textures: {
       credit: "Planet & Sun textures © Solar System Scope (CC BY 4.0), based on NASA/USGS imagery.",

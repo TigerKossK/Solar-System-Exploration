@@ -20,8 +20,16 @@
 
 /* mobile — keep a persistent map affordance in the nav; selector + orrery below */
 @media (max-width: 720px) {
-  .nav__links a:not(:first-child) { display: none; } /* keep "Explore" (→ the map); hide the rest */
-  .nav__links a { display: inline-flex; align-items: center; min-height: 44px; }
+  /* Previously this hid EVERY link but the first. That rule predates the article
+     pages, and it made formation / exploration / instruments unreachable from the
+     nav on a phone — the topbar was their only route in. Instead, drop the in-page
+     anchors (reachable by scrolling anyway) and keep the pages, which are not. */
+  .nav__links a[href^="#"]:not(:first-child) { display: none; }
+  .nav__links { flex-wrap: wrap; gap: 2px; justify-content: flex-end; }
+  .nav__links a {
+    display: inline-flex; align-items: center; min-height: 44px;
+    padding: 8px 11px; font-size: .86rem;
+  }
   .panel { padding: 18px; border-radius: 22px; min-height: 0; }
   .hero__title { font-size: clamp(1.7rem, 7vw, 2.2rem); }
   .orrery { --size: min(86vw, 420px); }
@@ -54,6 +62,6 @@
   .scroll-cue__dot { animation: none !important; }
   .panel, .hero, .selector { animation: none !important; }
   .btn, .btn__chev, .planet__body, .back svg, .orbit,
-  .widget, .mission-item, .readout, .readout__arrow, .scroll-cue,
+  .widget, .mission-item, .mission-item__more, .readout, .readout__arrow, .scroll-cue,
   .orrery, .section--menu > .section__card { transition: none !important; }
 }

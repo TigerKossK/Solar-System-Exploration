@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tigerkossk.github.io/Solar-System-Exploration/sitemap.xml

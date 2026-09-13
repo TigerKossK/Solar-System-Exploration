@@ -1,0 +1,128 @@
+{
+  "exploration-apollo11": {
+    "center": "JSC",
+    "creator": "",
+    "nasa_id": "as11-40-5927",
+    "title": "View Apollo 11 Lunar Module as it rested on lunar surface",
+    "url": "https://images.nasa.gov/details/as11-40-5927"
+  },
+  "exploration-earthrise": {
+    "center": "JSC",
+    "creator": "",
+    "nasa_id": "art002e016299",
+    "title": "Earthrise Captured by Orion",
+    "url": "https://images.nasa.gov/details/art002e016299"
+  },
+  "exploration-iss": {
+    "center": "JSC",
+    "creator": "",
+    "nasa_id": "iss074e0089785",
+    "title": "The International Space Station orbits into a sunset above China",
+    "url": "https://images.nasa.gov/details/iss074e0089785"
+  },
+  "exploration-pale-blue-dot": {
+    "center": "JPL",
+    "creator": "NASA/JPL",
+    "nasa_id": "PIA00452",
+    "title": "Solar System Portrait - Earth as Pale Blue Dot",
+    "url": "https://images.nasa.gov/details/PIA00452"
+  },
+  "exploration-perseverance": {
+    "center": "HQ",
+    "creator": "NASA/Bill Ingalls",
+    "nasa_id": "NHQ202102180045",
+    "title": "NASA Perseverance Rover Lands on Mars",
+    "url": "https://images.nasa.gov/details/NHQ202102180045"
+  },
+  "exploration-shuttle": {
+    "center": "HQ",
+    "creator": "NASA/Bill Ingalls",
+    "nasa_id": "201102240008HQ",
+    "title": "Space Shuttle Discovery Launch",
+    "url": "https://images.nasa.gov/details/201102240008HQ"
+  },
+  "formation-moon-impact": {
+    "center": "JSC",
+    "creator": "NASA",
+    "nasa_id": "art002e012702",
+    "title": "Poynting and Keeler Craters on the Lunar Far Side",
+    "url": "https://images.nasa.gov/details/art002e012702"
+  },
+  "formation-nebula": {
+    "center": "JPL",
+    "creator": "NASA and the Hubble Heritage Team STScI/AURA",
+    "nasa_id": "PIA04227",
+    "title": "Orion Nebula and Bow Shock",
+    "url": "https://images.nasa.gov/details/PIA04227"
+  },
+  "formation-protoplanetary-disk": {
+    "center": "JPL",
+    "creator": "NASA/JPL-Caltech/Leiden/SRON",
+    "nasa_id": "PIA03242",
+    "title": "Life Starting Materials Found in Dusty Disk",
+    "url": "https://images.nasa.gov/details/PIA03242"
+  },
+  "formation-young-star": {
+    "center": "GSFC",
+    "creator": "ESA/Hubble & NASA; K. Stapelfeldt",
+    "nasa_id": "potw1853a",
+    "title": "Hubble Captures Smoking Gun of a Newborn Star",
+    "url": "https://images.nasa.gov/details/potw1853a"
+  },
+  "image-cassini-saturn": {
+    "center": "JPL",
+    "creator": "NASA/JPL/Space Science Institute",
+    "nasa_id": "PIA12530",
+    "title": "Lost Among Rings",
+    "url": "https://images.nasa.gov/details/PIA12530"
+  },
+  "image-hubble-pillars": {
+    "center": "GSFC",
+    "creator": "",
+    "nasa_id": "GSFC_20171208_Archive_e000842",
+    "title": "Hubble Goes High Def to Revisit the Iconic 'Pillars of Creation'",
+    "url": "https://images.nasa.gov/details/GSFC_20171208_Archive_e000842"
+  },
+  "image-jwst-carina": {
+    "center": "STScI (Webb)",
+    "creator": "NASA ESA CSA STScI",
+    "nasa_id": "carina_nebula",
+    "title": "James Webb Space Telescope NIRCam Image of the “Cosmic Cliffs” in Carina Nebula",
+    "url": "https://images.nasa.gov/details/carina_nebula"
+  },
+  "instrument-chandra": {
+    "center": "KSC",
+    "creator": "",
+    "nasa_id": "KSC-99pc0180",
+    "title": "KSC-99pc0180",
+    "url": "https://images.nasa.gov/details/KSC-99pc0180"
+  },
+  "instrument-hubble": {
+    "center": "JSC",
+    "creator": "",
+    "nasa_id": "s90-34002",
+    "title": "Artist concept of Hubble Space Telescope (HST) orbiting Earth after deploy",
+    "url": "https://images.nasa.gov/details/s90-34002"
+  },
+  "instrument-jwst": {
+    "center": "GSFC",
+    "creator": "",
+    "nasa_id": "GSFC_20171208_Archive_e000422",
+    "title": "NASA's James Webb Space Telescope Primary Mirror Fully Assembled",
+    "url": "https://images.nasa.gov/details/GSFC_20171208_Archive_e000422"
+  },
+  "instrument-parker": {
+    "center": "KSC",
+    "creator": "NASA/Ben Smegelsky",
+    "nasa_id": "KSC-20180403-PH_JBS01_0008",
+    "title": "Parker Solar Probe Spacecraft Arrival, Offload and Transport",
+    "url": "https://images.nasa.gov/details/KSC-20180403-PH_JBS01_0008"
+  },
+  "instrument-voyager": {
+    "center": "JPL",
+    "creator": "NASA/JPL-Caltech",
+    "nasa_id": "PIA22915",
+    "title": "Voyager 2 Spacecraft Instruments",
+    "url": "https://images.nasa.gov/details/PIA22915"
+  }
+}

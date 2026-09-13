@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>document.documentElement.classList.add("js");</script>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='6.5' fill='%23f5b942'/><ellipse cx='16' cy='16' rx='13' ry='6' fill='none' stroke='%232a7d8c' stroke-width='2' transform='rotate(-24 16 16)'/></svg>" />
+  <title>Fifty years beyond Earth — Solar System</title>
+  <meta name="description" content="What humanity has actually done off this planet: Sputnik to Artemis, twelve people on the Moon, twenty-five unbroken years aboard the ISS, and two spacecraft now outside the Sun's reach." />
+  <link rel="canonical" href="https://tigerkossk.github.io/Solar-System-Exploration/exploration.html" />
+  <meta name="theme-color" content="#08110f" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Solar System Exploration" />
+  <meta property="og:title" content="Fifty years beyond Earth — Solar System" />
+  <meta property="og:description" content="What humanity has actually done off this planet: Sputnik to Artemis, twelve people on the Moon, twenty-five unbroken years aboard the ISS, and two spacecraft now outside the Sun's reach." />
+  <meta property="og:url" content="https://tigerkossk.github.io/Solar-System-Exploration/exploration.html" />
+  <meta property="og:image" content="https://tigerkossk.github.io/Solar-System-Exploration/assets/og-cover.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Earth seen from space, the Sun cresting beyond its horizon." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Fifty years beyond Earth — Solar System" />
+  <meta name="twitter:description" content="What humanity has actually done off this planet: Sputnik to Artemis, twelve people on the Moon, twenty-five unbroken years aboard the ISS, and two spacecraft now outside the Sun's reach." />
+  <meta name="twitter:image" content="https://tigerkossk.github.io/Solar-System-Exploration/assets/og-cover.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/planet.css" />
+  <link rel="stylesheet" href="css/sections.css" />
+  <link rel="stylesheet" href="css/content.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+  <div class="cosmos" aria-hidden="true">
+    <div class="cosmos__fallback"></div>
+    <canvas class="cosmos__canvas" id="bg"></canvas>
+    <div class="cosmos__stars"></div>
+  </div>
+
+  <a class="skip-link" href="#article">Skip to the article</a>
+
+  <header class="topbar">
+    <div class="topbar__inner container">
+      <a class="brand" href="index.html" aria-label="Solar System — home">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="26" height="26" fill="none">
+            <circle cx="16" cy="16" r="4" fill="currentColor"/>
+            <ellipse cx="16" cy="16" rx="13" ry="6.2" stroke="currentColor" stroke-width="1.3" opacity=".65" transform="rotate(-24 16 16)"/>
+            <circle cx="27" cy="10.2" r="1.9" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="brand__word">Solar&nbsp;System</span>
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="index.html#menu">Explore</a>
+        <a href="formation.html">Formation</a>
+        <a href="exploration.html" aria-current="page">Exploration</a>
+        <a href="instruments.html">Instruments</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="section content-page">
+    <div class="panel container">
+
+      <header class="content-hero">
+        <h1 class="content-hero__title">Fifty years <span class="accent">beyond Earth</span>.</h1>
+        <p class="content-hero__lead">
+          Everything humanity has done off this planet fits into a single lifetime. Twelve people
+          have walked on another world. Two of our machines have left the Sun's influence
+          altogether. And someone has been living in orbit, continuously, since the year 2000.
+        </p>
+      </header>
+
+      <div class="article" id="article">
+
+        <section class="article__section article__section--full reveal">
+          <h2>The numbers, before the stories</h2>
+          <div class="dash-grid">
+          <div class="widget">
+            <span class="kicker-label">Humans on the Moon</span>
+            <span class="stat__value tnum">12</span>
+            <span class="stat__context">Across six landings, 1969–1972</span>
+          </div>
+          <div class="widget">
+            <span class="kicker-label">Beyond low Earth orbit</span>
+            <span class="stat__value tnum">24</span>
+            <span class="stat__context">Everyone who has ever left near-Earth space</span>
+          </div>
+          <div class="widget">
+            <span class="kicker-label">Years of continuous ISS crew</span>
+            <span class="stat__value tnum">25<span class="unit">+</span></span>
+            <span class="stat__context">Unbroken since 2 November 2000</span>
+          </div>
+          <div class="widget">
+            <span class="kicker-label">Craft in interstellar space</span>
+            <span class="stat__value tnum">2</span>
+            <span class="stat__context">Voyager 1 and Voyager 2</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="article__section article__section--full reveal">
+          <h2>Opening the door: 1957 to 1969</h2>
+          <div class="timeline">
+          <div class="timeline__item">
+            <span class="timeline__when">4 October 1957</span>
+            <h3 class="timeline__title">Sputnik 1</h3>
+            <p class="timeline__body">
+              An 83.6 kg aluminium sphere with four antennas and a radio beacon. It did almost
+              nothing except beep — and in doing so proved that orbit was reachable.
+            </p>
+          </div>
+          <div class="timeline__item">
+            <span class="timeline__when">12 April 1961</span>
+            <h3 class="timeline__title">Yuri Gagarin, one orbit</h3>
+            <p class="timeline__body">
+              <strong>108 minutes</strong>, a single circuit of the Earth aboard Vostok 1. Gagarin
+              did not land in his capsule: he ejected at about 7 km altitude and parachuted down
+              separately, as the design intended.
+            </p>
+          </div>
+          <div class="timeline__item">
+            <span class="timeline__when">18 March 1965</span>
+            <h3 class="timeline__title">The first spacewalk</h3>
+            <p class="timeline__body">
+              Alexei Leonov left Voskhod 2 for <strong>12 minutes and 9 seconds</strong>. His suit
+              inflated in the vacuum until he could not fit back through the airlock, and he had to
+              bleed off pressure to get inside.
+            </p>
+          </div>
+          <div class="timeline__item">
+            <span class="timeline__when">20 July 1969</span>
+            <h3 class="timeline__title">Apollo 11</h3>
+            <p class="timeline__body">
+              Neil Armstrong, then Buzz Aldrin, on the Sea of Tranquillity. Eight years after
+              Gagarin's single orbit.
+            </p>
+            </div>
+          </div>
+        </section>
+
+        <figure class="figure figure--wide reveal">
+          <img src="assets/media/exploration-apollo11.webp" width="1500" height="1500"
+               alt="The Apollo 11 lunar module Eagle at rest on the surface of the Moon."
+               decoding="async" />
+          <figcaption class="figure__caption">
+            The lunar module <em>Eagle</em> on the surface, July 1969.
+            <span class="figure__credit">NASA / JSC</span>
+          </figcaption>
+        </figure>
+
+        <section class="article__section reveal">
+          <h2>Apollo, and then nothing</h2>
+          <p>
+            Six missions landed — Apollo 11, 12, 14, 15, 16 and 17. Apollo 8 and 10 flew to the
+            Moon and came back without landing; Apollo 13 got there and survived not landing.
+            <strong>Twelve people</strong> walked on the surface, all of them American, all of them
+            men.
+          </p>
+          <p>
+            The last was <strong>Apollo 17, in December 1972</strong>. Eugene Cernan was the last
+            human to stand on another world, and Harrison Schmitt — the only professional geologist
+            to go — was there with him. Nobody has been back since. In total,
+            <strong>24 people</strong> have travelled beyond low Earth orbit, all of them between
+            1968 and 1972.
+          </p>
+        </section>
+
+        <figure class="figure figure--wide reveal">
+          <img src="assets/media/exploration-earthrise.webp" width="1500" height="1125"
+               alt="Earth rising above the lunar horizon, photographed from the Orion spacecraft."
+               loading="lazy" decoding="async" />
+          <figcaption class="figure__caption">
+            Earthrise, seen from the Orion spacecraft during Artemis — a deliberate echo of the
+            Apollo 8 photograph that changed how we saw ourselves in 1968.
+            <span class="figure__credit">NASA / JSC</span>
+          </figcaption>
+        </figure>
+
+        <section class="article__section reveal">
+          <h2>Learning to stay: the space stations</h2>
+          <p>
+            The story after Apollo is not about distance, it is about duration. The Soviet
+            <strong>Salyut</strong> programme began in 1971 and worked out how to resupply and swap
+            crews. <strong>Mir</strong> then held people continuously from September 1989 to August
+            1999 — <strong>3,644 days</strong>. Valeri Polyakov's single stay of
+            <strong>437 days</strong> aboard Mir is still the record for one uninterrupted spaceflight.
+          </p>
+          <p>
+            Assembly of the <strong>International Space Station</strong> began with the Zarya module
+            in November 1998. Expedition 1 arrived on <strong>2 November 2000</strong>, and there has
+            been someone aboard every single day since — a run that passed Mir's record in 2010 and
+            now stands at more than a quarter of a century.
+          </p>
+        </section>
+
+        <figure class="figure figure--wide reveal">
+          <img src="assets/media/exploration-iss.webp" width="1500" height="842"
+               alt="The International Space Station in orbit above Earth."
+               loading="lazy" decoding="async" />
+          <figcaption class="figure__caption">
+            The International Space Station — continuously crewed since November 2000.
+            <span class="figure__credit">NASA / JSC</span>
+          </figcaption>
+        </figure>
+
+        <section class="article__section reveal">
+          <h2>The Shuttle: thirty years, and two losses</h2>
+          <p>
+            Between 1981 and 2011 the Space Shuttle flew <strong>135 missions</strong> — Discovery 39,
+            Atlantis 33, Columbia 28, Endeavour 25, Challenger 10. It built the ISS and launched and
+            repaired Hubble.
+          </p>
+          <p>
+            It also killed fourteen people. <strong>Challenger</strong> broke apart shortly after
+            launch on 28 January 1986, when a booster O-ring failed in unusually cold conditions.
+            <strong>Columbia</strong> disintegrated during re-entry on 1 February 2003. Seven crew
+            were lost each time. Both accidents were traced to known risks that had been
+            normalised over years of flights.
+          </p>
+        </section>
+
+        <figure class="figure figure--wide reveal">
+          <img src="assets/media/exploration-shuttle.webp" width="1500" height="998"
+               alt="A Space Shuttle lifting off, trailing a column of exhaust."
+               loading="lazy" decoding="async" />
+          <figcaption class="figure__caption">
+            Space Shuttle Discovery at launch.
+            <span class="figure__credit">NASA / Bill Ingalls</span>
+          </figcaption>
+        </figure>
+
+        <section class="article__section reveal">
+          <h2>The robots got everywhere first</h2>
+          <p>
+            Every planet in the Solar System has been visited, and all of it was done by machines.
+          </p>
+          <!-- tabindex + role: a scrollable region with no tabindex cannot be
+               scrolled by keyboard in Chrome or Safari, so a keyboard-only user on a
+               narrow screen could never reach the last column. -->
+          <div class="data-table-wrap" tabindex="0" role="region"
+               aria-label="First spacecraft visit to each planet">
+            <table class="data-table">
+              <caption class="sr-only">First visit to each planet by spacecraft</caption>
+              <thead>
+                <tr><th scope="col">World</th><th scope="col">First flyby</th><th scope="col">First orbiter</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Mercury</th><td>Mariner 10, 1974</td><td>MESSENGER, 2011</td></tr>
+                <tr><th scope="row">Venus</th><td>Mariner 2, 1962</td><td>Pioneer Venus, 1978 <span class="text-lo">(first US)</span></td></tr>
+                <tr><th scope="row">Mars</th><td>Mariner 4, July 1965</td><td>Mariner 9, 1971</td></tr>
+                <tr><th scope="row">Jupiter</th><td>Pioneer 10, Dec 1973</td><td>Galileo, Dec 1995</td></tr>
+                <tr><th scope="row">Saturn</th><td>Pioneer 11, Sept 1979</td><td>Cassini, July 2004</td></tr>
+                <tr><th scope="row">Uranus</th><td>Voyager 2, Jan 1986</td><td>None — ever</td></tr>
+                <tr><th scope="row">Neptune</th><td>Voyager 2, Aug 1989</td><td>None — ever</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            Uranus and Neptune have each been visited exactly once, by the same spacecraft, in a
+            single flyby. Almost everything we know about the ice giants comes from those two
+            encounters.
+          </p>
+        </section>
+
+        <section class="article__section reveal">
+          <h2>The Voyagers left entirely</h2>
+          <p>
+            Launched sixteen days apart in 1977 — <strong>Voyager 2 on 20 August</strong>,
+            <strong>Voyager 1 on 5 September</strong>. Voyager 2 remains the only spacecraft to
+            have visited all four giant planets. Both have now crossed the heliopause into
+            interstellar space: Voyager 1 in <strong>August 2012</strong>, Voyager 2 in
+            <strong>November 2018</strong>.
+          </p>
+          <p>
+            They run on plutonium-238, which produced about 470 watts at launch and has decayed to
+            roughly 220 watts. Instruments are being switched off one by one to stretch what is
+            left. Each carries a gold-plated copper record holding 116 images, ninety minutes of
+            music, and greetings in 55 languages — addressed to nobody in particular.
+          </p>
+        </section>
+
+        <figure class="figure reveal">
+          <img src="assets/media/exploration-pale-blue-dot.webp" width="453" height="614"
+               alt="A grainy image of space with Earth appearing as a single faint point of light in a band of scattered sunlight."
+               loading="lazy" decoding="async" />
+          <figcaption class="figure__caption">
+            The Pale Blue Dot. Earth photographed by Voyager 1 in 1990 from about six billion
+            kilometres away — the single bright speck partway down the light band. Everyone who has
+            ever lived is in this picture.
+            <span class="figure__credit">NASA / JPL</span>
+          </figcaption>
+        </figure>
+
+        <section class="article__section reveal">
+          <h2>Driving on Mars</h2>
+          <p>
+            Five NASA rovers have operated successfully on the Martian surface.
+            <strong>Sojourner</strong> came first, riding down with Mars Pathfinder in 1997 and
+            proving that the idea worked at all as it crept a few dozen metres around its lander.
+            <strong>Spirit</strong> landed in January 2004 and worked until 2010 — 2,210 Martian
+            days against a 90-day design life. <strong>Opportunity</strong> landed three weeks later
+            and lasted until a planet-wide dust storm silenced it in June 2018, fifteen years into a
+            three-month mission.
+          </p>
+          <p>
+            <strong>Curiosity</strong> has been in Gale crater since August 2012 and is still
+            working. <strong>Perseverance</strong> landed in Jezero crater in February 2021 and is
+            caching samples for a future return mission. It carried
+            <strong>Ingenuity</strong>, the first aircraft to fly on another world, which managed
+            <strong>72 flights</strong> before a damaged rotor ended its campaign in January 2024.
+          </p>
+        </section>
+
+        <figure class="figure figure--wide reveal">
+          <img src="assets/media/exploration-perseverance.webp" width="1500" height="887"
+               alt="NASA imagery from the day the Perseverance rover landed on Mars in February 2021."
+               loading="lazy" decoding="async" />
+          <figcaption class="figure__caption">
+            Perseverance arrives at Mars, 18 February 2021.
+            <span class="figure__credit">NASA / Bill Ingalls</span>
+          </figcaption>
+        </figure>
+
+        <section class="article__section reveal">
+          <h2>Bringing pieces home</h2>
+          <p>
+            Sample return is the hardest thing robotic exploration does. Japan's
+            <strong>Hayabusa</strong> brought back grains from asteroid Itokawa in 2010, and
+            <strong>Hayabusa2</strong> returned material from Ryugu in December 2020. NASA's
+            <strong>OSIRIS-REx</strong> delivered a capsule of asteroid Bennu to the Utah desert in
+            September 2023. China's <strong>Chang'e</strong> missions have returned lunar samples,
+            including the first ever taken from the Moon's far side.
+          </p>
+        </section>
+
+        <section class="article__section reveal">
+          <h2>What happens next</h2>
+          <p>
+            NASA's <strong>Artemis</strong> programme intends to put people back on the Moon, this
+            time to stay, with commercial landers and a small lunar station in support. Schedules
+            have slipped repeatedly and continue to move, so any specific date here would be out of
+            date before you read it. The honest summary is that the hardware is being flown and
+            tested now, and the return has not happened yet.
+          </p>
+          <div class="callout callout--fact">
+            <h3>Worth sitting with</h3>
+            <p>
+              Roughly 600 people have been to space. Twenty-four have gone further than low Earth
+              orbit, and the last of them came home in 1972 — before most people alive today were
+              born.
+            </p>
+          </div>
+        </section>
+
+        <nav class="content-next reveal" aria-label="Continue reading">
+          <a href="instruments.html">
+            <span class="content-next__label">Next</span>
+            <span class="content-next__title">The instruments that showed us →</span>
+          </a>
+          <a href="formation.html">
+            <span class="content-next__label">Also</span>
+            <span class="content-next__title">How the Solar System formed →</span>
+          </a>
+          <a href="index.html#menu">
+            <span class="content-next__label">Back</span>
+            <span class="content-next__title">The interactive map →</span>
+          </a>
+        </nav>
+
+        <footer class="planet-foot">
+          <a class="back" href="index.html">
+            <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Back to the Solar System
+          </a>
+          <span class="source-tag">
+            Sources:
+            <a href="https://science.nasa.gov/" target="_blank" rel="noopener">NASA Science</a>,
+            <a href="https://voyager.jpl.nasa.gov/" target="_blank" rel="noopener">JPL Voyager</a>
+            · Mission status current as of 2026
+          </span>
+        </footer>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/util.js"></script>
+  <script src="js/background.js"></script>
+  <script src="js/reveal.js"></script>
+</body>
+</html>

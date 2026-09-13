@@ -42,11 +42,11 @@
     }
     if (exitBtn) exitBtn.focus();
   }
-  function exit() {
+  function exit(keepFocus) {
     if (!isOn()) return;
     body.classList.remove("is-exploring");
     setExpanded(false);
-    if (cta) cta.focus();
+    if (cta && !keepFocus) cta.focus();
   }
 
   cta.addEventListener("click", function (e) {
@@ -59,10 +59,31 @@
       else { exit(); history.replaceState({}, "", location.pathname + location.search); }
     });
   }
+
+  /* Explorer hides every non-menu section (display:none, css/sections.css), so the
+     Sun's "Open" link (href="#sun-section") would target an invisible element and the
+     click would appear to do nothing. Leave Explorer first, then let the BROWSER do the
+     fragment navigation: that gives the smooth scroll, a real history entry (so Back
+     returns to Explorer) and the focus target for free — all of which a hand-rolled
+     preventDefault + scrollIntoView would have to reimplement, and get wrong.
+     Planet-page links and modifier-clicks fall through untouched. */
+  if (explore) {
+    explore.addEventListener("click", function (e) {
+      var href = explore.getAttribute("href") || "";
+      if (!isOn() || href.charAt(0) !== "#") return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || (e.button && e.button > 0)) return;
+      exit(true);   // keep focus — the anchor navigation sets the focus target itself
+    });
+  }
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && isOn()) {
-      if (location.hash === "#explore" && history.length > 1) history.back(); else exit();
-    }
+    if (e.key !== "Escape" || !isOn()) return;
+    if (location.hash === "#explore" && history.length > 1) { history.back(); return; }
+    /* Deep-linked straight into #explore, so there is nothing to go back to.
+       Clear the hash exactly as the Return button does — otherwise it lingers,
+       enter() later sees it and skips its pushState, and the next Back press
+       leaves the site instead of closing Explorer. */
+    exit();
+    history.replaceState({}, "", location.pathname + location.search);
   });
   window.addEventListener("popstate", function () {
     if (location.hash === "#explore") enter(false); else exit();

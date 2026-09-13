@@ -72,27 +72,38 @@
   ].join("\n");
 
   function compile(type, src) { var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; }
-  var program = gl.createProgram();
-  gl.attachShader(program, compile(gl.VERTEX_SHADER, VERT));
-  gl.attachShader(program, compile(gl.FRAGMENT_SHADER, FRAG));
-  gl.linkProgram(program);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return; // fallback stays
-  gl.useProgram(program);
 
-  var buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-  var pos = gl.getAttribLocation(program, "position");
-  gl.enableVertexAttribArray(pos);
-  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  /* All GL resources live behind setupGL() so they can be rebuilt from scratch.
+     A lost context invalidates every program, buffer and uniform location, so
+     recovery is only possible if creating them can be re-run (see the
+     webglcontextrestored handler at the bottom of this file). */
+  var program, buffer, pos, loc;
+  function setupGL() {
+    program = gl.createProgram();
+    gl.attachShader(program, compile(gl.VERTEX_SHADER, VERT));
+    gl.attachShader(program, compile(gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return false; // fallback stays
+    gl.useProgram(program);
 
-  var loc = {
-    res: gl.getUniformLocation(program, "u_resolution"),
-    time: gl.getUniformLocation(program, "u_time"),
-    grain: gl.getUniformLocation(program, "u_grain"),
-    colors: gl.getUniformLocation(program, "u_colors"),
-    bg: gl.getUniformLocation(program, "u_bg"),
-  };
+    buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    pos = gl.getAttribLocation(program, "position");
+    gl.enableVertexAttribArray(pos);
+    gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+
+    loc = {
+      res: gl.getUniformLocation(program, "u_resolution"),
+      time: gl.getUniformLocation(program, "u_time"),
+      grain: gl.getUniformLocation(program, "u_grain"),
+      colors: gl.getUniformLocation(program, "u_colors"),
+      bg: gl.getUniformLocation(program, "u_bg"),
+    };
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    return true;
+  }
+  if (!setupGL()) return; // CSS fallback remains visible
 
   function hexToRgb(hex) {
     var h = hex.replace("#", "");
@@ -121,9 +132,18 @@
     var dpr = Math.min((window.devicePixelRatio || 1) * QUALITY, DPR_CAP);
     var w = Math.max(1, Math.floor(window.innerWidth * dpr));
     var h = Math.max(1, Math.floor(window.innerHeight * dpr));
-    if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h); }
+    if (canvas.width === w && canvas.height === h) return false;
+    canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h);
+    return true;
   }
-  window.addEventListener("resize", resize, { passive: true });
+  /* Resizing a canvas CLEARS its drawing buffer. The animation loop naturally
+     repaints on the next frame — but under reduced motion there is no loop, so
+     without this redraw the background would vanish for good the first time the
+     viewport changed. On mobile that is guaranteed: the first scroll collapses
+     the URL bar and fires resize. */
+  window.addEventListener("resize", function () {
+    if (resize() && reduce) draw(0);
+  }, { passive: true });
   resize();
 
   function draw(t) {
@@ -148,4 +168,19 @@
       else if (!raf) { raf = window.requestAnimationFrame(loop); }
     });
   }
+
+  /* This page runs two WebGL contexts (see js/liquid-chrome.js), so a forced
+     context loss is realistic: a GPU process restart, a driver reset, mobile
+     backgrounding, or the browser reclaiming contexts. Without preventDefault
+     the context can never be restored, and the rAF loop would otherwise spin
+     forever issuing no-op calls against a dead context. */
+  canvas.addEventListener("webglcontextlost", function (e) {
+    e.preventDefault();
+    if (raf) { window.cancelAnimationFrame(raf); raf = null; }
+  }, false);
+  canvas.addEventListener("webglcontextrestored", function () {
+    if (!setupGL()) return;          // give up quietly; the CSS gradient shows
+    if (reduce) draw(0);
+    else if (!raf) raf = window.requestAnimationFrame(loop);
+  }, false);
 })();

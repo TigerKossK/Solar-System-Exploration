@@ -7,6 +7,23 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='6.5' fill='%23f5b942'/><ellipse cx='16' cy='16' rx='13' ry='6' fill='none' stroke='%232a7d8c' stroke-width='2' transform='rotate(-24 16 16)'/></svg>" />
   <title>Solar System — explore the worlds of our Sun</title>
   <meta name="description" content="A live, interactive map of the Solar System. Focus any planet to preview it, then open its page for real, sourced data — sizes, distances, moons and more." />
+  <link rel="canonical" href="https://tigerkossk.github.io/Solar-System-Exploration/" />
+  <meta name="theme-color" content="#08110f" />
+  <!-- Social cards. Without these a shared link renders as a bare grey URL —
+       which matters here, since being shared IS how this site is found. -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Solar System Exploration" />
+  <meta property="og:title" content="Solar System — explore the worlds of our Sun" />
+  <meta property="og:description" content="A live, interactive map of the Solar System. Focus any planet to preview it, then open its page for real, sourced data — sizes, distances, moons and more." />
+  <meta property="og:url" content="https://tigerkossk.github.io/Solar-System-Exploration/" />
+  <meta property="og:image" content="https://tigerkossk.github.io/Solar-System-Exploration/assets/og-cover.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Earth seen from space, the Sun cresting beyond its horizon." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Solar System — explore the worlds of our Sun" />
+  <meta name="twitter:description" content="A live, interactive map of the Solar System. Focus any planet to preview it, then open its page for real, sourced data — sizes, distances, moons and more." />
+  <meta name="twitter:image" content="https://tigerkossk.github.io/Solar-System-Exploration/assets/og-cover.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
@@ -15,6 +32,7 @@
   <link rel="stylesheet" href="css/planet.css" />
   <link rel="stylesheet" href="css/sections.css" />
   <link rel="stylesheet" href="css/journey.css" />
+  <link rel="stylesheet" href="css/content.css" />
   <link rel="stylesheet" href="css/responsive.css" />
 </head>
 <body>
@@ -65,11 +83,15 @@
         </span>
         <span class="brand__word">Solar&nbsp;System</span>
       </a>
+      <!-- Five items is the ceiling before this pill starts competing with the map.
+           The landing's own sections stay reachable by scrolling and by the cues;
+           the three article pages cannot be found by scrolling, so they win the slots. -->
       <nav class="nav__links" aria-label="Primary">
         <a href="#menu">Explore</a>
+        <a href="formation.html">Formation</a>
+        <a href="exploration.html">Exploration</a>
+        <a href="instruments.html">Instruments</a>
         <a href="#sun-section">The Sun</a>
-        <a href="#missions">Missions</a>
-        <a href="#about">About</a>
       </nav>
     </div>
   </header>
@@ -82,7 +104,19 @@
        without JS and under reduced motion. css/journey.css ── -->
   <section class="journey" id="journey" aria-label="Earth from space — enter the interactive Solar System">
     <div class="journey__stage">
+      <!-- sizes must describe the PAINTED width, not the element box. This is an
+           object-fit:cover 16:9 image in a full-viewport box, so whenever the
+           viewport is taller than 16:9 the image is scaled by HEIGHT and painted
+           much wider than 100vw (16/9 x viewport height = 178vh), with the excess
+           cropped. Declaring 100vw here would under-request and hand phones an
+           upscaled 1024px hero. width/height give the intrinsic ratio; the CSS
+           sizes this absolutely, so there is no layout shift to fix — they only
+           matter if the stylesheet fails to load. -->
       <img class="journey__earth" src="assets/journey-earth.webp"
+           srcset="assets/journey-earth-1024.webp 1024w,
+                   assets/journey-earth.webp 2048w"
+           sizes="(max-aspect-ratio: 16/9) 178vh, 100vw"
+           width="2048" height="1152"
            alt="Earth seen from space, the Sun cresting beyond its horizon."
            decoding="async" fetchpriority="high" />
       <div class="journey__veil" aria-hidden="true"></div>
@@ -91,7 +125,7 @@
 
       <div class="journey__inner container">
         <div class="journey__copy">
-          <p class="journey__title">Eight worlds.<br><span class="accent">One star.</span></p>
+          <h1 class="journey__title">Eight worlds.<br><span class="accent">One star.</span></h1>
           <p class="journey__sub">A living, interactive map of the Solar System — scroll in toward Earth, or skip straight to the map.</p>
         </div>
       </div>
@@ -111,9 +145,9 @@
     <!-- ── 1 · Intro / About (context before the map) ── -->
     <section class="section section--intro" id="intro" aria-labelledby="intro-title">
       <div class="panel container section__card">
-        <h1 class="intro__title display reveal" id="intro-title" data-reveal-delay="1">
+        <h2 class="intro__title display reveal" id="intro-title" data-reveal-delay="1">
           Explore the <span class="accent">worlds</span> of our Sun.
-        </h1>
+        </h2>
         <p class="intro__lead reveal" data-reveal-delay="2">
           A living map of the Solar System, built as the way you navigate it. Focus any planet to
           preview it, open its page for real, sourced data — sizes, distances, moons, atmospheres
@@ -165,7 +199,7 @@
                    Compact here; body.is-exploring repositions it and reveals the
                    fun-facts + Return control. IDs are consumed by js/solar-system.js
                    (render) and js/explorer.js (mode). -->
-              <aside class="readout glass" id="readout" aria-live="polite">
+              <aside class="readout glass" id="readout">
                 <button class="readout__exit btn btn--ghost btn--sm" id="exitExplore" type="button" hidden>
                   <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
                   Back to the Solar System
@@ -266,6 +300,23 @@
         <div class="intro__actions reveal" data-reveal-delay="2">
           <a class="btn btn--primary btn--lg" href="#menu">Back to the map</a>
         </div>
+
+        <!-- Real discovery for the article pages. The topbar alone is not enough:
+             it is hidden below 720px, so on mobile these cards are the only way in. -->
+        <nav class="content-next reveal" data-reveal-delay="3" aria-label="Go deeper">
+          <a href="formation.html">
+            <span class="content-next__label">Read</span>
+            <span class="content-next__title">How it all began →</span>
+          </a>
+          <a href="exploration.html">
+            <span class="content-next__label">Read</span>
+            <span class="content-next__title">Fifty years beyond Earth →</span>
+          </a>
+          <a href="instruments.html">
+            <span class="content-next__label">Read</span>
+            <span class="content-next__title">The machines that saw it →</span>
+          </a>
+        </nav>
         <span class="source-tag" id="creditTag">
           Data: <a href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/" target="_blank" rel="noopener">NASA Planetary Fact Sheet</a>
         </span>
@@ -273,6 +324,7 @@
     </section>
   </main>
 
+  <script src="js/util.js"></script>
   <script src="js/background.js"></script>
   <script src="js/data.js"></script>
   <script src="js/solar-system.js"></script>

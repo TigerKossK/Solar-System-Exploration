@@ -96,6 +96,7 @@ html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 body {
   margin: 0;
   min-height: 100vh;
+  min-height: 100svh;
   font-family: var(--font-ui);
   color: var(--text-hi);
   background: var(--bg-void);
@@ -169,7 +170,7 @@ img, canvas { display: block; max-width: 100%; }
 }
 
 /* ── layout helpers ─────────────────────────────────────── */
-.stage { min-height: 100vh; display: grid; place-items: center; padding: var(--pad); }
+.stage { min-height: 100vh; min-height: 100svh; display: grid; place-items: center; padding: var(--pad); }
 .container { width: 100%; max-width: var(--maxw); margin-inline: auto; }
 
 /* ── typography scale ───────────────────────────────────── */

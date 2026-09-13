@@ -20,7 +20,9 @@
 .journey { position: relative; }
 .journey__stage {
   position: relative;
-  height: 100vh; min-height: 560px;
+  height: 100vh;
+  height: 100svh;          /* small-viewport unit: immune to mobile URL-bar collapse */
+  min-height: 560px;
   overflow: hidden;
   background: var(--bg-void);
   isolation: isolate;
@@ -109,7 +111,7 @@
 
 /* ── JS-enhanced: tall runway + pinned stage + scroll scrub ── */
 .js .journey { height: 300vh; }                 /* runway the beat spans */
-.js .journey__stage { position: sticky; top: 0; height: 100vh; }
+.js .journey__stage { position: sticky; top: 0; height: 100vh; height: 100svh; }
 
 .js .journey__earth {
   transform:
@@ -133,7 +135,7 @@
 
 /* ── reduced motion: no pin, no scrub — a calm static hero ── */
 @media (prefers-reduced-motion: reduce) {
-  .js .journey { height: 100vh; }
+  .js .journey { height: 100vh; height: 100svh; }
   .js .journey__stage { position: relative; }
   .js .journey__earth { transform: none; }
   .js .journey__wedge { opacity: 1; }

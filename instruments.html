@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>document.documentElement.classList.add("js");</script>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='6.5' fill='%23f5b942'/><ellipse cx='16' cy='16' rx='13' ry='6' fill='none' stroke='%232a7d8c' stroke-width='2' transform='rotate(-24 16 16)'/></svg>" />
+  <title>The instruments — Solar System</title>
+  <meta name="description" content="The machines behind every number on this site: Hubble, Webb, Chandra, Spitzer, Parker, the Voyagers, Cassini and Galileo — what they are, and what they showed us." />
+  <link rel="canonical" href="https://tigerkossk.github.io/Solar-System-Exploration/instruments.html" />
+  <meta name="theme-color" content="#08110f" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Solar System Exploration" />
+  <meta property="og:title" content="The instruments — Solar System" />
+  <meta property="og:description" content="The machines behind every number on this site: Hubble, Webb, Chandra, Spitzer, Parker, the Voyagers, Cassini and Galileo — what they are, and what they showed us." />
+  <meta property="og:url" content="https://tigerkossk.github.io/Solar-System-Exploration/instruments.html" />
+  <meta property="og:image" content="https://tigerkossk.github.io/Solar-System-Exploration/assets/og-cover.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Earth seen from space, the Sun cresting beyond its horizon." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="The instruments — Solar System" />
+  <meta name="twitter:description" content="The machines behind every number on this site: Hubble, Webb, Chandra, Spitzer, Parker, the Voyagers, Cassini and Galileo — what they are, and what they showed us." />
+  <meta name="twitter:image" content="https://tigerkossk.github.io/Solar-System-Exploration/assets/og-cover.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/planet.css" />
+  <link rel="stylesheet" href="css/sections.css" />
+  <link rel="stylesheet" href="css/content.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+  <div class="cosmos" aria-hidden="true">
+    <div class="cosmos__fallback"></div>
+    <canvas class="cosmos__canvas" id="bg"></canvas>
+    <div class="cosmos__stars"></div>
+  </div>
+
+  <a class="skip-link" href="#article">Skip to the article</a>
+
+  <header class="topbar">
+    <div class="topbar__inner container">
+      <a class="brand" href="index.html" aria-label="Solar System — home">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="26" height="26" fill="none">
+            <circle cx="16" cy="16" r="4" fill="currentColor"/>
+            <ellipse cx="16" cy="16" rx="13" ry="6.2" stroke="currentColor" stroke-width="1.3" opacity=".65" transform="rotate(-24 16 16)"/>
+            <circle cx="27" cy="10.2" r="1.9" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="brand__word">Solar&nbsp;System</span>
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="index.html#menu">Explore</a>
+        <a href="formation.html">Formation</a>
+        <a href="exploration.html">Exploration</a>
+        <a href="instruments.html" aria-current="page">Instruments</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="section content-page">
+    <div class="panel container">
+
+      <header class="content-hero">
+        <h1 class="content-hero__title">The machines that <span class="accent">saw it</span>.</h1>
+        <p class="content-hero__lead">
+          Every figure on this site — every temperature, every moon count, every ring — came from a
+          specific piece of hardware built by people, launched on a rocket, and operated for
+          decades. These are those machines, and the images they sent back.
+        </p>
+      </header>
+
+      <div class="article" id="article">
+
+        <section class="article__section article__section--full reveal">
+          <h2>Telescopes in space</h2>
+          <p>
+            Putting a telescope in orbit buys two things: no atmosphere blurring the view, and
+            access to wavelengths — infrared, ultraviolet, X-ray — that the air simply absorbs
+            before they reach the ground.
+          </p>
+          <div class="instrument-grid">
+
+          <article class="instrument" id="hubble">
+            <div class="instrument__body">
+              <h3 class="instrument__name">Hubble Space Telescope</h3>
+              <div class="instrument__meta">
+                <span class="chip chip--live">Operating</span>
+                <span class="chip">Visible / UV / near-IR</span>
+              </div>
+              <p class="instrument__desc">
+                Launched by Shuttle <em>Discovery</em> in April 1990 and immediately found to have a
+                mirror ground wrong by less than a fiftieth the width of a human hair — enough to
+                ruin every image. A 1993 servicing mission fitted corrective optics, and Hubble
+                went on to become the most productive telescope ever built.
+              </p>
+              <div class="instrument__specs">
+                <div><span class="k">Launched</span><span class="v">24 April 1990</span></div>
+                <div><span class="k">Primary mirror</span><span class="v">2.4 m</span></div>
+                <div><span class="k">Mass at launch</span><span class="v">11,110 kg</span></div>
+                <div><span class="k">Orbit</span><span class="v">~600 km, low Earth orbit</span></div>
+                <div><span class="k">Observations</span><span class="v">over 1.5 million</span></div>
+              </div>
+            </div>
+            <figure class="figure instrument__figure">
+              <img src="assets/media/instrument-hubble.webp" width="1500" height="1911"
+                   alt="Artist's concept of the Hubble Space Telescope in orbit above Earth."
+                   decoding="async" />
+              <figcaption class="figure__caption">
+                An artist's concept, not a photograph. Hubble has been observing since 1990.
+                <span class="figure__credit">NASA / JSC</span>
+              </figcaption>
+            </figure>
+          </article>
+
+          <article class="instrument" id="jwst">
+            <div class="instrument__body">
+              <h3 class="instrument__name">James Webb Space Telescope</h3>
+              <div class="instrument__meta">
+                <span class="chip chip--live">Operating</span>
+                <span class="chip">Infrared</span>
+              </div>
+              <p class="instrument__desc">
+                Too big to launch assembled, Webb flew folded and unpacked itself over weeks —
+                eighteen gold-coated beryllium hexagons and a five-layer sunshield, with hundreds of
+                single-point failures and no possibility of repair. It sits at the Sun–Earth L2
+                point, 1.5 million km out, chilled to around 40 K so its own heat does not drown the
+                infrared light it came to collect.
+              </p>
+              <div class="instrument__specs">
+                <div><span class="k">Launched</span><span class="v">25 December 2021</span></div>
+                <div><span class="k">Primary mirror</span><span class="v">6.5 m, 18 segments</span></div>
+                <div><span class="k">Mass</span><span class="v">~6,200 kg</span></div>
+                <div><span class="k">Location</span><span class="v">Sun–Earth L2, 1.5 M km</span></div>
+                <div><span class="k">Operating temp.</span><span class="v">~40 K (−233 °C)</span></div>
+              </div>
+            </div>
+            <figure class="figure instrument__figure">
+              <img src="assets/media/instrument-jwst.webp" width="1280" height="959"
+                   alt="The James Webb Space Telescope's gold-coated hexagonal primary mirror segments."
+                   loading="lazy" decoding="async" />
+              <figcaption class="figure__caption">
+                Webb's primary mirror, fully assembled before launch.
+                <span class="figure__credit">NASA / GSFC</span>
+              </figcaption>
+            </figure>
+          </article>
+
+          <article class="instrument" id="chandra">
+            <div class="instrument__body">
+              <h3 class="instrument__name">Chandra X-ray Observatory</h3>
+              <div class="instrument__meta">
+                <span class="chip chip--live">Operating</span>
+                <span class="chip">X-ray</span>
+              </div>
+              <p class="instrument__desc">
+                X-rays cannot be focused by ordinary lenses or mirrors, so Chandra uses nested
+                cylindrical mirrors that graze the incoming light into focus. It sees only the
+                violent universe: matter falling into black holes, supernova remnants, and the
+                hundred-million-degree gas that fills galaxy clusters. Its observations of the
+                Bullet Cluster provided some of the most direct evidence that dark matter exists.
+              </p>
+              <div class="instrument__specs">
+                <div><span class="k">Launched</span><span class="v">23 July 1999</span></div>
+                <div><span class="k">Length</span><span class="v">13.8 m</span></div>
+                <div><span class="k">Mass</span><span class="v">4,800 kg</span></div>
+                <div><span class="k">Resolution</span><span class="v">~0.5 arcseconds</span></div>
+                <div><span class="k">Orbit apogee</span><span class="v">~139,000 km</span></div>
+              </div>
+            </div>
+            <figure class="figure instrument__figure">
+              <img src="assets/media/instrument-chandra.webp" width="904" height="1280"
+                   alt="The Chandra X-ray Observatory before launch."
+                   loading="lazy" decoding="async" />
+              <figcaption class="figure__caption">
+                Photographed at Kennedy Space Center, 1999.
+                <span class="figure__credit">NASA / KSC</span>
+              </figcaption>
+            </figure>
+          </article>
+
+          <article class="instrument instrument--noimg" id="spitzer">
+            <div class="instrument__body">
+              <h3 class="instrument__name">Spitzer Space Telescope</h3>
+              <div class="instrument__meta">
+                <span class="chip chip--retired">Retired 2020</span>
+                <span class="chip">Infrared</span>
+              </div>
+              <p class="instrument__desc">
+                A modest 0.85 m infrared telescope designed for two and a half years, which ran for
+                <strong>sixteen</strong>. Spitzer pioneered the technique of measuring an exoplanet's
+                atmosphere as it passes in front of its star, and quietly found an enormous, faint
+                outer ring around Saturn that nobody had noticed in four centuries of looking. It was
+                switched off on 30 January 2020; its data archive is still producing results.
+              </p>
+              <div class="instrument__specs">
+                <div><span class="k">Operated</span><span class="v">2003 – 2020</span></div>
+                <div><span class="k">Primary mirror</span><span class="v">0.85 m</span></div>
+                <div><span class="k">Wavelengths</span><span class="v">3.6 – 160 µm</span></div>
+                <div><span class="k">Design life</span><span class="v">2.5 years</span></div>
+              </div>
+            </div>
+          </article>
+
+          </div>
+        </section>
+
+        <section class="article__section article__section--full reveal">
+          <h2>Spacecraft that went there</h2>
+          <div class="instrument-grid">
+
+          <article class="instrument" id="parker">
+            <div class="instrument__body">
+              <h3 class="instrument__name">Parker Solar Probe</h3>
+              <div class="instrument__meta">
+                <span class="chip chip--live">Operating</span>
+                <span class="chip">Solar corona</span>
+              </div>
+              <p class="instrument__desc">
+                The fastest object humans have ever built, and the closest anything of ours has come
+                to a star. A 4.24 m carbon-composite heat shield takes the full force of the Sun at
+                around 1,400 K while the instruments behind it sit near room temperature. It is
+                flying <em>through</em> the corona to find out why the Sun's outer atmosphere is
+                hundreds of times hotter than its surface.
+              </p>
+              <div class="instrument__specs">
+                <div><span class="k">Launched</span><span class="v">12 August 2018</span></div>
+                <div><span class="k">Closest approach</span><span class="v">6.1 million km</span></div>
+                <div><span class="k">Top speed</span><span class="v">~192 km/s</span></div>
+                <div><span class="k">Shield front face</span><span class="v">~1,400 K</span></div>
+                <div><span class="k">Dry mass</span><span class="v">~559 kg</span></div>
+              </div>
+            </div>
+            <figure class="figure instrument__figure">
+              <img src="assets/media/instrument-parker.webp" width="1500" height="1000"
+                   alt="The Parker Solar Probe spacecraft before launch."
+                   loading="lazy" decoding="async" />
+              <figcaption class="figure__caption">
+                Arriving at Kennedy Space Center for launch processing.
+                <span class="figure__credit">NASA / Ben Smegelsky</span>
+              </figcaption>
+            </figure>
+          </article>
+
+          <article class="instrument" id="voyager">
+            <div class="instrument__body">
+              <h3 class="instrument__name">Voyager 1 &amp; 2</h3>
+              <div class="instrument__meta">
+                <span class="chip chip--live">Operating</span>
+                <span class="chip">Interstellar</span>
+              </div>
+              <p class="instrument__desc">
+                Built with 1970s electronics and still returning data from beyond the Sun's
+                influence. Between them they gave us our only close looks at Uranus and Neptune,
+                discovered volcanoes on Io and the smooth ice shell of Europa, and are now measuring
+                the interstellar medium directly. Their plutonium is running out; instruments are
+                being retired one at a time to keep the rest alive.
+              </p>
+              <div class="instrument__specs">
+                <div><span class="k">Launched</span><span class="v">1977, 16 days apart</span></div>
+                <div><span class="k">Power at launch</span><span class="v">~470 W</span></div>
+                <div><span class="k">Power now</span><span class="v">~220 W</span></div>
+                <div><span class="k">Left the heliosphere</span><span class="v">2012 · 2018</span></div>
+                <div><span class="k">Golden Record</span><span class="v">116 images, 55 languages</span></div>
+              </div>
+            </div>
+            <figure class="figure instrument__figure">
+              <img src="assets/media/instrument-voyager.webp" width="1500" height="844"
+                   alt="Diagram of the Voyager 2 spacecraft showing its instrument booms and dish antenna."
+                   loading="lazy" decoding="async" />
+              <figcaption class="figure__caption">
+                Voyager 2's instrument layout.
+                <span class="figure__credit">NASA / JPL-Caltech</span>
+              </figcaption>
+            </figure>
+          </article>
+
+          <article class="instrument instrument--noimg" id="cassini">
+            <div class="instrument__body">
+              <h3 class="instrument__name">Cassini–Huygens</h3>
+              <div class="instrument__meta">
+                <span class="chip chip--retired">Ended 2017</span>
+                <span class="chip">Saturn orbiter</span>
+              </div>
+              <p class="instrument__desc">
+                Thirteen years in orbit around Saturn and <strong>294 circuits</strong> of the
+                planet. Its radar found seas of liquid methane on Titan; ESA's Huygens probe landed
+                there in January 2005, the only landing ever made in the outer Solar System. It also
+                caught Enceladus venting water ice from a hidden ocean — which is why, when the fuel
+                ran out, Cassini was deliberately flown into Saturn on 15 September 2017 rather than
+                risk contaminating a moon that might host life.
+              </p>
+              <div class="instrument__specs">
+                <div><span class="k">Launched</span><span class="v">15 October 1997</span></div>
+                <div><span class="k">In Saturn orbit</span><span class="v">July 2004 – Sept 2017</span></div>
+                <div><span class="k">Orbits of Saturn</span><span class="v">294</span></div>
+                <div><span class="k">Huygens probe mass</span><span class="v">~320 kg</span></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="instrument instrument--noimg" id="galileo">
+            <div class="instrument__body">
+              <h3 class="instrument__name">Galileo</h3>
+              <div class="instrument__meta">
+                <span class="chip chip--retired">Ended 2003</span>
+                <span class="chip">Jupiter orbiter</span>
+              </div>
+              <p class="instrument__desc">
+                The first spacecraft to orbit a gas giant, and the only one to drop a probe into
+                Jupiter's atmosphere. Its magnetometer readings at Europa are the strongest evidence
+                that a salty ocean lies beneath the ice — a finding so significant that Galileo was
+                sent into Jupiter on 21 September 2003 to guarantee it could never crash into Europa
+                carrying terrestrial microbes.
+              </p>
+              <div class="instrument__specs">
+                <div><span class="k">Launched</span><span class="v">18 October 1989</span></div>
+                <div><span class="k">In Jupiter orbit</span><span class="v">Dec 1995 – Sept 2003</span></div>
+                <div><span class="k">Dry mass</span><span class="v">~2,223 kg</span></div>
+              </div>
+            </div>
+          </article>
+
+          </div>
+        </section>
+
+        <section class="article__section reveal">
+          <h2>And the ones still on the ground</h2>
+          <p>
+            Space is not always the answer. In the Atacama Desert, the
+            <strong>Very Large Telescope</strong> runs four 8.2 m mirrors at 2,635 m altitude, each
+            flexed by around 150 actuators to cancel out atmospheric distortion in real time — and
+            able to combine into a single interferometer. Higher up at 5,000 m,
+            <strong>ALMA</strong> operates 66 movable dishes as one radio instrument, spread from
+            150 m to 16 km apart. ALMA's images of gaps and rings in protoplanetary discs are the
+            closest thing we have to watching planets being born.
+          </p>
+        </section>
+
+        <section class="article__section reveal">
+          <h2>What they showed us</h2>
+          <p>
+            The same object, observed with different hardware, is a different object. Hubble sees
+            dust as opaque; Webb sees straight through it to the stars forming inside. Neither
+            picture is more real than the other.
+          </p>
+        </section>
+
+        <figure class="figure figure--wide reveal">
+          <img src="assets/media/image-hubble-pillars.webp" width="1500" height="1405"
+               alt="The Pillars of Creation: towering columns of dark dust and gas in the Eagle Nebula, lit from above."
+               loading="lazy" decoding="async" />
+          <figcaption class="figure__caption">
+            <strong>Hubble, visible light.</strong> The Pillars of Creation in the Eagle Nebula,
+            first imaged in 1995 and revisited in high definition in 2015. The pillars are opaque
+            towers of dust light-years tall.
+            <span class="figure__credit">NASA / GSFC</span>
+          </figcaption>
+        </figure>
+
+        <figure class="figure figure--wide reveal">
+          <img src="assets/media/image-jwst-carina.webp" width="1500" height="868"
+               alt="The Cosmic Cliffs in the Carina Nebula, a glowing ridge of gas studded with newborn stars."
+               loading="lazy" decoding="async" />
+          <figcaption class="figure__caption">
+            <strong>Webb, infrared.</strong> The Cosmic Cliffs in the Carina Nebula. At these
+            wavelengths the dust turns translucent and hundreds of young stars appear that are
+            invisible to Hubble.
+            <span class="figure__credit">NASA / ESA / CSA / STScI</span>
+          </figcaption>
+        </figure>
+
+        <figure class="figure figure--wide reveal">
+          <img src="assets/media/image-cassini-saturn.webp" width="1016" height="401"
+               alt="Saturn's rings seen nearly edge-on as a thin bright band."
+               loading="lazy" decoding="async" />
+          <figcaption class="figure__caption">
+            <strong>Cassini, from inside the system.</strong> Saturn's rings viewed from a vantage
+            point no Earth-based telescope can reach.
+            <span class="figure__credit">NASA / JPL / Space Science Institute</span>
+          </figcaption>
+        </figure>
+
+        <div class="callout callout--fact reveal">
+          <h3>Why this page matters</h3>
+          <p>
+            None of the data on this site is obvious or self-evident. Someone had to build a
+            machine, launch it, keep it alive for years, and interpret what came back. The numbers
+            are real because the hardware was.
+          </p>
+        </div>
+
+        <nav class="content-next reveal" aria-label="Continue reading">
+          <a href="formation.html">
+            <span class="content-next__label">Read</span>
+            <span class="content-next__title">How the Solar System formed →</span>
+          </a>
+          <a href="exploration.html">
+            <span class="content-next__label">Read</span>
+            <span class="content-next__title">Fifty years beyond Earth →</span>
+          </a>
+          <a href="index.html#menu">
+            <span class="content-next__label">Back</span>
+            <span class="content-next__title">The interactive map →</span>
+          </a>
+        </nav>
+
+        <footer class="planet-foot">
+          <a class="back" href="index.html">
+            <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Back to the Solar System
+          </a>
+          <span class="source-tag">
+            Sources:
+            <a href="https://science.nasa.gov/" target="_blank" rel="noopener">NASA Science</a>,
+            <a href="https://esawebb.org/" target="_blank" rel="noopener">ESA/Webb</a>,
+            <a href="https://www.eso.org/" target="_blank" rel="noopener">ESO</a>
+            · Imagery credited per figure
+          </span>
+        </footer>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/util.js"></script>
+  <script src="js/background.js"></script>
+  <script src="js/reveal.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "solar-system-exploration",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An interactive, educational map of the Solar System - the orbital map is the navigation.",
+  "homepage": "https://tigerkossk.github.io/Solar-System-Exploration/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TigerKossK/Solar-System-Exploration.git"
+  },
+  "scripts": {
+    "build": "node scripts/build-planets.js",
+    "check": "node scripts/build-planets.js && git add -A -- planet/ && git diff --cached --exit-code -- planet/",
+    "serve": "python scripts/serve.py"
+  }
+}

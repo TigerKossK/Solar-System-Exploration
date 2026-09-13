@@ -12,6 +12,14 @@
 .neighbors a:hover { color: var(--text-hi); background: rgba(255,255,255,.05); }
 .neighbors .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--nc, var(--text-lo)); box-shadow: 0 0 8px var(--nc, transparent); flex: none; }
 
+/* return link injected by js/backlink.js when this page was opened from a
+   mission dialog on the landing — absent on a directly-visited planet page */
+.backlink-bar { margin-top: 16px; }
+.backlink-bar .back {
+  background: var(--glass-fill); border: 1px solid var(--glass-brd);
+}
+.backlink-bar .back:hover { border-color: var(--glass-brd-strong); }
+
 /* ── hero ───────────────────────────────────────────────── */
 .planet-hero {
   position: relative; display: grid; grid-template-columns: 1.05fr .95fr;

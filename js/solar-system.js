@@ -6,8 +6,9 @@
    ============================================================ */
 (function () {
   "use strict";
-  if (!window.SOLAR_SYSTEM) return;
+  if (!window.SOLAR_SYSTEM || !window.SolarUtil) return;
 
+  var esc = window.SolarUtil.esc;   // shared helper — js/util.js
   var PLANETS = SOLAR_SYSTEM.planets;
   var SUN = SOLAR_SYSTEM.sun;
   var stage = document.getElementById("orreryStage");
@@ -54,9 +55,8 @@
     stage.appendChild(orbit);
     nodes[p.id] = { link: link, orbit: orbit };
 
-    var preview = function () { showPlanet(p.id); };
-    link.addEventListener("mouseenter", preview);
-    link.addEventListener("focus", preview);
+    link.addEventListener("mouseenter", function () { showPlanet(p.id); });
+    link.addEventListener("focus", function () { showPlanet(p.id, true); });
     /* Map interaction is identical in the menu and in Explorer mode:
        hover / focus / first touch-tap previews; click, Enter, or a second
        tap on the already-previewed planet opens its page. Mouse and keyboard
@@ -84,10 +84,6 @@
     });
   });
 
-  function esc(s) {
-    return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  }
-
   /* ---- readout (one shared preview panel; Explorer mode reuses it) ---- */
   var el = {
     hint: document.getElementById("readoutHint"),
@@ -100,6 +96,19 @@
     explore: document.getElementById("readoutExplore"),
     exploreName: document.getElementById("readoutExploreName"),
   };
+
+  /* Screen-reader announcements for DELIBERATE actions only. The readout itself is no
+     longer a live region: it updates on hover too, and sweeping a mouse across the map
+     queued a dozen announcements that never settled. Keyboard focus and the arrow
+     stepper are intentional, so those still speak — through this dedicated region. */
+  var live = document.createElement("p");
+  live.className = "sr-only";
+  live.setAttribute("aria-live", "polite");
+  document.body.appendChild(live);
+  function announce(text) {
+    // step() previews then focuses, which re-previews; don't say the same thing twice
+    if (live.textContent !== text) live.textContent = text;
+  }
   function fillFunFacts(list) {
     if (!el.funFacts) return;
     el.funFacts.innerHTML = (list || []).slice(0, 3).map(function (f) {
@@ -115,9 +124,10 @@
     Object.keys(selectorLinks).forEach(function (id) {
       selectorLinks[id].classList.remove("is-active");
     });
+    if (sunBtn) sunBtn.classList.remove("is-active");
   }
 
-  function showPlanet(id) {
+  function showPlanet(id, speak) {
     var p = getPlanet(id);
     if (!p) return;
     currentId = id;
@@ -138,11 +148,16 @@
     fillFunFacts(p.funFacts);
     el.explore.href = "planet/" + p.id + ".html";
     el.exploreName.textContent = p.name;
+    if (speak) {
+      announce(p.name + ", " + p.type + ". " + p.facts.distance.km + " from the Sun, " +
+        moons + (moons === 1 ? " moon." : " moons."));
+    }
   }
 
-  function showSun() {
+  function showSun(speak) {
     currentId = "sun";   // not a planet — arrows step to the first/last from here
     clearActive();
+    if (sunBtn) sunBtn.classList.add("is-active");
     el.hint.hidden = true;
     el.body.hidden = false;
     el.dot.style.setProperty("--c", SUN.color);
@@ -153,12 +168,16 @@
     fillFunFacts(SUN.funFacts);
     el.explore.href = "#sun-section";
     el.exploreName.textContent = "the Sun";
+    if (speak) {
+      announce(SUN.name + ", " + SUN.type + ". " + SUN.facts.massShare.value +
+        ", surface " + SUN.facts.surface.value + ".");
+    }
   }
 
   var sunBtn = document.getElementById("sun");
   if (sunBtn) {
-    sunBtn.addEventListener("mouseenter", showSun);
-    sunBtn.addEventListener("focus", showSun);
+    sunBtn.addEventListener("mouseenter", function () { showSun(); });
+    sunBtn.addEventListener("focus", function () { showSun(true); });
   }
 
   /* ---- prev / next planet stepper (arrow navigation) ----------
@@ -175,7 +194,7 @@
     var n = PLANET_IDS.length;
     var next = i < 0 ? (dir > 0 ? 0 : n - 1) : (((i + dir) % n) + n) % n;
     var id = PLANET_IDS[next];
-    showPlanet(id);
+    showPlanet(id, true);
     if (nodes[id]) nodes[id].link.focus({ preventScroll: true });
   }
 
@@ -237,9 +256,8 @@
       var p = getPlanet(id);
       if (p) a.style.setProperty("--c", p.color);
       selectorLinks[id] = a;
-      var preview = function () { showPlanet(id); };
-      a.addEventListener("mouseenter", preview);
-      a.addEventListener("focus", preview);
+      a.addEventListener("mouseenter", function () { showPlanet(id); });
+      a.addEventListener("focus", function () { showPlanet(id, true); });
     });
   }
 

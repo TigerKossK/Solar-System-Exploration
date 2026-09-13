@@ -64,34 +64,50 @@
   ].join("\n");
 
   function compile(t, s) { var sh = gl.createShader(t); gl.shaderSource(sh, s); gl.compileShader(sh); return sh; }
-  var prog = gl.createProgram();
-  gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT));
-  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG));
-  gl.linkProgram(prog);
-  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { btn.classList.remove("has-liquid"); return; }
-  gl.useProgram(prog);
 
-  var buf = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-  var pos = gl.getAttribLocation(prog, "position");
-  gl.enableVertexAttribArray(pos);
-  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  /* GL resources behind a re-runnable setup, so a lost context can be rebuilt
+     rather than leaving a permanently blank canvas (see the handlers below). */
+  var prog, buf, pos, loc;
+  function setupGL() {
+    prog = gl.createProgram();
+    gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT));
+    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return false;
+    gl.useProgram(prog);
 
-  var loc = {
-    res: gl.getUniformLocation(prog, "u_res"),
-    time: gl.getUniformLocation(prog, "u_time"),
-    base: gl.getUniformLocation(prog, "u_base"),
-    amp: gl.getUniformLocation(prog, "u_amp"),
-  };
+    buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    pos = gl.getAttribLocation(prog, "position");
+    gl.enableVertexAttribArray(pos);
+    gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+
+    loc = {
+      res: gl.getUniformLocation(prog, "u_res"),
+      time: gl.getUniformLocation(prog, "u_time"),
+      base: gl.getUniformLocation(prog, "u_base"),
+      amp: gl.getUniformLocation(prog, "u_amp"),
+    };
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    return true;
+  }
+  if (!setupGL()) { btn.classList.remove("has-liquid"); return; }
 
   function resize() {
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
     var w = Math.max(1, Math.floor(btn.clientWidth * dpr));
     var h = Math.max(1, Math.floor(btn.clientHeight * dpr));
-    if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h); }
+    if (canvas.width === w && canvas.height === h) return false;
+    canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h);
+    return true;
   }
-  if (window.ResizeObserver) new ResizeObserver(resize).observe(btn); else window.addEventListener("resize", resize);
+  /* Same clear-on-resize trap as js/background.js, and it fires on virtually
+     every load: the web fonts land after this script runs, which changes the
+     button's width. Under reduced motion there is no loop to repaint, so the
+     metallic surface would be wiped within a second of load. */
+  function onResize() { if (resize() && reduce) draw(1200); }
+  if (window.ResizeObserver) new ResizeObserver(onResize).observe(btn); else window.addEventListener("resize", onResize);
   resize();
 
   function draw(t) {
@@ -118,4 +134,16 @@
       else if (!raf) { raf = window.requestAnimationFrame(loop); }
     });
   }
+
+  /* Context loss: stop the loop and allow restoration. On failure the button
+     keeps its solid .has-liquid pill styling, so the CTA stays readable. */
+  canvas.addEventListener("webglcontextlost", function (e) {
+    e.preventDefault();
+    if (raf) { window.cancelAnimationFrame(raf); raf = null; }
+  }, false);
+  canvas.addEventListener("webglcontextrestored", function () {
+    if (!setupGL()) { btn.classList.remove("has-liquid"); return; }
+    if (reduce) draw(1200);
+    else if (!raf) raf = window.requestAnimationFrame(loop);
+  }, false);
 })();

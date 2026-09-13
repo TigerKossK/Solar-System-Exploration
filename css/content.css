@@ -1,0 +1,216 @@
+/* ============================================================
+   Solar System — content.css
+   ------------------------------------------------------------
+   Long-form pages: Formation, Exploration, Instruments.
+   Everything here builds on the existing vocabulary — .panel,
+   .container, .callout, .widget, .chips, .source-tag — and adds
+   only what long-form reading needs that the dashboard pages
+   did not: a comfortable measure, a vertical timeline, and a
+   figure/credit pattern.
+
+   Every image on these pages carries a visible credit. That is
+   not decoration: the imagery is NASA/ESA/STScI material and the
+   credit is a condition of use, so .figure__credit is part of
+   the component, never optional.
+   ============================================================ */
+
+/* ── page scaffold ──────────────────────────────────────── */
+.content-page { padding-block: clamp(96px, 12vh, 150px) clamp(48px, 8vh, 90px); }
+.content-page > .panel { gap: clamp(28px, 4vw, 48px); }
+
+.content-hero { display: grid; gap: 18px; max-width: 62ch; }
+.content-hero__title {
+  font-family: var(--font-serif); font-weight: 500;
+  font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1.02; letter-spacing: -.015em;
+  text-wrap: balance;
+}
+.content-hero__title .accent { color: var(--accent); }
+.content-hero__lead {
+  color: var(--text-mid); font-size: clamp(1.04rem, 1.4vw, 1.2rem); max-width: 58ch;
+}
+
+/* ── article body — one comfortable measure ─────────────── */
+.article { display: grid; gap: clamp(26px, 3.5vw, 42px); }
+.article__section { display: grid; gap: 14px; max-width: 72ch; }
+/* for sections that introduce a full-width block (a grid, timeline or table):
+   the heading keeps the reading measure, the block it labels is free to breathe.
+   Lets the content live INSIDE the section that names it, rather than as a sibling. */
+.article__section--full { max-width: none; }
+.article__section--full > h2,
+.article__section--full > p { max-width: 72ch; }
+.article__section h2 {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(1.35rem, 2.4vw, 1.8rem); letter-spacing: -.02em; line-height: 1.15;
+}
+/* Child combinators, deliberately. These have the same specificity as
+   .callout h3 / .callout--fact p in planet.css but load later, so a descendant
+   selector would win inside any .callout nested in an article section — giving
+   the same component two different looks on sibling pages. */
+.article__section > h3 {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: 1.05rem; letter-spacing: -.01em; color: var(--text-hi);
+}
+.article__section > p { color: var(--text-mid); font-size: 1.02rem; }
+.article__section p strong,
+.article__section strong { color: var(--text-hi); font-weight: 600; }
+.article__section a:not(.btn) {
+  color: var(--text-hi); text-decoration: underline;
+  text-underline-offset: 2px; text-decoration-color: var(--glass-brd-strong);
+}
+.article__section a:not(.btn):hover { text-decoration-color: var(--accent); }
+
+/* ── figure + mandatory credit ──────────────────────────── */
+.figure { display: grid; gap: 10px; margin: 4px 0; max-width: 72ch; justify-items: start; }
+/* width:auto, not 100%. Several sources are legitimately small — the 1990 Pale Blue
+   Dot is 453px wide — and stretching them to the column made a grainy frame worse.
+   They now render at their own size and only ever scale DOWN to fit. */
+.figure img {
+  width: auto; max-width: 100%; height: auto; border-radius: var(--r-lg);
+  border: 1px solid var(--glass-brd); background: var(--bg-deep);
+  box-shadow: var(--shadow-soft);
+}
+.figure--wide { max-width: none; }
+.figure--wide img { width: 100%; }
+.figure__caption { color: var(--text-mid); font-size: .94rem; }
+.figure__credit {
+  color: var(--text-lo); font-size: .78rem; letter-spacing: .01em;
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.figure__credit::before {
+  content: ""; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--teal-400); flex: none;
+}
+
+/* ── vertical timeline (formation + exploration) ────────── */
+.timeline { display: grid; gap: 0; position: relative; margin-block: 4px; }
+.timeline__item {
+  position: relative; display: grid; gap: 8px;
+  padding: 0 0 clamp(26px, 3vw, 38px) clamp(28px, 4vw, 42px);
+  border-left: 1px solid var(--glass-brd);
+}
+.timeline__item:last-child { border-left-color: transparent; padding-bottom: 0; }
+.timeline__item::before {
+  content: ""; position: absolute; left: 0; top: 6px;
+  width: 11px; height: 11px; border-radius: 50%;
+  transform: translateX(-6px);
+  background: var(--accent); box-shadow: 0 0 12px -1px var(--accent);
+}
+.timeline__when {
+  font-family: var(--font-ui); font-weight: 600; font-size: .78rem;
+  text-transform: uppercase; letter-spacing: .08em; color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.timeline__title {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(1.1rem, 1.8vw, 1.3rem); letter-spacing: -.02em;
+}
+.timeline__body { color: var(--text-mid); font-size: 1rem; max-width: 64ch; }
+
+/* ── "still debated" marker ─────────────────────────────────
+   The site promises only real facts. Where the science is genuinely
+   unsettled, saying so plainly is more honest than picking a number,
+   so contested claims get a visible marker rather than silence. */
+.unsettled {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 2px 9px; border-radius: var(--r-pill);
+  background: rgba(245, 185, 66, .1); border: 1px solid rgba(245, 185, 66, .3);
+  color: var(--accent); font-size: .74rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .06em; white-space: nowrap;
+  vertical-align: middle;
+}
+
+/* ── data table ─────────────────────────────────────────────
+   Wrapped in an overflow-x container: per the project's responsive
+   rule, only tables, diagrams and code may exceed the measure, and
+   only inside their own scroller — the page itself must never
+   scroll sideways. */
+.data-table-wrap { overflow-x: auto; margin-block: 4px; }
+.data-table {
+  width: 100%; border-collapse: collapse;
+  font-size: .94rem; font-variant-numeric: tabular-nums;
+}
+.data-table th, .data-table td {
+  text-align: left; padding: 10px 14px;
+  border-bottom: 1px solid rgba(150, 205, 210, .14);
+}
+.data-table thead th {
+  font-family: var(--font-ui); font-weight: 600; font-size: .78rem;
+  text-transform: uppercase; letter-spacing: .08em; color: var(--text-lo);
+  border-bottom-color: var(--glass-brd-strong); white-space: nowrap;
+}
+.data-table tbody th { color: var(--text-hi); font-weight: 600; white-space: nowrap; }
+.data-table tbody td { color: var(--text-mid); }
+.data-table tbody tr:last-child th,
+.data-table tbody tr:last-child td { border-bottom: 0; }
+
+/* ── instrument cards ───────────────────────────────────── */
+.instrument-grid { display: grid; gap: clamp(18px, 2.5vw, 28px); }
+.instrument {
+  display: grid; gap: 16px; align-items: start;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  padding: clamp(16px, 2vw, 24px);
+  background: var(--glass-fill); border: 1px solid var(--glass-brd);
+  border-radius: var(--r-lg);
+  transition: border-color .3s var(--ease), background .3s var(--ease);
+}
+.instrument:hover { border-color: var(--glass-brd-strong); background: rgba(255,255,255,.045); }
+/* each card is a link target from the landing's mission dialog; clear the fixed topbar */
+.instrument { scroll-margin-top: 90px; }
+/* brief highlight so a deep link makes obvious which card you were sent to */
+.instrument:target { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+/* no photograph for this one — do not leave half the card empty */
+.instrument--noimg { grid-template-columns: 1fr; }
+.instrument__body { display: grid; gap: 10px; }
+.instrument__name {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(1.15rem, 2vw, 1.4rem); letter-spacing: -.02em;
+}
+.instrument__meta {
+  display: flex; flex-wrap: wrap; gap: 6px 8px; margin-top: 2px;
+}
+.instrument__desc { color: var(--text-mid); font-size: .98rem; }
+.instrument__specs { display: grid; gap: 4px; margin-top: 2px; }
+.instrument__specs div {
+  display: flex; gap: 10px; justify-content: space-between;
+  font-size: .88rem; padding: 5px 0;
+  border-bottom: 1px dashed rgba(150, 205, 210, .14);
+}
+.instrument__specs .k { color: var(--text-lo); }
+.instrument__specs .v {
+  color: var(--text-hi); font-weight: 600; text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.chip--live { color: var(--accent); border-color: rgba(245,185,66,.35); }
+.chip--retired { color: var(--text-lo); }
+
+/* ── cross-page navigation at the foot ──────────────────── */
+.content-next {
+  display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  margin-top: 4px;
+}
+.content-next a {
+  display: grid; gap: 4px; padding: 16px 18px; border-radius: var(--r-md);
+  background: var(--glass-fill); border: 1px solid var(--glass-brd);
+  transition: border-color .25s var(--ease), background .25s var(--ease), transform .25s var(--ease);
+}
+.content-next a:hover {
+  border-color: var(--glass-brd-strong); background: rgba(255,255,255,.05);
+  transform: translateY(-2px);
+}
+.content-next__label {
+  font-size: .74rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-lo);
+}
+.content-next__title { font-family: var(--font-display); font-weight: 600; font-size: 1.02rem; }
+
+/* ── responsive ─────────────────────────────────────────── */
+@media (max-width: 820px) {
+  .instrument { grid-template-columns: 1fr; }
+  .instrument__figure { order: -1; }
+}
+@media (max-width: 460px) {
+  .timeline__item { padding-left: 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .instrument, .content-next a { transition: none !important; }
+}

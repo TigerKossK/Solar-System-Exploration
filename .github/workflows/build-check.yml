@@ -1,0 +1,44 @@
+name: Build check
+
+# The eight planet/*.html pages are GENERATED from js/data.js by
+# scripts/build-planets.js. If someone edits the data and forgets to
+# regenerate (or has no Node.js installed locally, which is the usual
+# case here), the site silently serves stale numbers with nothing to
+# catch it. This workflow is that missing check: it regenerates the
+# pages on a runner that does have Node, and fails if the committed
+# output differs by so much as a byte.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  planet-pages-in-sync:
+    name: planet/*.html matches js/data.js
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Regenerate the planet pages
+        run: node scripts/build-planets.js
+
+      - name: Fail if the committed pages have drifted
+        run: |
+          # git status --porcelain, not git diff: diff ignores UNTRACKED files, so
+          # adding a ninth body to js/data.js would write a brand-new page that a
+          # diff-based check would happily report as clean.
+          CHANGES="$(git status --porcelain -- planet/)"
+          if [ -n "$CHANGES" ]; then
+            echo "::error::planet/*.html is out of sync with js/data.js."
+            echo "Run 'node scripts/build-planets.js' and commit the result."
+            echo "$CHANGES"
+            git diff -- planet/
+            exit 1
+          fi
+          echo "Planet pages are in sync with js/data.js."

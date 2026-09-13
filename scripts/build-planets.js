@@ -16,6 +16,9 @@ const path = require("path");
 const { SOLAR_SYSTEM, getNeighbours } = require("../js/data.js");
 
 const OUT_DIR = path.join(__dirname, "..", "planet");
+/* Absolute origin for canonical + social-card URLs. Open Graph and Twitter
+   require absolute URLs — a relative path silently yields no card at all. */
+const SITE = "https://tigerkossk.github.io/Solar-System-Exploration";
 const FONTS =
   'https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap';
 const FAVICON =
@@ -178,6 +181,14 @@ function render(p) {
 
   const discovery = p.discovery ? ` · ${esc(p.discovery)}` : "";
 
+  // one description string, reused by <meta name="description"> and both card sets
+  const desc = attr(
+    p.name + ": " + p.tagline +
+    ". Real, sourced data — distance, size, gravity, day and year length, temperature, moons and more."
+  );
+  const pageUrl = `${SITE}/planet/${p.id}.html`;
+  const cardTitle = attr(p.name + " — Solar System");
+
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -185,7 +196,22 @@ function render(p) {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" href="${FAVICON}" />
   <title>${esc(p.name)} — Solar System</title>
-  <meta name="description" content="${attr(p.name + ": " + p.tagline + ". Real, sourced data — distance, size, gravity, day and year length, temperature, moons and more.")}" />
+  <meta name="description" content="${desc}" />
+  <link rel="canonical" href="${pageUrl}" />
+  <meta name="theme-color" content="#08110f" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Solar System Exploration" />
+  <meta property="og:title" content="${cardTitle}" />
+  <meta property="og:description" content="${desc}" />
+  <meta property="og:url" content="${pageUrl}" />
+  <meta property="og:image" content="${SITE}/assets/og-cover.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Earth seen from space, the Sun cresting beyond its horizon." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="${cardTitle}" />
+  <meta name="twitter:description" content="${desc}" />
+  <meta name="twitter:image" content="${SITE}/assets/og-cover.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="${FONTS}" rel="stylesheet" />
@@ -254,6 +280,7 @@ function render(p) {
 
   <script src="../js/background.js"></script>
   <script src="../js/liquid-chrome.js"></script>
+  <script src="../js/backlink.js"></script>
 </body>
 </html>
 `;

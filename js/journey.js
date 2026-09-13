@@ -26,6 +26,10 @@
   function update() {
     ticking = false;
     var rect = root.getBoundingClientRect();
+    // Beat fully scrolled past: leave the layers at their final state rather
+    // than recomputing nine custom properties on every frame for the rest of
+    // the page. The next scroll back into view resumes it immediately.
+    if (rect.bottom < 0) return;
     var top = rect.top + window.scrollY;                   // section's document offset
     var runway = root.offsetHeight - window.innerHeight;    // px of scroll the beat spans
     var p = runway > 0 ? clamp01((window.scrollY - top) / runway) : 0;
@@ -56,5 +60,8 @@
 
   update(); // initial state (also correct on reload mid-page)
   window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", update);
+  // through the same rAF gate as scroll: update() opens with a forced reflow
+  // (getBoundingClientRect) then writes nine properties, and dragging a window
+  // edge fires resize dozens of times a second.
+  window.addEventListener("resize", onScroll, { passive: true });
 })();

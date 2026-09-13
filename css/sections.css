@@ -30,15 +30,18 @@
   border: 1px solid var(--glass-brd); box-shadow: var(--shadow-soft);
   backdrop-filter: blur(14px) saturate(1.1); -webkit-backdrop-filter: blur(14px) saturate(1.1);
 }
-.topbar .nav__links a[aria-current="true"] {
+.topbar .nav__links a[aria-current] {
   color: var(--text-hi); background: rgba(255,255,255,.07); font-weight: 600;
 }
+/* five nav items plus the brand can exceed the pill just above the mobile
+   breakpoint; wrapping is always preferable to spilling out of the rounded edge */
+.topbar__inner { flex-wrap: wrap; row-gap: 6px; }
 
 /* ── section scaffold ── */
 .scroll { display: block; }
 .section {
   position: relative; z-index: 0; /* local stacking context for the ambient glows below */
-  min-height: 100vh; scroll-margin-top: 84px;
+  min-height: 100vh; min-height: 100svh; scroll-margin-top: 84px;
   display: grid; place-items: center;
   padding: var(--space-section-y) var(--pad) clamp(64px, 9vh, 110px);
 }
@@ -74,6 +77,8 @@
 /* ── 3 · Main menu (hero + orrery) — spacing/rhythm only; the
    .hero/.orrery/.readout primitives themselves live in components.css ── */
 .section--menu .selector { margin-top: clamp(20px, 4vh, 40px); }
+/* the no-JS primary CTA jumps to #planets; clear the fixed topbar like .section does */
+#planets { scroll-margin-top: 84px; }
 
 /* Simplify the explore model to Orbit + arrows: with JS on, drop the
    "The eight planets" heading + duplicate link list. The list stays in the
