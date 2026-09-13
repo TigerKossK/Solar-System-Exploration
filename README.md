@@ -13,10 +13,6 @@ Discover the planets, the Sun, moons, space missions, and the incredible story o
 The project combines a **cool, modern, and fresh design** with educational information about the worlds and objects that make up our cosmic neighborhood. It is built for anyone who wants to discover the Solar System — from curious 
 beginners to people who already enjoy astronomy.
 
-## 🎬 GIF Demo
-
-![Demo1](assets/Demo/Demo1.gif)
-
 ## 🌌 What Is Solar System Exploration?
 
 Solar System Exploration is an educational exploration experience focused on the **whole Solar System**.
