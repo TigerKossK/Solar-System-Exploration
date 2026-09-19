@@ -33,6 +33,7 @@
   <link rel="stylesheet" href="css/content.css" />
   <link rel="stylesheet" href="css/responsive.css" />
   <link rel="stylesheet" href="css/mobile-nav.css" />
+  <link rel="stylesheet" href="css/search.css" />
 </head>
 <body>
   <div class="cosmos" aria-hidden="true">
@@ -79,7 +80,7 @@
       <div class="article" id="article" tabindex="-1">
 
         <section class="article__section article__section--full reveal">
-          <h2>Telescopes in space</h2>
+          <h2 id="telescopes-in-space">Telescopes in space</h2>
           <p>
             Putting a telescope in orbit buys two things: no atmosphere blurring the view, and
             access to wavelengths — infrared, ultraviolet, X-ray — that the air simply absorbs
@@ -89,7 +90,7 @@
 
           <article class="instrument" id="hubble">
             <div class="instrument__body">
-              <h3 class="instrument__name">Hubble Space Telescope</h3>
+              <h3 class="instrument__name" id="hubble-space-telescope">Hubble Space Telescope</h3>
               <div class="instrument__meta">
                 <span class="chip chip--live">Operating</span>
                 <span class="chip">Visible / UV / near-IR</span>
@@ -121,7 +122,7 @@
 
           <article class="instrument" id="jwst">
             <div class="instrument__body">
-              <h3 class="instrument__name">James Webb Space Telescope</h3>
+              <h3 class="instrument__name" id="james-webb-space-telescope">James Webb Space Telescope</h3>
               <div class="instrument__meta">
                 <span class="chip chip--live">Operating</span>
                 <span class="chip">Infrared</span>
@@ -154,7 +155,7 @@
 
           <article class="instrument" id="chandra">
             <div class="instrument__body">
-              <h3 class="instrument__name">Chandra X-ray Observatory</h3>
+              <h3 class="instrument__name" id="chandra-x-ray-observatory">Chandra X-ray Observatory</h3>
               <div class="instrument__meta">
                 <span class="chip chip--live">Operating</span>
                 <span class="chip">X-ray</span>
@@ -187,7 +188,7 @@
 
           <article class="instrument instrument--noimg" id="spitzer">
             <div class="instrument__body">
-              <h3 class="instrument__name">Spitzer Space Telescope</h3>
+              <h3 class="instrument__name" id="spitzer-space-telescope">Spitzer Space Telescope</h3>
               <div class="instrument__meta">
                 <span class="chip chip--retired">Retired 2020</span>
                 <span class="chip">Infrared</span>
@@ -212,12 +213,12 @@
         </section>
 
         <section class="article__section article__section--full reveal">
-          <h2>Spacecraft that went there</h2>
+          <h2 id="spacecraft-that-went-there">Spacecraft that went there</h2>
           <div class="instrument-grid">
 
           <article class="instrument" id="parker">
             <div class="instrument__body">
-              <h3 class="instrument__name">Parker Solar Probe</h3>
+              <h3 class="instrument__name" id="parker-solar-probe">Parker Solar Probe</h3>
               <div class="instrument__meta">
                 <span class="chip chip--live">Operating</span>
                 <span class="chip">Solar corona</span>
@@ -250,7 +251,7 @@
 
           <article class="instrument" id="voyager">
             <div class="instrument__body">
-              <h3 class="instrument__name">Voyager 1 &amp; 2</h3>
+              <h3 class="instrument__name" id="voyager-1-2">Voyager 1 &amp; 2</h3>
               <div class="instrument__meta">
                 <span class="chip chip--live">Operating</span>
                 <span class="chip">Interstellar</span>
@@ -283,7 +284,7 @@
 
           <article class="instrument instrument--noimg" id="cassini">
             <div class="instrument__body">
-              <h3 class="instrument__name">Cassini–Huygens</h3>
+              <h3 class="instrument__name" id="cassini-huygens">Cassini–Huygens</h3>
               <div class="instrument__meta">
                 <span class="chip chip--retired">Ended 2017</span>
                 <span class="chip">Saturn orbiter</span>
@@ -307,7 +308,7 @@
 
           <article class="instrument instrument--noimg" id="galileo">
             <div class="instrument__body">
-              <h3 class="instrument__name">Galileo</h3>
+              <h3 class="instrument__name" id="galileo-2">Galileo</h3>
               <div class="instrument__meta">
                 <span class="chip chip--retired">Ended 2003</span>
                 <span class="chip">Jupiter orbiter</span>
@@ -331,7 +332,7 @@
         </section>
 
         <section class="article__section reveal">
-          <h2>And the ones still on the ground</h2>
+          <h2 id="and-the-ones-still-on-the-ground">And the ones still on the ground</h2>
           <p>
             Space is not always the answer. In the Atacama Desert, the
             <strong>Very Large Telescope</strong> runs four 8.2 m mirrors at 2,635 m altitude, each
@@ -344,7 +345,7 @@
         </section>
 
         <section class="article__section reveal">
-          <h2>What they showed us</h2>
+          <h2 id="what-they-showed-us">What they showed us</h2>
           <p>
             The same object, observed with different hardware, is a different object. Hubble sees
             dust as opaque; Webb sees straight through it to the stars forming inside. Neither
@@ -388,7 +389,7 @@
         </figure>
 
         <div class="callout callout--fact reveal">
-          <h3>Why this page matters</h3>
+          <h3 id="why-this-page-matters">Why this page matters</h3>
           <p>
             None of the data on this site is obvious or self-evident. Someone had to build a
             machine, launch it, keep it alive for years, and interpret what came back. The numbers
@@ -431,6 +432,7 @@
   <script src="js/util.js"></script>
   <script src="js/background.js"></script>
   <script src="js/reveal.js"></script>
+  <script src="js/search.js"></script>
   <script src="js/mobile-nav.js"></script>
 </body>
 </html>

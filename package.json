@@ -9,8 +9,9 @@
     "url": "https://github.com/TigerKossK/Solar-System-Exploration.git"
   },
   "scripts": {
-    "build": "node scripts/build-planets.js",
+    "build": "node scripts/build-planets.js && python scripts/build-search-index.py",
     "check": "node scripts/build-planets.js && git add -A -- planet/ && git diff --cached --exit-code -- planet/",
-    "serve": "python scripts/serve.py"
+    "serve": "python scripts/serve.py",
+    "build:search": "python scripts/build-search-index.py"
   }
 }

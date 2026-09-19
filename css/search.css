@@ -1,0 +1,142 @@
+/* ============================================================
+   Solar System — site search (css/search.css)
+   The palette is a native <dialog>, so it gets focus trapping, Escape,
+   a backdrop and focus restoration from the browser. As in
+   css/mobile-nav.css, NO `display` rule appears here: a class selector
+   outranks the UA's dialog rules in both directions, which would either
+   stop it opening or leave it permanently on screen.
+   ============================================================ */
+
+/* ── the topbar trigger ─────────────────────────────────────
+   A compact icon pill rather than a sixth text link: index.html notes that
+   five items is the ceiling before the nav starts competing with the map. */
+.search-trigger {
+  display: inline-flex; align-items: center; gap: 8px;
+  min-height: 40px; padding: 8px 12px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--glass-brd);
+  background: var(--glass-fill);
+  color: var(--text-mid);
+  font-family: var(--font-ui); font-weight: 500; font-size: .9rem;
+  transition: color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+}
+.search-trigger:hover { color: var(--text-hi); border-color: var(--glass-brd-strong); background: rgba(255,255,255,.06); }
+.search-trigger__kbd {
+  font-family: var(--font-ui); font-size: .74rem; font-weight: 600;
+  color: var(--text-lo); border: 1px solid var(--glass-brd);
+  border-radius: 5px; padding: 1px 6px; line-height: 1.5;
+}
+
+/* ── the palette ────────────────────────────────────────── */
+.search {
+  position: fixed; top: 9vh; left: 50%; transform: translateX(-50%);
+  width: min(680px, calc(100vw - 32px)); max-width: none;
+  max-height: min(74vh, 680px);
+  margin: 0; padding: 0; border: 1px solid var(--glass-brd-strong);
+  border-radius: var(--r-lg); overflow: hidden;
+  background: linear-gradient(160deg, rgba(17,56,65,.97), rgba(9,22,26,.99));
+  color: var(--text-hi);
+  box-shadow: 0 40px 90px -30px rgba(0,0,0,.85);
+}
+.search::backdrop { background: rgba(4,10,9,.7); }
+
+.search__bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 12px 12px 16px;
+  border-bottom: 1px solid var(--glass-brd);
+}
+.search__icon { color: var(--text-lo); flex: none; }
+.search__input {
+  flex: 1 1 auto; min-width: 0;
+  background: none; border: 0; outline: none;
+  color: var(--text-hi);
+  font-family: var(--font-ui); font-weight: 500;
+  /* 16px floor: anything smaller makes iOS Safari zoom the viewport the
+     instant the field takes focus, and it never zooms back out. */
+  font-size: 1rem;
+}
+.search__input::placeholder { color: var(--text-lo); }
+.search__input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+.search__close { flex: none; }
+
+.search__results { overflow-y: auto; overscroll-behavior: contain; padding: 8px; max-height: 52vh; }
+.search__group {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: .74rem; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--text-lo);
+  padding: 12px 10px 6px;
+}
+.search__row {
+  display: grid; gap: 2px;
+  padding: 10px 12px; border-radius: var(--r-md);
+  border: 1px solid transparent;
+  text-decoration: none; color: var(--text-hi);
+  transition: background .15s var(--ease), border-color .15s var(--ease);
+}
+.search__row:hover,
+.search__row.is-active { background: rgba(255,255,255,.06); border-color: var(--glass-brd); }
+.search__where { color: var(--text-lo); font-size: .76rem; font-weight: 600; letter-spacing: .02em; }
+.search__title { font-family: var(--font-display); font-weight: 600; font-size: 1.02rem; letter-spacing: -.01em; }
+.search__snippet { color: var(--text-mid); font-size: .88rem; line-height: 1.5; }
+
+/* The requested "underlined info about the part which was searched".
+   Amber echoes ::selection in css/main.css, and the underline carries the
+   signal for anyone who cannot separate the two colours. */
+.search mark {
+  background: rgba(245,185,66,.2);
+  color: var(--text-hi);
+  border-radius: 3px;
+  padding: 0 2px;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+}
+
+.search__empty { padding: 26px 16px; color: var(--text-mid); font-size: .95rem; text-align: center; }
+.search__seed {
+  display: inline-block; margin: 6px 4px 0;
+  padding: 7px 13px; min-height: 36px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--glass-brd);
+  background: var(--glass-fill);
+  color: var(--text-hi); font: inherit; font-size: .88rem; font-weight: 600;
+}
+.search__seed:hover { border-color: var(--accent); color: var(--accent); }
+
+.search__hint {
+  display: flex; flex-wrap: wrap; gap: 4px; align-items: center; justify-content: center;
+  padding: 9px 12px; border-top: 1px solid var(--glass-brd);
+  color: var(--text-lo); font-size: .76rem;
+}
+.search__hint kbd {
+  font-family: var(--font-ui); font-size: .72rem; font-weight: 600;
+  border: 1px solid var(--glass-brd); border-radius: 4px;
+  padding: 0 5px; margin: 0 1px;
+}
+
+/* ── phones: a full-height sheet, and no keyboard hints ──
+   The palette is a comfortable floating card on a desktop, but on a phone the
+   on-screen keyboard eats half the viewport, so it takes the whole screen and
+   the result list gets everything the keyboard leaves. */
+@media (max-width: 820px), (pointer: coarse) {
+  .search {
+    top: 0; left: 0; transform: none;
+    width: 100vw; max-width: 100vw;
+    height: 100dvh; max-height: 100dvh;
+    border: 0; border-radius: 0;
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .search__results { max-height: none; flex: 1 1 auto; }
+  .search__hint { display: none; }          /* no physical keyboard to hint at */
+  .search__bar { padding: 10px 10px 10px 14px; }
+  .search__close { min-height: 44px; }
+  .search__row { padding: 12px; min-height: 44px; }
+  .search-trigger__label { display: none; } /* icon only in the slim mobile topbar */
+  .search-trigger__kbd { display: none; }
+  .search-trigger { padding: 8px 10px; min-width: 44px; min-height: 44px; justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .search-trigger, .search__row { transition: none; }
+}

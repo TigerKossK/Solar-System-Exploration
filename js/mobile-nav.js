@@ -51,6 +51,7 @@
     map: "M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm0 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z",
     planets: "M5 12a7 7 0 1 0 14 0 7 7 0 0 0-14 0Zm-2.2 2.6c3.6 2 12 3 18.4-1.6",
     learn: "M4 5.5h6a2 2 0 0 1 2 2v11a1.6 1.6 0 0 0-1.6-1.6H4Zm16 0h-6a2 2 0 0 0-2 2v11a1.6 1.6 0 0 1 1.6-1.6H20Z",
+    search: "M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13Zm4.6 11.1L20 20",
   };
 
   /* ── the bar ─────────────────────────────────────────────── */
@@ -63,7 +64,9 @@
     '<button class="tabbar__item" type="button" data-sheet="planets">' +
       icon(ICONS.planets) + "<span>Planets</span></button>" +
     '<button class="tabbar__item" type="button" data-sheet="learn">' +
-      icon(ICONS.learn) + "<span>Learn</span></button>";
+      icon(ICONS.learn) + "<span>Learn</span></button>" +
+    '<button class="tabbar__item" type="button" data-search>' +
+      icon(ICONS.search) + "<span>Search</span></button>";
   body.appendChild(bar);
 
   /* ── the shared sheet ────────────────────────────────────────
@@ -114,7 +117,13 @@
 
   bar.addEventListener("click", function (e) {
     var btn = e.target.closest("[data-sheet]");
-    if (btn) openSheet(btn.getAttribute("data-sheet"));
+    if (btn) { openSheet(btn.getAttribute("data-sheet")); return; }
+    /* Looked up at CLICK time, not at load time, so this file does not care
+       whether js/search.js has run yet. On a phone there is no keyboard to
+       press "/" on, so this tab is the only way in. */
+    if (e.target.closest("[data-search]") && window.SolarSearch) {
+      window.SolarSearch.open();
+    }
   });
   sheet.addEventListener("click", function (e) {
     if (e.target.closest(".sheet__close")) { closeSheet(); return; }

@@ -42,3 +42,25 @@ jobs:
             exit 1
           fi
           echo "Planet pages are in sync with js/data.js."
+
+      # js/search-index.js is generated from the BUILT pages, so this has to run
+      # after the regeneration above -- otherwise a data change would be checked
+      # against the stale HTML it was about to replace. Python rather than Node
+      # because, unlike the planet generator, this one can also be run locally.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Rebuild the search index
+        run: python scripts/build-search-index.py
+
+      - name: Fail if the committed search index has drifted
+        run: |
+          CHANGES="$(git status --porcelain -- js/search-index.js)"
+          if [ -n "$CHANGES" ]; then
+            echo "::error::js/search-index.js is out of sync with the site's pages."
+            echo "Run 'python scripts/build-search-index.py' and commit the result."
+            git diff -- js/search-index.js | head -40
+            exit 1
+          fi
+          echo "Search index is in sync with the pages."
