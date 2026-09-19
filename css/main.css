@@ -202,3 +202,34 @@ img, canvas { display: block; max-width: 100%; }
   color: var(--text-mid); font-weight: 600;
 }
 .tnum { font-variant-numeric: tabular-nums; }
+
+/* ── typography: let the browser break lines properly ────────
+   text-wrap: balance evens the line lengths of a short block, which is what
+   stops a big display headline dropping one orphaned word onto its own line
+   at an awkward viewport width -- the failure mode of every fluid clamp()
+   heading. It is capped by browsers at a handful of lines, so it is applied
+   to headings only; body copy gets `pretty`, which does the cheaper job of
+   avoiding orphans and bad hyphen breaks. Both degrade to normal wrapping
+   where unsupported, so no fallback is needed. */
+.section__title,
+.intro__title,
+.journey__title,
+.hero__title,
+.planet-hero__name,
+.article__title,
+.article__section > h2,
+.article__section > h3,
+.timeline__title,
+.instrument__name,
+.mission-dialog__title,
+.sheet__title { text-wrap: balance; }
+
+.section__lead,
+.intro__lead,
+.journey__sub,
+.hero__sub,
+.planet-hero__desc,
+.article__lead,
+.article__section > p,
+.timeline__body,
+.mission-dialog__note { text-wrap: pretty; }

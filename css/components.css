@@ -11,11 +11,18 @@
   display: flex; flex-direction: column;
   padding: clamp(20px, 2.6vw, 40px);
   border-radius: var(--r-card);
-  background: linear-gradient(150deg, rgba(18,65,74,.42) 0%, rgba(10,30,38,.6) 44%, rgba(8,17,15,.78) 100%);
+  /* Restraint pass. Six blur(22px) cards stacked down one page is the look that
+     now reads as dated -- frosted glass in 2026 is a spice, not a meal -- and it
+     is the same property that costs a full re-blur per frame over the animated
+     canvas. Content panels become substantial cards with a hint of depth; the
+     real glass is kept for chrome that FLOATS over content (topbar, readout,
+     dialogs), which is where it still means something. Touch devices drop the
+     blur entirely (css/responsive.css). */
+  background: linear-gradient(150deg, rgba(17,58,67,.62) 0%, rgba(10,29,36,.76) 44%, rgba(8,17,15,.88) 100%);
   border: 1px solid var(--glass-brd);
   box-shadow: var(--shadow-card);
-  backdrop-filter: blur(22px) saturate(1.1);
-  -webkit-backdrop-filter: blur(22px) saturate(1.1);
+  backdrop-filter: blur(14px) saturate(1.06);
+  -webkit-backdrop-filter: blur(14px) saturate(1.06);
   overflow: hidden;
 }
 .panel::before { /* top edge sheen */
