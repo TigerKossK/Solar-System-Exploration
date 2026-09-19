@@ -20,7 +20,17 @@
      js/background.js. The amber .btn--primary styling remains untouched,
      so the CTA never depends on this enhancement. */
   var nav = window.navigator || {};
+  /* Touch-primary devices skip this outright. The old test asked for
+     deviceMemory and connection.saveData, NEITHER of which exists on iOS
+     Safari, while hardwareConcurrency reports 6-8 on current phones -- so
+     lowPower was false on essentially every phone and this second full-rate
+     WebGL context ran anyway, which is exactly what the comment above says it
+     was written to prevent. Two live GL contexts is also near the practical
+     limit before a mobile browser starts force-losing them. */
+  var coarse = !!(window.matchMedia && window.matchMedia("(pointer: coarse)").matches);
+  var small = window.innerWidth <= 900 || window.innerHeight <= 500;
   var lowPower =
+    coarse || small ||
     (nav.hardwareConcurrency && nav.hardwareConcurrency <= 4) ||
     (nav.deviceMemory && nav.deviceMemory <= 4) ||
     (nav.connection && nav.connection.saveData) || false;

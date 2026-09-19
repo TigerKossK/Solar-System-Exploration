@@ -121,12 +121,27 @@
      upscales invisibly. Low-power devices (few cores / little memory /
      data-saver) render at reduced resolution to protect the frame rate. */
   var nav = window.navigator || {};
+  /* A touch-primary device is the signal that actually correlates with a mobile
+     GPU. The old heuristic asked only for hardwareConcurrency, deviceMemory and
+     connection.saveData -- but deviceMemory and connection DO NOT EXIST on iOS
+     Safari at all, and hardwareConcurrency reports 6 on an iPhone 13 and 8 on a
+     mid-range Android. So lowPower evaluated false on virtually every phone in
+     use, and this entire reduced-cost path never ran on the devices it was
+     written for. Ask about the pointer and the screen first. */
+  var coarse = !!(window.matchMedia && window.matchMedia("(pointer: coarse)").matches);
+  var small = window.innerWidth <= 900 || window.innerHeight <= 500;
   var lowPower =
+    coarse || small ||
     (nav.hardwareConcurrency && nav.hardwareConcurrency <= 4) ||
     (nav.deviceMemory && nav.deviceMemory <= 4) ||
     (nav.connection && nav.connection.saveData) || false;
   var QUALITY = lowPower ? 0.7 : 1;
   var DPR_CAP = lowPower ? 1.0 : 1.5;
+  /* Three simplex-noise octaves plus a grain term run PER PIXEL, per frame, for
+     as long as the page is open. At DPR 1.0 a 390x844 phone is already 329k
+     pixels; halving the frame rate on top of that roughly halves what is left.
+     The field drifts slowly enough that 30fps is indistinguishable from 60. */
+  var MIN_FRAME_MS = lowPower ? 1000 / 30 : 0;
 
   function resize() {
     var dpr = Math.min((window.devicePixelRatio || 1) * QUALITY, DPR_CAP);
@@ -162,8 +177,13 @@
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 
-  var raf = null;
-  function loop(t) { draw(t); raf = window.requestAnimationFrame(loop); }
+  var raf = null, lastFrame = -1e9;
+  function loop(t) {
+    raf = window.requestAnimationFrame(loop);
+    if (t - lastFrame < MIN_FRAME_MS) return;   // capped to ~30fps on low-power devices
+    lastFrame = t;
+    draw(t);
+  }
 
   if (reduce) {
     draw(0); // one static frame, no continuous work

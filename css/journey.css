@@ -22,7 +22,10 @@
   position: relative;
   height: 100vh;
   height: 100svh;          /* small-viewport unit: immune to mobile URL-bar collapse */
-  min-height: 560px;
+  /* Never taller than the viewport: a sticky element that exceeds the viewport
+     cannot pin, so a flat 560px broke the whole beat on a landscape phone
+     (svh is ~330px there) and let the hero scroll away mid-flight. */
+  min-height: min(560px, 100svh);
   overflow: hidden;
   background: var(--bg-void);
   isolation: isolate;
@@ -110,7 +113,7 @@
 .journey__enter:hover svg { transform: translateX(3px); }
 
 /* ── JS-enhanced: tall runway + pinned stage + scroll scrub ── */
-.js .journey { height: 300vh; }                 /* runway the beat spans */
+.js .journey { height: 300svh; }                /* runway the beat spans */
 .js .journey__stage { position: sticky; top: 0; height: 100vh; height: 100svh; }
 
 .js .journey__earth {
@@ -118,19 +121,26 @@
     translateY(calc(var(--earth-shift, 0) * 1vh))
     scale(var(--earth-scale, 1))
     rotate(var(--earth-rot, 0deg));
-  will-change: transform;
 }
+/* will-change only while the beat is on screen (js/journey.js toggles the class).
+   Left on permanently it kept .journey__earth -- a full-bleed, 1.6x-scaled image --
+   resident as its own composited layer for the life of the page, which on a 3x DPR
+   phone is several megabytes of GPU texture held while it is 6,000px behind you. */
+.js .journey.is-scrubbing .journey__earth { will-change: transform; }
+.js .journey.is-scrubbing .journey__copy,
+.js .journey.is-scrubbing .journey__bar { will-change: transform, opacity; }
 .js .journey__wedge { opacity: var(--wedge-op, 1); }
 .js .journey__copy {
   opacity: var(--copy-op, 1);
   transform: translateY(calc(var(--copy-shift, 0) * 1px));
-  filter: blur(calc(var(--copy-blur, 0) * 1px));   /* small element — cheap depth cue */
-  will-change: transform, opacity;
+  /* No filter: blur() here. It is not a compositor-only property, so animating it
+     forced a GPU filter pass on the headline on every frame of the single most
+     scroll-intensive stretch of the page. Opacity plus the lift already read as
+     depth. */
 }
 .js .journey__bar {
   opacity: var(--bar-op, 1);
   transform: translateX(-50%) translateY(calc(var(--bar-shift, 0) * 1px));
-  will-change: transform, opacity;
 }
 
 /* ── reduced motion: no pin, no scrub — a calm static hero ── */
@@ -158,4 +168,12 @@
   .journey__title { font-size: clamp(2.1rem, 13vw, 3rem); }
   .journey__meta { display: none; }             /* tiny screens: bar is just the CTA */
   .journey__bar { justify-content: center; }
+}
+
+/* Phones get half the runway. At 300svh the beat was ~2,530px on a 390x844
+   phone -- about 30% of the entire landing page, and three full screens of
+   scrolling before a single word of content. The same choreography plays out
+   over half the distance. */
+@media (max-width: 820px) {
+  .js .journey { height: 150svh; }
 }

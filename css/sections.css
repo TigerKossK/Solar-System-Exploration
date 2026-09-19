@@ -250,3 +250,16 @@ body.is-exploring .readout {
   transition: opacity .35s var(--ease), transform .35s var(--ease),
     box-shadow .3s var(--ease), border-color .3s var(--ease);
 }
+
+/* ── pause offscreen decoration ──────────────────────────────
+   .sun-visual__core animates a box-shadow with a 152px spread, and its two
+   pseudo-elements animate background-position under mix-blend-mode. All three
+   are PAINT animations (not compositor-only transforms), and all three ran
+   continuously for the whole session — including while the Sun section was
+   five thousand pixels off screen. The orrery already pauses itself this way
+   (js/solar-system.js); js/sections.js now applies the same treatment here
+   and to the scroll cue. */
+.sun-visual.is-paused .sun-visual__core,
+.sun-visual.is-paused .sun-visual__core::before,
+.sun-visual.is-paused .sun-visual__core::after,
+.scroll-cue.is-paused .scroll-cue__dot { animation-play-state: paused; }

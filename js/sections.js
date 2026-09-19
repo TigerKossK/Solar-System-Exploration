@@ -37,6 +37,20 @@
   if (sunVisual && sun.imagery && sun.imagery.alt) {
     sunVisual.setAttribute("aria-label", sun.imagery.alt);
   }
+
+  /* Pause decorative animation while it is off screen. These are PAINT
+     animations -- a 152px-spread box-shadow that breathes, plus two
+     background-position drifts under mix-blend-mode -- so each frame costs a
+     real repaint and a compositor read-back, and they ran for the entire
+     session no matter where the visitor had scrolled to. */
+  function pauseOffscreen(el) {
+    if (!el || !("IntersectionObserver" in window)) return;
+    new IntersectionObserver(function (entries) {
+      el.classList.toggle("is-paused", !entries[0].isIntersecting);
+    }, { threshold: 0 }).observe(el);
+  }
+  pauseOffscreen(sunVisual);
+  pauseOffscreen(document.querySelector(".scroll-cue"));
   set("sunStats",
     tile("Type", sf.type.value, "", "") +
     tile("Diameter", sf.diameter.value, "", sf.diameter.vsEarth || "") +

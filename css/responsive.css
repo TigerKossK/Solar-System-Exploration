@@ -24,7 +24,11 @@
      Size from the CONTAINER, less that overhang on both sides, and it always
      fits: .48s + 31 ≤ .5s + 32 holds for every s. */
   .orrery {
-    --size: min(470px, 100% - 64px);
+    /* --size is a registered @property with syntax:"<length>" (css/main.css), so a
+       percentage in here is INVALID at computed-value time and silently falls back
+       to the 480px initial value. The container clamp therefore lives in width
+       below, where a percentage is both valid and unambiguous. */
+    --size: min(470px, 86vw);
     width: 100%; height: auto; margin-inline: auto;
     display: grid; grid-template-columns: 1fr; justify-items: center;
   }
@@ -37,7 +41,13 @@
      and let the grid stack the two properly. */
   .orrery__stage {
     position: relative; inset: auto;
-    width: var(--size); height: var(--size);
+    /* Clamped to the container less the painted overhang (~31px each side: the
+       outer planet body plus its 16px tap ring), so .panel's overflow:hidden can
+       never cut Neptune off. aspect-ratio keeps it square without needing the
+       percentage in a height, where % would resolve against an auto-height
+       parent and collapse. */
+    width: min(var(--size), 100% - 64px);
+    height: auto; aspect-ratio: 1;
     margin-block: 30px;          /* vertical twin of the horizontal overhang */
   }
   .readout {
@@ -46,21 +56,14 @@
   }
 }
 
-/* mobile — keep a persistent map affordance in the nav; selector + orrery below */
+/* mobile — the bottom tab bar carries navigation; see css/mobile-nav.css */
 @media (max-width: 720px) {
-  /* Previously this hid EVERY link but the first. That rule predates the article
-     pages, and it made formation / exploration / instruments unreachable from the
-     nav on a phone — the topbar was their only route in. Instead, drop the in-page
-     anchors (reachable by scrolling anyway) and keep the pages, which are not. */
-  .nav__links a[href^="#"]:not(:first-child) { display: none; }
-  .nav__links { flex-wrap: wrap; gap: 2px; justify-content: flex-end; }
-  .nav__links a {
-    display: inline-flex; align-items: center; min-height: 44px;
-    padding: 8px 11px; font-size: .86rem;
-  }
   .panel { padding: 18px; border-radius: 22px; min-height: 0; }
   .hero__title { font-size: clamp(1.7rem, 7vw, 2.2rem); }
-  .orrery { --size: min(86vw, 420px); }
+  /* NO --size override here. The 980px block above measures the map from its
+     CONTAINER precisely so the outer orbits cannot be clipped; a viewport-based
+     value like min(86vw, 420px) wins by source order and puts the bug straight
+     back (86vw = 335px inside a 342px box overflows by ~21px at 390px wide). */
   .selector { gap: 12px 18px; }
   .selector__label { width: 100%; }
   .source-tag { width: 100%; }
@@ -94,4 +97,186 @@
   .btn, .btn__chev, .planet__body, .back svg, .orbit,
   .widget, .mission-item, .mission-item__more, .readout, .readout__arrow, .scroll-cue,
   .orrery, .section--menu > .section__card { transition: none !important; }
+}
+
+/* ============================================================
+   TOUCH / SMALL SCREENS — trade the frosted glass for opaque glass
+   ------------------------------------------------------------
+   This is the single biggest cause of the site feeling slow on a phone,
+   and the cost is not the blur itself: it is that the blur's SOURCE moves.
+
+   Every glass surface here composites over .cosmos, a position:fixed
+   WebGL canvas that js/background.js repaints every single frame. Because
+   the backdrop changes each frame, the browser cannot cache the blurred
+   result — every visible backdrop-filter must be re-sampled and re-blurred
+   at 60Hz, forever, even with the page completely idle. On the landing
+   that meant six blur(22px) .panel cards plus the topbar, the journey bar
+   and every ghost button, all re-blurring continuously on a mobile GPU.
+
+   So on touch and small screens the surfaces become near-opaque instead of
+   translucent. The gradients keep the same hue progression, so the look
+   barely shifts on a dark ground — what disappears is the per-frame work.
+   Desktop keeps the real thing (and Phase 3 tones it down there too).
+
+   Opacity was raised alongside removing the blur, not just as a look:
+   the blur was also doing the legibility work, muting the moving nebula
+   behind body text. Drop one without the other and the canvas shows
+   straight through the copy.
+   ============================================================ */
+@media (max-width: 900px), (pointer: coarse) {
+  .panel {
+    background: linear-gradient(150deg, rgba(16,52,60,.94) 0%, rgba(10,28,35,.96) 44%, rgba(8,17,15,.98) 100%);
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+  .glass {
+    background: rgba(12,34,40,.88);
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+  .btn--ghost {
+    background: rgba(12,34,40,.66);
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+  .readout {
+    background: linear-gradient(160deg, rgba(18,58,66,.95), rgba(9,24,30,.97));
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+  .widget {
+    background: rgba(14,40,47,.72);
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+  .topbar__inner {
+    background: linear-gradient(150deg, rgba(16,52,60,.95), rgba(8,17,15,.97));
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+  .journey__bar {
+    background: linear-gradient(150deg, rgba(16,52,60,.95), rgba(8,17,15,.97));
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+  .mission-dialog::backdrop {
+    background: rgba(4,10,9,.86);
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+
+  /* Animating a blur RADIUS forces the whole backdrop to be re-sampled and
+     re-blurred at a new kernel size on every frame of the transition — one
+     of the most expensive things that can be asked of a compositor, and it
+     fired on every Explorer enter/exit. The other three properties still
+     transition; only the blur is dropped. */
+  .section--menu > .section__card {
+    transition: padding .5s var(--ease), border-radius .5s var(--ease),
+      box-shadow .5s var(--ease);
+  }
+
+  /* Each spinning planet body carries a mix-blend-mode ::after, and a blend
+     mode forces the compositor to read back what is already painted beneath
+     it before it can draw. Eight of those, spinning continuously, on top of
+     the animated canvas. The banding is decorative; the frame rate is not. */
+  .planet__body::after { mix-blend-mode: normal; opacity: .5; }
+}
+
+/* ── the topbar hands navigation to the tab bar on touch/small screens ──
+   Four pills plus a 12-character wordmark need ~356px of row; a 390px phone
+   offers 334px. Both .topbar__inner and .nav__links carry flex-wrap, so the
+   bar silently became a two- or three-row block 130-180px tall -- 15-21% of
+   the screen, permanently, at the top where a thumb cannot reach it. Worse,
+   scroll-margin-top is 84px, so every anchor jump landed with its heading
+   tucked underneath.
+
+   Dropping the links leaves a single ~56px row that cannot wrap, which fixes
+   the anchor offset as a side effect. Nothing is lost: Map replaces "Explore",
+   the Learn sheet holds the three article pages, and the in-page sections are
+   reachable by scrolling, exactly as the original comment in index.html said. */
+@media (max-width: 820px), (pointer: coarse) {
+  .topbar .nav__links { display: none; }
+  .topbar__inner { justify-content: flex-start; padding: 8px 16px; }
+}
+
+/* ============================================================
+   TOUCH — the map has to be operable with a finger
+   ============================================================ */
+@media (pointer: coarse) {
+  /* FREEZE THE MAP ON FIRST TAP.
+     Opening a planet by touch takes two taps: the first previews it, the
+     second opens (js/solar-system.js -- touch has no hover, so it cannot
+     preview any other way). But the orbits never stopped, and Mercury is a
+     12px dot travelling ~15px/s, so between the two taps the target had moved
+     out from under the finger and the second tap landed on empty space.
+
+     The stage paused on :hover and :focus-within -- neither of which is
+     reliable on touch -- but NOT on .is-active, which is the class the tap
+     actually sets. So on a touch device it effectively never paused at all.
+     Scoped to coarse pointers because on a mouse .is-active persists after
+     the cursor leaves, which would freeze the map permanently after the
+     first hover. */
+  .orrery__stage:has(.planet.is-active) .orbit__spin,
+  .orrery__stage:has(.planet.is-active) .planet__body,
+  .orrery__stage:has(.planet.is-active) .planet__tagspin { animation-play-state: paused; }
+
+  /* 44px floor on the controls that matter most. .btn--sm is ~38px tall and
+     carries the readout's "Open <planet>" -- the single action the whole map
+     exists to deliver -- plus the Explorer exit and every dialog control. */
+  .btn--sm { min-height: 44px; padding: 10px 16px; }
+  .back { min-height: 44px; padding: 10px 16px; }
+  .mission-item { min-height: 44px; }
+
+  /* The scroll cue is a real link but only 26px wide. Widen the HIT AREA with
+     a pseudo-element instead of the element, so the slim pill design survives. */
+  .scroll-cue { position: relative; }
+  .scroll-cue::after { content: ""; position: absolute; inset: -6px -9px; }
+}
+
+/* ── Explorer mode on a phone ──
+   "Full-screen map" made the map SMALLER: --size: min(84vmin, 720px) is 328px
+   at 390px wide, against ~278px outside Explorer, and the 358px-wide fixed
+   readout then covered its lower edge. Give the card almost the full width,
+   reserve the bottom for the panel, and let the stage clamp itself as usual. */
+@media (max-width: 820px), (pointer: coarse) {
+  body.is-exploring .section--menu > .section__card {
+    padding: 8px 8px calc(42vh + 8px);
+  }
+  body.is-exploring .orrery { --size: min(88vw, 520px); }
+  body.is-exploring .orrery__stage { margin-block: 14px; }
+  body.is-exploring .readout {
+    left: 8px; right: 8px; width: auto;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    max-height: 40vh; overflow-y: auto;
+  }
+}
+
+/* ============================================================
+   MOBILE — stop the landing being ten screens tall
+   ------------------------------------------------------------
+   Six sections at min-height:100svh, each with clamp(96px,12vh,150px) of top
+   padding AND ~76px at the bottom, made the landing ~8,450px on a 390x844
+   phone: about ten full swipes, most of it empty vertical rhythm. The rhythm
+   was designed for a desktop viewport, where a 100vh band frames one card;
+   on a phone the same band just separates content with dead space.
+
+   Sections now size to their content with a tighter beat. Combined with
+   halving the intro runway (css/journey.css), this roughly halves the page.
+   ============================================================ */
+@media (max-width: 820px) {
+  .section {
+    min-height: 0;
+    padding-block: clamp(52px, 7vh, 84px) clamp(36px, 5vh, 60px);
+  }
+  /* The map keeps a little more room above it -- it is the one band that
+     genuinely benefits from arriving on a clean screen. */
+  .section--menu { padding-top: clamp(64px, 9vh, 104px); }
+}
+
+/* ── functional text: 11.5-12px is below the legibility floor ──
+   The earlier /impeccable critique measured labels at 10.88px and units at
+   9.28px and called it the clearest violation of the project's own WCAG-AA
+   commitment. Those have since been raised, but a band of genuinely
+   functional text -- the map's own planet names among it -- still sits at
+   11.5-11.8px, and nothing scaled it up on the smallest screens, where it
+   matters most. */
+@media (max-width: 820px), (pointer: coarse) {
+  .planet__label { font-size: .78rem; }        /* 12.5px — the map's own labels */
+  .source-tag { font-size: .8rem; }            /* 12.8px */
+  .content-next__label { font-size: .8rem; }
+  .cmp__scale { font-size: .78rem; }
+  .readout__type { font-size: .8rem; }
+  .stat__context { font-size: .86rem; }
 }
