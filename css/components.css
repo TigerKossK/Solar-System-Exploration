@@ -348,4 +348,17 @@ button.mission-item:focus-visible .mission-item__more { opacity: 1; transform: t
 .btn.has-liquid { position: relative; overflow: hidden; background: #0a1512; border-color: var(--glass-brd-strong); color: var(--text-hi); box-shadow: 0 10px 26px -12px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.05) inset; }
 .btn.has-liquid:hover { transform: translateY(-2px); box-shadow: 0 16px 34px -14px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.09) inset; }
 .liquid-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; border-radius: inherit; }
-.liquid-label { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 8px; }
+/* Legibility scrim between the shader and the label.
+   The metallic surface peaks near white-cyan where a specular glint passes, and
+   the label is --text-hi (#eaf1f1): that is roughly a 1:1 contrast ratio, so the
+   text flickered in and out of readability as the glints swept across — on the
+   landing CTA and on every planet page. Neither dimming the glints nor a
+   text-shadow is enough on its own (the teal base alone only reaches ~3.7:1),
+   so a uniform veil sits between the two layers and holds the worst case above
+   5:1 while leaving the motion clearly visible through it. */
+.btn.has-liquid::after {
+  content: ""; position: absolute; inset: 0; z-index: 1;
+  border-radius: inherit; pointer-events: none;
+  background: rgba(5,14,16,.5);
+}
+.liquid-label { position: relative; z-index: 2; display: inline-flex; align-items: center; gap: 8px; }

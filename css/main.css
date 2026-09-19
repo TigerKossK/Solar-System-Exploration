@@ -123,6 +123,16 @@ img, canvas { display: block; max-width: 100%; }
 /* ── themed browser surfaces (the cheap tell of a built page) ── */
 ::selection { background: rgba(245,185,66,.26); color: #fff; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+/* Skip-link landmark targets carry tabindex="-1" so focus actually lands there.
+   They are not in the tab order and are not operable, so WCAG's visible-focus
+   requirement does not apply — and ringing a full-viewport section in amber
+   would be a jarring false affordance. The jump itself is the feedback. */
+.section[tabindex="-1"]:focus,
+.section[tabindex="-1"]:focus-visible,
+#article[tabindex="-1"]:focus,
+#article[tabindex="-1"]:focus-visible,
+#dashboard[tabindex="-1"]:focus,
+#dashboard[tabindex="-1"]:focus-visible { outline: none; }
 * { scrollbar-width: thin; scrollbar-color: var(--teal-600) transparent; }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-thumb { background: var(--teal-600); border-radius: 999px; border: 2px solid var(--bg-void); }

@@ -136,6 +136,13 @@
     canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h);
     return true;
   }
+  /* Declared BEFORE the resize handler that reads it, not 14 lines after. The
+     handler only ever saw a defined value because resize events arrive
+     asynchronously, long after this IIFE finished and var-hoisting resolved —
+     so the reduced-motion repaint below was one statement reorder away from
+     silently never running. */
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   /* Resizing a canvas CLEARS its drawing buffer. The animation loop naturally
      repaints on the next frame — but under reduced motion there is no loop, so
      without this redraw the background would vanish for good the first time the
@@ -155,7 +162,6 @@
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 
-  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var raf = null;
   function loop(t) { draw(t); raf = window.requestAnimationFrame(loop); }
 

@@ -80,15 +80,24 @@
 /* the no-JS primary CTA jumps to #planets; clear the fixed topbar like .section does */
 #planets { scroll-margin-top: 84px; }
 
-/* Simplify the explore model to Orbit + arrows: with JS on, drop the
-   "The eight planets" heading + duplicate link list. The list stays in the
-   DOM as the no-JS / screen-reader path to planet pages (the orbit links are
-   JS-injected, so without JS this is the ONLY way in) — only its visual
-   duplication goes. The .selector footer itself remains so its NASA
-   source-tag keeps crediting the data beneath the map. */
-.js .section--menu .selector__label,
-.js .section--menu .selector__list { display: none; }
-.js .section--menu .selector { border-top: 0; padding-top: 0; margin-top: clamp(12px, 2vh, 20px); }
+/* Simplify the explore model to Orbit + arrows: once the map has actually been
+   built, drop the "The eight planets" heading + duplicate link list.
+
+   Keyed on .orrery-ready, which js/solar-system.js sets only AFTER the orbit
+   links exist — NOT on .js, which index.html sets in <head> before a single
+   script has run. With the old .js gate, a failed js/data.js hid the fallback
+   list while leaving the map empty: no route to any planet page at all.
+
+   Note display:none removes this from the accessibility tree too — it is the
+   no-JS path, not a screen-reader path (the older comment here claimed both).
+   With JS on, the accessible route is the eight injected orbit links, which are
+   real anchors carrying "Mercury, Terrestrial planet, planet 1 from the Sun."
+   aria-labels (js/solar-system.js). Deliberately not .sr-only: that would keep
+   eight invisible tab stops duplicating navigation a sighted keyboard user can
+   already see. */
+.orrery-ready .section--menu .selector__label,
+.orrery-ready .section--menu .selector__list { display: none; }
+.orrery-ready .section--menu .selector { border-top: 0; padding-top: 0; margin-top: clamp(12px, 2vh, 20px); }
 
 /* ── 4 · The Sun ── */
 .section--sun::before {

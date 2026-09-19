@@ -22,6 +22,14 @@
 
   var isOn = function () { return body.classList.contains("is-exploring"); };
 
+  /* Did WE create the current #explore history entry, or did we arrive at it?
+     Leaving may step back only in the first case. history.length is NOT a
+     substitute: it counts the whole tab session across origins, so a visitor who
+     followed a shared or bookmarked #explore link from any other site satisfied
+     history.length > 1 and was ejected off-site instead of closing Explorer.
+     Same flag pattern js/sections.js already uses for the mission dialog. */
+  var pushedByUs = false;
+
   /* the shared panel adapts to the mode: Return + fun-facts appear, and the
      open action steps up from a ghost to the primary pill. */
   function setExpanded(on) {
@@ -37,8 +45,11 @@
     if (isOn()) return;
     body.classList.add("is-exploring");
     setExpanded(true);
-    if (push !== false && location.hash !== "#explore") {
+    if (push === false) {
+      pushedByUs = false;              // we arrived at this URL; we did not create it
+    } else if (location.hash !== "#explore") {
       history.pushState({ explore: true }, "", "#explore");
+      pushedByUs = true;
     }
     if (exitBtn) exitBtn.focus();
   }
@@ -49,16 +60,24 @@
     if (cta && !keepFocus) cta.focus();
   }
 
+  /* The single "leave Explorer" path, shared by the Return button and Escape, so
+     the two can never disagree about how history is unwound. */
+  function leave() {
+    if (pushedByUs) { history.back(); return; }   // popstate then runs exit()
+    /* Deep-linked straight into #explore: there is no entry of ours to go back
+       to. Strip the hash in place — otherwise it lingers, enter() later sees it
+       and skips its pushState, and the next Back press leaves the site. */
+    exit();
+    if (location.hash === "#explore") {
+      history.replaceState({}, "", location.pathname + location.search);
+    }
+  }
+
   cta.addEventListener("click", function (e) {
     e.preventDefault();
     enter();
   });
-  if (exitBtn) {
-    exitBtn.addEventListener("click", function () {
-      if (location.hash === "#explore" && history.length > 1) history.back();
-      else { exit(); history.replaceState({}, "", location.pathname + location.search); }
-    });
-  }
+  if (exitBtn) exitBtn.addEventListener("click", leave);
 
   /* Explorer hides every non-menu section (display:none, css/sections.css), so the
      Sun's "Open" link (href="#sun-section") would target an invisible element and the
@@ -77,16 +96,11 @@
   }
   document.addEventListener("keydown", function (e) {
     if (e.key !== "Escape" || !isOn()) return;
-    if (location.hash === "#explore" && history.length > 1) { history.back(); return; }
-    /* Deep-linked straight into #explore, so there is nothing to go back to.
-       Clear the hash exactly as the Return button does — otherwise it lingers,
-       enter() later sees it and skips its pushState, and the next Back press
-       leaves the site instead of closing Explorer. */
-    exit();
-    history.replaceState({}, "", location.pathname + location.search);
+    leave();
   });
   window.addEventListener("popstate", function () {
-    if (location.hash === "#explore") enter(false); else exit();
+    if (location.hash === "#explore") enter(false);
+    else { exit(); pushedByUs = false; }
   });
 
   /* deep link: open straight into the explorer */

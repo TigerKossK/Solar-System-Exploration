@@ -21,6 +21,7 @@
   <meta name="twitter:title" content="Jupiter — Solar System" />
   <meta name="twitter:description" content="Jupiter: The giant of the system. Real, sourced data — distance, size, gravity, day and year length, temperature, moons and more." />
   <meta name="twitter:image" content="https://tigerkossk.github.io/Solar-System-Exploration/assets/og-cover.jpg" />
+  <meta name="twitter:image:alt" content="Earth seen from space, the Sun cresting beyond its horizon." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
@@ -66,7 +67,13 @@
           <p class="planet-hero__type kicker-label">Gas giant · The giant of the system · Known since antiquity</p>
           <p class="planet-hero__desc">The largest planet by far, Jupiter is a ball of hydrogen and helium with a centuries-old storm — the Great Red Spot — wider than Earth.</p>
           <div class="planet-hero__cta">
-            <a class="btn btn--primary btn--lg" id="primaryCta" href="../index.html">
+            <!-- Deliberately NOT id="primaryCta": that id is what js/liquid-chrome.js
+                 looks for, so reusing it here spent a second full-rate WebGL context on
+                 every planet page in order to put a premium metallic finish on a BACK
+                 button — and made the same page's primary action render amber or
+                 near-black depending on the visitor's hardware. The amber pill is the
+                 right treatment for this control, and phones get one less GL context. -->
+            <a class="btn btn--primary btn--lg" id="backToSystem" href="../index.html">
               Back to the Solar System
               <svg class="btn__chev" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
@@ -80,7 +87,7 @@
       </header>
 
       <!-- dashboard -->
-      <div id="dashboard">
+      <div id="dashboard" tabindex="-1">
         <section class="dash-section" aria-labelledby="h-key">
           <div class="section-head"><h2 id="h-key">Key facts</h2></div>
           <div class="dash-grid">
@@ -242,8 +249,10 @@
     </div>
   </main>
 
+  <!-- js/liquid-chrome.js is deliberately absent: its only target is #primaryCta,
+       which no longer exists on these pages (see the back link above). Loading it
+       here cost a request and a parse to reach an early return. -->
   <script src="../js/background.js"></script>
-  <script src="../js/liquid-chrome.js"></script>
   <script src="../js/backlink.js"></script>
 </body>
 </html>

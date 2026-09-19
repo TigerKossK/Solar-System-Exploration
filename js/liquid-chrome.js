@@ -58,7 +58,11 @@
     "  vec3 teal = vec3(0.16, 0.45, 0.5);",
     "  vec3 spec = vec3(0.85, 0.97, 0.97);",
     "  vec3 col = u_base + teal * smoothstep(0.25, 0.95, v);",
-    "  col += spec * pow(v, 9.0) * 0.5;",     // sharp metallic glints
+    /* Glint strength halved. At 0.5 the peak was a near-white cyan sitting at
+       ~1:1 contrast against the --text-hi label above it; the scrim in
+       css/components.css does the real work, but a softer highlight means the
+       veil needed to hold AA is lighter and the metal reads better through it. */
+    "  col += spec * pow(v, 9.0) * 0.25;",    // sharp metallic glints
     "  gl_FragColor = vec4(col, 1.0);",
     "}",
   ].join("\n");
@@ -102,6 +106,14 @@
     canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h);
     return true;
   }
+  /* Declared BEFORE the observer below, not after it. ResizeObserver delivers an
+     initial callback, and onResize reads `reduce`; this only worked because that
+     callback happens to arrive asynchronously, after the IIFE has finished and
+     var-hoisting has resolved. Moving the observe() one statement earlier — or a
+     browser delivering it synchronously — would silently read undefined and skip
+     the reduced-motion repaint this very code exists to guarantee. */
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   /* Same clear-on-resize trap as js/background.js, and it fires on virtually
      every load: the web fonts land after this script runs, which changes the
      button's width. Under reduced motion there is no loop to repaint, so the
@@ -118,20 +130,28 @@
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 
-  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var raf = null, visible = true;
-  function loop(t) { if (visible) draw(t); raf = window.requestAnimationFrame(loop); }
+  var raf = null;
+  function loop(t) { draw(t); raf = window.requestAnimationFrame(loop); }
+  function start() { if (!raf && !document.hidden) raf = window.requestAnimationFrame(loop); }
+  function stop() { if (raf) { window.cancelAnimationFrame(raf); raf = null; } }
 
   if (reduce) {
     draw(1200); // one static frame with some warp
   } else {
+    /* Genuinely STOP offscreen, rather than keeping the rAF alive and skipping
+       the draw. The old `if (visible) draw(t)` still woke the page every frame
+       for the life of the session — on a phone that is a wakeup 60×/sec for a
+       button scrolled thousands of pixels away. js/background.js already
+       cancels properly; this now matches it. */
     if (window.IntersectionObserver) {
-      new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }).observe(btn);
+      new IntersectionObserver(function (e) {
+        if (e[0].isIntersecting) start(); else stop();
+      }).observe(btn);
+    } else {
+      start();
     }
-    raf = window.requestAnimationFrame(loop);
     document.addEventListener("visibilitychange", function () {
-      if (document.hidden) { if (raf) { window.cancelAnimationFrame(raf); raf = null; } }
-      else if (!raf) { raf = window.requestAnimationFrame(loop); }
+      if (document.hidden) stop(); else start();
     });
   }
 
@@ -139,11 +159,11 @@
      keeps its solid .has-liquid pill styling, so the CTA stays readable. */
   canvas.addEventListener("webglcontextlost", function (e) {
     e.preventDefault();
-    if (raf) { window.cancelAnimationFrame(raf); raf = null; }
+    stop();
   }, false);
   canvas.addEventListener("webglcontextrestored", function () {
     if (!setupGL()) { btn.classList.remove("has-liquid"); return; }
     if (reduce) draw(1200);
-    else if (!raf) raf = window.requestAnimationFrame(loop);
+    else start();
   }, false);
 })();

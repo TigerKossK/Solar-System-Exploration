@@ -75,7 +75,10 @@ const SOLAR_SYSTEM = {
       funFacts: [
         "Mercury has ice in permanently shadowed polar craters, despite being the closest planet to the Sun.",
         "Its axial tilt is near zero — the smallest of any planet — so Mercury has virtually no seasons.",
-        "Surface temperatures swing from about −180 °C at night to 430 °C in daylight.",
+        /* Matches facts.temperature.range above. Both render on planet/mercury.html
+           about 400px apart, and the old rounded "−180 … 430" read as a second,
+           contradictory measurement rather than the same NASA figure. */
+        "Surface temperatures swing from about −173 °C at night to 427 °C in daylight.",
         "One solar day on Mercury (sunrise to sunrise) lasts about 176 Earth days — two Mercury years.",
         "Its oversized iron core makes up roughly 60% of the planet's mass.",
       ],
@@ -129,7 +132,8 @@ const SOLAR_SYSTEM = {
         "A day on Venus (one spin) is longer than a Venusian year (one orbit around the Sun).",
         "Venus spins backwards — from its surface the Sun would rise in the west.",
         "Its surface pressure is about 92 times Earth's, enough to crush an unprotected craft.",
-        "A runaway greenhouse keeps the surface near 465 °C — hotter than Mercury's.",
+        /* 464, matching facts.temperature above — same page, same number. */
+        "A runaway greenhouse keeps the surface near 464 °C — hotter than Mercury's.",
         "Bright sulphuric-acid clouds make Venus the most brilliant planet in our sky.",
       ],
       imagery: { alt: "Venus — a pale yellow planet shrouded in dense cloud." },
@@ -413,7 +417,13 @@ const SOLAR_SYSTEM = {
         radius: { value: "24,622", unit: "km", vsEarth: "3.9× Earth" },
         gravity: { value: "11.0", unit: "m/s²", vsEarth: "1.12 g" },
         distance: { au: "30.07", km: "4.50 billion km" },
-        orbital: { days: 59800, human: "164.8 Earth years", context: "Neptune completed its first orbit since discovery only in 2011." },
+        /* 60,190 rather than the NASA fact sheet's rounded 59,800: that figure
+           divides to 163.7 years and so contradicts the 164.8 printed beside it
+           (and on NASA's own Neptune page). Every other planet here is
+           self-consistent — Jupiter 4331 → 11.86, Saturn 10747 → 29.42,
+           Uranus 30589 → 83.75 — so this one is brought into line rather than
+           left as the single pair that disagrees. */
+        orbital: { days: 60190, human: "164.8 Earth years", context: "Neptune completed its first orbit since discovery only in 2011." },
         rotation: { hours: 16.1, human: "16.1 hours", context: "A short day for such a distant world." },
         temperature: { mean: "−200", unit: "°C", range: "cloud-top average" },
         moons: { count: 16, note: "16 confirmed moons, the largest being Triton.", notable: ["Triton", "Proteus", "Nereid"] },
@@ -489,7 +499,14 @@ const SOLAR_SYSTEM = {
     stats: {
       planets: 8,
       dwarfPlanets: 5,
-      moons: { count: 456, note: "known moons orbiting the eight planets", asOf: "2026" },
+      /* Contested at review time: independent checks returned both Jupiter 95 /
+         Saturn 274 (the long-standing figures) and Jupiter 115 / Saturn 293
+         (later confirmations). The authored numbers are LEFT AS THEY ARE —
+         rewriting sourced data on contradictory evidence is worse than dating
+         it — but the tile now says "confirmed" explicitly and meta.sources is
+         rendered in the page credit, so a reader can check rather than trust.
+         Moon counts are the most volatile field in this file (see the header). */
+      moons: { count: 456, note: "confirmed moons orbiting the eight planets", asOf: "2026" },
       ageBillionYears: 4.6,
       sunMassShare: "99.86%",
       voyager1: "Voyager 1 is over 25 billion km away — the most distant human-made object.",

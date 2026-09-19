@@ -14,18 +14,35 @@
 (function () {
   "use strict";
 
+  /* Planet pages do not load js/data.js, so the mission list is mirrored here.
+     Pattern-matching alone was not enough: ?from=nope passed the character class
+     and rendered "Back to Nope" pointing at #mission=nope, which opens nothing —
+     a dead link the visitor was invited to click. Anything not on this list now
+     renders no bar at all.
+
+     Keys are system.landmarkMissions[].id in js/data.js; values are the display
+     names, which must match m.name there or the return trip is labelled with a
+     different string than the dialog it reopens (Cassini–Huygens takes an EN
+     DASH, which the old title-casing turned into "Cassini Huygens"). */
+  var MISSIONS = {
+    "voyager-1": "Voyager 1",
+    "voyager-2": "Voyager 2",
+    "galileo": "Galileo",
+    "cassini-huygens": "Cassini–Huygens",
+    "new-horizons": "New Horizons",
+    "juno": "Juno",
+    "parker-solar-probe": "Parker Solar Probe",
+    "perseverance": "Perseverance",
+  };
+
   var found = /[?&]from=([A-Za-z0-9-]{1,40})(?:&|$)/.exec(location.search);
   if (!found) return;
   var id = found[1].toLowerCase();
+  var label = Object.prototype.hasOwnProperty.call(MISSIONS, id) ? MISSIONS[id] : null;
+  if (!label) return;      // unknown id: no bar, rather than a link that goes nowhere
 
   var hero = document.querySelector(".planet-hero");
   if (!hero || !hero.parentNode) return;
-
-  /* "voyager-2" -> "Voyager 2". Derived from the validated id rather than passed
-     through the URL, so there is no attacker-controlled string to escape. */
-  var label = id.split("-").map(function (w) {
-    return w ? w.charAt(0).toUpperCase() + w.slice(1) : w;
-  }).join(" ");
 
   var link = document.createElement("a");
   link.className = "back";

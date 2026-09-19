@@ -9,7 +9,8 @@
   "use strict";
   if (!window.SOLAR_SYSTEM || !window.SolarUtil) return;
   var S = window.SOLAR_SYSTEM;
-  var esc = window.SolarUtil.esc;   // shared helper — js/util.js
+  var esc = window.SolarUtil.esc;   // shared helpers — js/util.js
+  var attr = window.SolarUtil.attr; // quote-safe: for attribute values only
   function tile(label, value, unit, context) {
     return (
       '<div class="widget">' +
@@ -28,6 +29,14 @@
   /* ── The Sun ── */
   var sun = S.sun, sf = sun.facts;
   text("sunDesc", sun.description);
+  /* The same sentence is hard-coded as the aria-label in index.html AND authored
+     as sun.imagery.alt here, so the two drift apart the moment either is edited.
+     Every planet page already derives its orb label from the data
+     (scripts/build-planets.js); make the landing agree. */
+  var sunVisual = document.querySelector(".sun-visual");
+  if (sunVisual && sun.imagery && sun.imagery.alt) {
+    sunVisual.setAttribute("aria-label", sun.imagery.alt);
+  }
   set("sunStats",
     tile("Type", sf.type.value, "", "") +
     tile("Diameter", sf.diameter.value, "", sf.diameter.vsEarth || "") +
@@ -140,13 +149,13 @@
     var links = [];
     if (m.detail) {
       links.push('<a class="btn btn--ghost btn--sm" href="instruments.html#' +
-        esc(m.detail) + '">The hardware →</a>');
+        attr(m.detail) + '">The hardware →</a>');
     }
     (m.targets || []).forEach(function (id) {
       var p = window.getPlanet ? getPlanet(id) : null;
       if (!p) return;        // unknown id in the data: skip, never emit a dead link
       // ?from= lets the planet page offer a route back to this mission (js/backlink.js)
-      links.push('<a class="btn btn--ghost btn--sm" href="planet/' + p.id + '.html?from=' +
+      links.push('<a class="btn btn--ghost btn--sm" href="planet/' + attr(p.id) + '.html?from=' +
         encodeURIComponent(m.id || "") + '">' + esc(p.name) + " →</a>");
     });
     if (links.length) {
@@ -157,13 +166,23 @@
     }
 
     dlgBody.innerHTML = html;
+    var wasOpen = dlg.open;
     if (push === false) {
       pushedByUs = false;          // we arrived at this URL; we did not create it
     } else if (m.id && missionIdFromHash() !== m.id) {
-      history.pushState({ mission: m.id }, "", "#mission=" + encodeURIComponent(m.id));
-      pushedByUs = true;
+      /* Swapping missions while the dialog is ALREADY open must replace the entry,
+         not stack a second one. Pushing on every row click meant Close stepped back
+         to the previously viewed mission, which popstate then re-opened — so the
+         dialog visibly closed and immediately reappeared, and Close had to be
+         pressed twice. The entry being replaced is still the one we pushed (or
+         arrived at), so pushedByUs stays as it is. */
+      if (wasOpen) history.replaceState({ mission: m.id }, "", "#mission=" + encodeURIComponent(m.id));
+      else {
+        history.pushState({ mission: m.id }, "", "#mission=" + encodeURIComponent(m.id));
+        pushedByUs = true;
+      }
     }
-    if (dlg.open) return;                // already showing: content swapped in place
+    if (wasOpen) return;                 // already showing: content swapped in place
     if (dlg.showModal) dlg.showModal();
     else dlg.setAttribute("open", "");   // no <dialog> support: inline but readable
   }
@@ -176,8 +195,18 @@
     });
   }
   dlg.addEventListener("click", function (e) {
-    // e.target === dlg means the click landed on the backdrop, not the content
-    if (e.target === dlg || e.target.closest(".mission-dialog__close")) closeDialog();
+    if (e.target.closest(".mission-dialog__close")) { closeDialog(); return; }
+    /* A backdrop click reports the <dialog> itself as the target — but so does a
+       click on the dialog's OWN padding (clamp(20px,3vw,32px)), because that is
+       inside its box. Testing e.target === dlg alone therefore closed the dialog
+       when you clicked the gutter beside the title or next to a link row.
+       Hit-test the border box instead. e.detail guards against synthetic clicks,
+       whose clientX/Y are 0 and would read as "outside". */
+    if (e.target !== dlg || !e.detail) return;
+    var r = dlg.getBoundingClientRect();
+    var inside = e.clientX >= r.left && e.clientX <= r.right &&
+                 e.clientY >= r.top && e.clientY <= r.bottom;
+    if (!inside) closeDialog();
   });
 
   function syncFromHash() {
@@ -192,9 +221,21 @@
   window.addEventListener("pageshow", function (e) { if (e.persisted) syncFromHash(); });
   syncFromHash();
 
-  /* ── credit line ── */
+  /* ── credit line ──
+     meta.sources was authored but rendered nowhere, so "every value comes from
+     public NASA data" was a claim the page asked you to take on trust. The
+     volatile figures — moon counts above all — are exactly the ones a reader
+     should be able to check, so list the sources where that claim is made. */
   var credit = document.getElementById("creditTag");
-  if (credit && S.system.textures && S.system.textures.credit) {
-    credit.insertAdjacentHTML("beforeend", ' · <span class="text-lo">' + esc(S.system.textures.credit) + "</span>");
+  if (credit) {
+    var srcs = (S.meta && S.meta.sources) || [];
+    if (srcs.length) {
+      credit.innerHTML = "Data: " + srcs.map(function (s) {
+        return '<a href="' + attr(s.url) + '" target="_blank" rel="noopener">' + esc(s.name) + "</a>";
+      }).join(" · ");
+    }
+    if (S.system.textures && S.system.textures.credit) {
+      credit.insertAdjacentHTML("beforeend", ' · <span class="text-lo">' + esc(S.system.textures.credit) + "</span>");
+    }
   }
 })();

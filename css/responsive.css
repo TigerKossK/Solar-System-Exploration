@@ -9,13 +9,41 @@
   .orrery { --size: min(48vw, 500px); }
 }
 
-/* tablet — stack, keep ordering / labels / selection / hierarchy */
+/* tablet and below — stack, keep ordering / labels / selection / hierarchy */
 @media (max-width: 980px) {
   .hero { grid-template-columns: 1fr; gap: 28px; }
   .hero__lede { max-width: none; }
-  .hero__orrery { min-height: 60vw; }
-  .orrery { --size: min(82vw, 470px); margin-inline: auto; }
-  .readout { position: static; width: 100%; margin-top: 16px; }
+  .hero__orrery { min-height: 0; }
+
+  /* THE MAP IS NOT THE ORRERY BOX. The outermost planet (Neptune, orbit .96)
+     sits at .48 × --size from the centre; its body adds up to 15px and its 16px
+     tap ring another 16 — so the painted map reaches ~31px beyond the box on
+     every side. .panel clips with overflow:hidden, so sizing --size from the
+     viewport (it was 90vw = 351px inside a 334px content box) put Neptune
+     entirely outside the visible area for part of every orbit, tap ring and all.
+     Size from the CONTAINER, less that overhang on both sides, and it always
+     fits: .48s + 31 ≤ .5s + 32 holds for every s. */
+  .orrery {
+    --size: min(470px, 100% - 64px);
+    width: 100%; height: auto; margin-inline: auto;
+    display: grid; grid-template-columns: 1fr; justify-items: center;
+  }
+
+  /* .orrery__stage is position:absolute, so the readout below used to be the
+     orrery's ONLY in-flow child: `position:static` laid it out at the TOP of
+     the map box, painting over the Sun and the inner orbits at z-index 6 — and
+     its controls keep pointer-events:auto, so "Open Earth →" and the ◀ ▶ arrows
+     sat as tap blockers on Mercury, Venus and Earth. Put the stage back in flow
+     and let the grid stack the two properly. */
+  .orrery__stage {
+    position: relative; inset: auto;
+    width: var(--size); height: var(--size);
+    margin-block: 30px;          /* vertical twin of the horizontal overhang */
+  }
+  .readout {
+    position: static; width: 100%; margin-top: 0;
+    pointer-events: auto;        /* it no longer overlays the map, so it may take taps */
+  }
 }
 
 /* mobile — keep a persistent map affordance in the nav; selector + orrery below */
@@ -45,7 +73,9 @@
 
 @media (max-width: 460px) {
   .stage { padding: 8px; }
-  .orrery { --size: 90vw; }
+  /* Buy the map back some width: every pixel trimmed here is a pixel --size
+     gains, since it is now measured from the container (see the 980px block). */
+  .panel { padding: 14px; }
   .btn--lg { padding: 12px 18px; font-size: .95rem; }
   .planet::after { inset: -16px; }
 }

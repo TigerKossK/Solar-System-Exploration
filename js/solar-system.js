@@ -12,6 +12,11 @@
   var PLANETS = SOLAR_SYSTEM.planets;
   var SUN = SOLAR_SYSTEM.sun;
   var stage = document.getElementById("orreryStage");
+  /* Bail before touching anything if this page has no map. The guard above only
+     proves the DATA loaded, not that the markup is here — and stage.appendChild
+     inside the build loop would throw on the first iteration, taking the readout
+     and the selector wiring down with it. Same pattern as js/explorer.js:21. */
+  if (!stage) return;
   var nodes = {};      // id -> { link, orbit }
   var selectorLinks = {};
   var currentId = null;   // planet id last previewed — the arrow stepper's anchor
@@ -47,7 +52,7 @@
     link.innerHTML =
       '<span class="planet__body"></span>' +
       '<span class="planet__tagspin"><span class="planet__tagstart">' +
-      '<span class="planet__label">' + p.name + "</span></span></span>";
+      '<span class="planet__label">' + esc(p.name) + "</span></span></span>";
 
     arm.appendChild(link);
     spin.appendChild(arm);
@@ -83,6 +88,15 @@
       }
     });
   });
+
+  /* The map is now built and its planets are real, navigable links, so the
+     hand-authored fallback list may finally be taken out of the visual flow.
+     This class — not `html.js` — is what css/sections.css keys off. index.html
+     sets `js` in <head>, before any script has run, so gating on it meant that
+     if js/data.js 404'd or threw, both guards above returned silently, the
+     orrery stayed empty AND the fallback list stayed hidden: a landing page
+     with zero links to any of the eight planets. */
+  document.documentElement.classList.add("orrery-ready");
 
   /* ---- readout (one shared preview panel; Explorer mode reuses it) ---- */
   var el = {
@@ -143,7 +157,7 @@
     el.name.textContent = p.name;
     el.type.textContent = p.type;
     el.fact.innerHTML =
-      "<b>" + p.facts.distance.km + "</b> from the Sun · <b>" + moons + "</b> " +
+      "<b>" + esc(p.facts.distance.km) + "</b> from the Sun · <b>" + esc(moons) + "</b> " +
       (moons === 1 ? "moon" : "moons");
     fillFunFacts(p.funFacts);
     el.explore.href = "planet/" + p.id + ".html";
@@ -164,7 +178,7 @@
     el.name.textContent = SUN.name;
     el.type.textContent = SUN.type;
     el.fact.innerHTML =
-      "<b>" + SUN.facts.massShare.value + "</b> · surface " + SUN.facts.surface.value;
+      "<b>" + esc(SUN.facts.massShare.value) + "</b> · surface " + esc(SUN.facts.surface.value);
     fillFunFacts(SUN.funFacts);
     el.explore.href = "#sun-section";
     el.exploreName.textContent = "the Sun";

@@ -24,6 +24,7 @@
   <meta name="twitter:title" content="Solar System — explore the worlds of our Sun" />
   <meta name="twitter:description" content="A live, interactive map of the Solar System. Focus any planet to preview it, then open its page for real, sourced data — sizes, distances, moons and more." />
   <meta name="twitter:image" content="https://tigerkossk.github.io/Solar-System-Exploration/assets/og-cover.jpg" />
+  <meta name="twitter:image:alt" content="Earth seen from space, the Sun cresting beyond its horizon." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
@@ -168,7 +169,10 @@
 
     <!-- ── 2 · MAIN MENU — the redesigned hero (orrery dominant) ──
          PRESERVED MARKUP: js/solar-system.js + js/liquid-chrome.js depend on the IDs below. -->
-    <section class="section section--menu" id="menu" aria-labelledby="menu-title">
+    <!-- tabindex="-1": the skip link targets this section, and without a focusable
+         target the browser only moves the scroll position in some engines, leaving
+         keyboard focus stranded at the top of the document. -->
+    <section class="section section--menu" id="menu" tabindex="-1" aria-labelledby="menu-title">
       <div class="panel container section__card">
         <div class="hero">
           <div class="hero__lede">
@@ -301,8 +305,13 @@
           <a class="btn btn--primary btn--lg" href="#menu">Back to the map</a>
         </div>
 
-        <!-- Real discovery for the article pages. The topbar alone is not enough:
-             it is hidden below 720px, so on mobile these cards are the only way in. -->
+        <!-- A second, in-content route to the article pages, at the point where a
+             reader has finished the landing and is looking for what comes next.
+             (An older version of this comment claimed the topbar was hidden below
+             720px and that these cards were therefore the ONLY mobile route in.
+             That was never true of .topbar itself — css/responsive.css hides only
+             in-page anchor links after the first — so these cards are a deliberate
+             second entrance, not a fallback.) -->
         <nav class="content-next reveal" data-reveal-delay="3" aria-label="Go deeper">
           <a href="formation.html">
             <span class="content-next__label">Read</span>

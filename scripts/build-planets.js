@@ -212,6 +212,7 @@ function render(p) {
   <meta name="twitter:title" content="${cardTitle}" />
   <meta name="twitter:description" content="${desc}" />
   <meta name="twitter:image" content="${SITE}/assets/og-cover.jpg" />
+  <meta name="twitter:image:alt" content="Earth seen from space, the Sun cresting beyond its horizon." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="${FONTS}" rel="stylesheet" />
@@ -247,7 +248,13 @@ function render(p) {
           <p class="planet-hero__type kicker-label">${esc(p.type)} · ${esc(p.tagline)}${discovery}</p>
           <p class="planet-hero__desc">${esc(p.description)}</p>
           <div class="planet-hero__cta">
-            <a class="btn btn--primary btn--lg" id="primaryCta" href="../index.html">
+            <!-- Deliberately NOT id="primaryCta": that id is what js/liquid-chrome.js
+                 looks for, so reusing it here spent a second full-rate WebGL context on
+                 every planet page in order to put a premium metallic finish on a BACK
+                 button — and made the same page's primary action render amber or
+                 near-black depending on the visitor's hardware. The amber pill is the
+                 right treatment for this control, and phones get one less GL context. -->
+            <a class="btn btn--primary btn--lg" id="backToSystem" href="../index.html">
               Back to the Solar System
               ${CHEV}
             </a>
@@ -261,7 +268,7 @@ function render(p) {
       </header>
 
       <!-- dashboard -->
-      <div id="dashboard">${section("key", "Key facts", keyFacts)}${section("time", "Time & motion", timeMotion, true)}${section("mass", "Mass & physical characteristics", massPhysical)}${section("atmos", "Atmosphere & magnetosphere", atmosphere, true)}${section("moons", "Moons & rings", moonsRings, true)}${section("about", "Make-up", makeup, true)}${funFacts}${missions}
+      <div id="dashboard" tabindex="-1">${section("key", "Key facts", keyFacts)}${section("time", "Time & motion", timeMotion, true)}${section("mass", "Mass & physical characteristics", massPhysical)}${section("atmos", "Atmosphere & magnetosphere", atmosphere, true)}${section("moons", "Moons & rings", moonsRings, true)}${section("about", "Make-up", makeup, true)}${funFacts}${missions}
       </div>
 
       <!-- foot -->
@@ -278,8 +285,10 @@ function render(p) {
     </div>
   </main>
 
+  <!-- js/liquid-chrome.js is deliberately absent: its only target is #primaryCta,
+       which no longer exists on these pages (see the back link above). Loading it
+       here cost a request and a parse to reach an early return. -->
   <script src="../js/background.js"></script>
-  <script src="../js/liquid-chrome.js"></script>
   <script src="../js/backlink.js"></script>
 </body>
 </html>
