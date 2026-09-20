@@ -73,6 +73,93 @@
     tile("Farthest craft", "Voyager 1", "", st.voyager1)
   );
 
+  /* ── the map's scale disclaimer ──
+     meta.scaleNote was authored and rendered on no page at all. It is the
+     sentence that makes the map honest -- the orbit spacing and planet sizes
+     ARE wrong, deliberately, and saying so belongs beside them rather than in
+     a data file nobody reads. */
+  var scaleTag = document.getElementById("scaleTag");
+  if (scaleTag && S.meta && S.meta.scaleNote) {
+    scaleTag.innerHTML =
+      'Data: <a href="' + attr(S.meta.sourceUrl) + '" target="_blank" rel="noopener">' +
+      esc(S.meta.source) + "</a> · " +
+      '<span class="text-lo">' + esc(S.meta.scaleNote) + "</span>";
+  }
+
+  /* ── You, on another world ──
+     Surface gravity and orbital period are the two figures on this site that a
+     reader can feel directly, and both were already here doing nothing much.
+     facts.orbital.days in particular was authored for all nine bodies and
+     rendered on no page at all until now.
+
+     The section is authored `hidden` in index.html and only revealed here, so
+     a visitor without JS gets no half-built calculator. */
+  var youGrid = document.getElementById("youGrid");
+  var youMass = document.getElementById("youMass");
+  var youAge = document.getElementById("youAge");
+  var youUnit = document.getElementById("youUnit");
+  var youStatus = document.getElementById("youStatus");
+
+  if (youGrid && youMass && youAge && youUnit) {
+    var EARTH_G = 9.80665;       // standard gravity, m/s^2
+    var EARTH_YEAR = 365.25;     // days, matching facts.orbital.days
+
+    function fmtMass(v) {
+      if (!isFinite(v)) return "—";
+      return v >= 100 ? v.toFixed(0) : v.toFixed(1);
+    }
+    function fmtYears(v) {
+      if (!isFinite(v)) return "—";
+      if (v >= 100) return v.toFixed(0);
+      if (v >= 10) return v.toFixed(1);
+      return v.toFixed(2);
+    }
+
+    function renderYou() {
+      var mass = parseFloat(youMass.value);
+      var age = parseFloat(youAge.value);
+      var unit = youUnit.value === "lb" ? "lb" : "kg";
+      var haveMass = isFinite(mass) && mass > 0;
+      var haveAge = isFinite(age) && age >= 0;
+
+      var html = S.planets.map(function (p) {
+        var g = parseFloat(p.facts.gravity.value);
+        var days = p.facts.orbital.days;
+        var w = haveMass ? mass * (g / EARTH_G) : NaN;
+        var yrs = haveAge && days ? age * (EARTH_YEAR / days) : NaN;
+        var isEarth = p.id === "earth";
+        return (
+          '<a class="you-card' + (isEarth ? " you-card--home" : "") +
+            '" href="planet/' + attr(p.id) + '.html" style="--c: ' + attr(p.color) + '">' +
+            '<span class="you-card__name">' + esc(p.name) + "</span>" +
+            '<span class="you-card__stat"><b class="tnum">' + esc(fmtMass(w)) +
+              '</b><span class="unit">' + esc(unit) + "</span></span>" +
+            '<span class="you-card__stat you-card__stat--age"><b class="tnum">' +
+              esc(fmtYears(yrs)) + '</b><span class="unit">yr' +
+              (isEarth ? "" : "s here") + "</span></span>" +
+          "</a>"
+        );
+      }).join("");
+      youGrid.innerHTML = html;
+
+      if (youStatus && haveMass && haveAge) {
+        var j = getPlanet("jupiter"), me = getPlanet("mercury");
+        youStatus.textContent =
+          "On Jupiter you would weigh " +
+          fmtMass(mass * (parseFloat(j.facts.gravity.value) / EARTH_G)) + " " + unit +
+          "; on Mercury, " +
+          fmtMass(mass * (parseFloat(me.facts.gravity.value) / EARTH_G)) + " " + unit + ".";
+      }
+    }
+
+    youMass.addEventListener("input", renderYou);
+    youAge.addEventListener("input", renderYou);
+    youUnit.addEventListener("change", renderYou);
+    renderYou();
+    var youSection = document.getElementById("you");
+    if (youSection) youSection.hidden = false;
+  }
+
   /* ── Missions: the list, plus a detail dialog ──
      Each row is a real <button>. Activating it opens a native <dialog>, which
      hands us focus trapping, Escape-to-close, a backdrop and focus restoration

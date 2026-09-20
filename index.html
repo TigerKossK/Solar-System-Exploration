@@ -239,7 +239,11 @@
             <li><a href="planet/uranus.html"  data-planet="uranus">Uranus</a></li>
             <li><a href="planet/neptune.html" data-planet="neptune">Neptune</a></li>
           </ul>
-          <span class="source-tag">
+          <!-- The map deliberately is not to scale, and saying so plainly next to it
+               is part of the point. The full sentence lives in SOLAR_SYSTEM.meta
+               .scaleNote; js/sections.js expands this into it, so the claim and the
+               data cannot drift apart. -->
+          <span class="source-tag" id="scaleTag">
             Data: <a href="https://nssdc.gsfc.nasa.gov/planetary/factsheet/" target="_blank" rel="noopener">NASA</a>
             · Illustrative scale
           </span>
@@ -283,7 +287,51 @@
       </div>
     </section>
 
-    <!-- ── 5 · Missions / exploration ── -->
+    <!-- ── 5 · You, on another world ──
+         The one place on the site where the numbers are about the reader. Every
+         figure comes from the same NASA data as the rest (surface gravity and
+         orbital period), applied to two values they type. Rendered by
+         js/sections.js; the section is removed entirely without JS, since an
+         empty calculator is worse than no calculator. -->
+    <section class="section section--you" id="you" aria-labelledby="you-title" hidden>
+      <div class="panel container section__card">
+        <div class="section__head">
+          <h2 class="section__title serif reveal" id="you-title">You, on another world</h2>
+          <p class="section__lead reveal" data-reveal-delay="1">
+            Gravity and orbits are abstract until they are yours. Enter a weight and an
+            age and watch both come apart across the system.
+          </p>
+        </div>
+        <div class="youform reveal" data-reveal-delay="2">
+          <div class="youform__field">
+            <label class="kicker-label" for="youMass">Your weight</label>
+            <div class="youform__row">
+              <input class="youform__input" id="youMass" type="number" inputmode="decimal"
+                     min="1" max="1000" step="0.1" value="70" />
+              <select class="youform__unit" id="youUnit" aria-label="Weight unit">
+                <option value="kg" selected>kg</option>
+                <option value="lb">lb</option>
+              </select>
+            </div>
+          </div>
+          <div class="youform__field">
+            <label class="kicker-label" for="youAge">Your age</label>
+            <div class="youform__row">
+              <input class="youform__input" id="youAge" type="number" inputmode="decimal"
+                     min="0" max="150" step="1" value="30" />
+              <span class="youform__unit youform__unit--static">Earth years</span>
+            </div>
+          </div>
+        </div>
+        <div class="you-grid reveal" id="youGrid" data-reveal-delay="3"></div>
+        <p class="sr-only" id="youStatus" role="status" aria-live="polite"></p>
+        <span class="source-tag">
+          Weight scales with surface gravity; age is your time in that world&rsquo;s years.
+        </span>
+      </div>
+    </section>
+
+    <!-- ── 6 · Missions / exploration ── -->
     <section class="section section--missions" id="missions" aria-labelledby="missions-title">
       <div class="panel container section__card">
         <div class="section__head">
@@ -294,7 +342,7 @@
       </div>
     </section>
 
-    <!-- ── 6 · Educational conclusion ── -->
+    <!-- ── 7 · Educational conclusion ── -->
     <section class="section section--outro" id="about" aria-labelledby="outro-title">
       <div class="panel container section__card">
         <h2 class="section__title serif reveal" id="outro-title">Keep looking up.</h2>

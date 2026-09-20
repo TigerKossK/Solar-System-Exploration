@@ -263,3 +263,76 @@ body.is-exploring .readout {
 .sun-visual.is-paused .sun-visual__core::before,
 .sun-visual.is-paused .sun-visual__core::after,
 .scroll-cue.is-paused .scroll-cue__dot { animation-play-state: paused; }
+
+/* ── 5 · You, on another world ──────────────────────────────
+   The calculator is deliberately plain next to the rest of the page: the
+   interest is in the numbers changing, and a heavily styled form would
+   compete with them. */
+.section--you .section__head { margin-bottom: clamp(18px, 3vh, 30px); }
+
+.youform { display: flex; flex-wrap: wrap; gap: clamp(14px, 3vw, 32px); margin-bottom: clamp(18px, 3vh, 28px); }
+.youform__field { display: grid; gap: 7px; }
+.youform__row {
+  display: flex; align-items: stretch; gap: 8px;
+  border: 1px solid var(--glass-brd); border-radius: var(--r-md);
+  background: var(--glass-fill); padding: 4px 4px 4px 12px;
+}
+.youform__row:focus-within { border-color: var(--accent); }
+.youform__input {
+  width: 6.5ch; min-width: 0; background: none; border: 0; outline: none;
+  color: var(--text-hi);
+  font-family: var(--font-display); font-weight: 700;
+  /* 16px floor: below it, iOS Safari zooms the viewport the moment the field
+     takes focus and never zooms back out. */
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
+  padding: 8px 0;
+}
+/* The spinners are tiny, mouse-only, and push the value off-centre. */
+.youform__input::-webkit-outer-spin-button,
+.youform__input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.youform__input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+.youform__unit {
+  display: inline-flex; align-items: center;
+  background: rgba(255,255,255,.05); border: 0; border-radius: var(--r-sm);
+  color: var(--text-mid); font: inherit; font-size: .88rem; font-weight: 600;
+  padding: 0 10px; min-height: 40px;
+}
+.youform__unit--static { background: none; color: var(--text-lo); padding-right: 6px; }
+select.youform__unit { cursor: pointer; }
+
+.you-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.you-card {
+  display: grid; gap: 4px; padding: 14px 15px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--glass-brd);
+  background: rgba(255,255,255,.035);
+  text-decoration: none; color: var(--text-hi);
+  border-left: 3px solid var(--c, var(--accent));
+  transition: background .2s var(--ease), border-color .2s var(--ease), transform .2s var(--ease);
+}
+.you-card:hover { background: rgba(255,255,255,.07); transform: translateY(-2px); }
+.you-card--home { background: rgba(245,185,66,.08); }
+.you-card__name {
+  font-family: var(--font-display); font-weight: 700; font-size: .96rem;
+  letter-spacing: -.01em; margin-bottom: 2px;
+}
+.you-card__stat { display: flex; align-items: baseline; gap: 5px; color: var(--text-hi); }
+.you-card__stat b { font-family: var(--font-display); font-weight: 700; font-size: 1.24rem; letter-spacing: -.02em; }
+.you-card__stat .unit { color: var(--text-lo); font-size: .8rem; font-weight: 600; }
+.you-card__stat--age b { font-size: 1.05rem; font-weight: 600; color: var(--text-mid); }
+
+@media (max-width: 460px) {
+  .you-grid { grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); gap: 8px; }
+  .you-card { padding: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .you-card { transition: none; }
+}
+
+/* .source-tag is nowrap by default (it is normally three or four words), but
+   this one carries the full scale disclaimer from SOLAR_SYSTEM.meta.scaleNote
+   — a whole sentence, which would otherwise run straight off the card. */
+/* display:block, not the inherited inline-flex: flex would keep the sentence
+   on one un-wrappable line however permissive white-space is. */
+#scaleTag { display: block; white-space: normal; max-width: 68ch; line-height: 1.45; }
