@@ -290,20 +290,13 @@
   var SEEDS = ["Jupiter", "moons", "Voyager", "frost line"];
 
   function render(query) {
-    /* Typing can outrun the lazy index load, so every entry point funnels back
-       through loadIndex rather than assuming DOCS exists. (Function
-       declarations hoist, so referring to loadIndex from above is fine.) */
-    if (indexState !== "ready") {
-      if (indexState !== "failed") {
-        results.innerHTML = '<p class="search__empty">Loading…</p>';
-        loadIndex(function () { render(query); });
-      }
-      return;
-    }
     rows = [];
     active = -1;
     input.removeAttribute("aria-activedescendant");
 
+    /* The empty state is checked BEFORE the index, because it does not need
+       one. Otherwise opening the palette flashed "Loading…" and only then the
+       suggestions, which made an instant, in-memory search feel slow. */
     if (!query.trim()) {
       results.innerHTML = '<p class="search__empty">Try ' +
         SEEDS.map(function (s) {
@@ -311,6 +304,17 @@
         }).join("") + "</p>";
       input.setAttribute("aria-expanded", "false");
       status.textContent = "";
+      return;
+    }
+
+    /* Typing can outrun the lazy index load, so every entry point funnels back
+       through loadIndex rather than assuming DOCS exists. (Function
+       declarations hoist, so calling loadIndex from above it is fine.) */
+    if (indexState !== "ready") {
+      if (indexState !== "failed") {
+        results.innerHTML = '<p class="search__empty">Loading…</p>';
+        loadIndex(function () { render(query); });
+      }
       return;
     }
 

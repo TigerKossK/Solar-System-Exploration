@@ -41,6 +41,18 @@ PLANETS = ["mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "
 # Chrome, not content: navigation, the skip link, the injected mobile bar, and
 # the cosmic background would otherwise appear in every single record.
 SKIP_TAGS = {"script", "style", "svg", "noscript", "template"}
+
+# Void elements never receive an end tag, so they must not enter the depth
+# stacks below. index.html contains one bare <br> in the opening headline;
+# pushing it left open_tags permanently one deeper than reality, and every
+# id/skip depth comparison after that point was measured against the wrong
+# number. It happened to stay self-consistent (the offset applied to both
+# sides), but a second void element at a different nesting depth would have
+# started silently swallowing content.
+VOID_TAGS = {
+    "area", "base", "br", "col", "embed", "hr", "img", "input",
+    "link", "meta", "param", "source", "track", "wbr",
+}
 SKIP_CLASSES = {
     "topbar", "tabbar", "sheet", "skip-link", "cosmos", "nav__links",
     "neighbors", "content-next", "source-tag", "backlink-bar", "scroll-cue",
@@ -88,6 +100,12 @@ class Extractor(HTMLParser):
     # -- parser hooks -----------------------------------------------------
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
+        if tag in VOID_TAGS:
+            # No end tag will ever arrive, so stay out of the depth stacks.
+            # Still counts as a word boundary: "worlds.<br>One star.".
+            if not self.depth_skip:
+                self._gap()
+            return
         self.open_tags.append(tag)
         classes = set((a.get("class") or "").split())
         if tag in SKIP_TAGS or (classes & SKIP_CLASSES):
@@ -105,6 +123,11 @@ class Extractor(HTMLParser):
             self.heading_id = a.get("id") or self._nearest_id()
 
     def handle_endtag(self, tag):
+        # HTMLParser.handle_startendtag ("<meta … />") dispatches to BOTH hooks
+        # by default, so this must mirror the guard above or the stacks unwind
+        # one level too far.
+        if tag in VOID_TAGS:
+            return
         if self.skip_stack and self.skip_stack[-1] == len(self.open_tags):
             self.skip_stack.pop()
             self.depth_skip -= 1

@@ -122,12 +122,24 @@
       var haveMass = isFinite(mass) && mass > 0;
       var haveAge = isFinite(age) && age >= 0;
 
+      /* Collected during the same pass that builds the grid, rather than looked
+         up again afterwards. The announcement needs the heaviest and lightest
+         worlds, and re-deriving them with getPlanet("jupiter") meant a second
+         traversal plus two results that then had to be null-checked — for ids
+         that are right here in the array being walked. */
+      var extremes = null;
+
       var html = S.planets.map(function (p) {
         var g = parseFloat(p.facts.gravity.value);
         var days = p.facts.orbital.days;
         var w = haveMass ? mass * (g / EARTH_G) : NaN;
         var yrs = haveAge && days ? age * (EARTH_YEAR / days) : NaN;
         var isEarth = p.id === "earth";
+        if (haveMass && isFinite(w)) {
+          if (!extremes) extremes = { hiName: p.name, hi: w, loName: p.name, lo: w };
+          if (w > extremes.hi) { extremes.hi = w; extremes.hiName = p.name; }
+          if (w < extremes.lo) { extremes.lo = w; extremes.loName = p.name; }
+        }
         return (
           '<a class="you-card' + (isEarth ? " you-card--home" : "") +
             '" href="planet/' + attr(p.id) + '.html" style="--c: ' + attr(p.color) + '">' +
@@ -142,13 +154,14 @@
       }).join("");
       youGrid.innerHTML = html;
 
-      if (youStatus && haveMass && haveAge) {
-        var j = getPlanet("jupiter"), me = getPlanet("mercury");
+      /* Screen readers get the two ends of the range rather than all eight
+         cards read out in sequence, which is the point the grid is making. */
+      if (youStatus && extremes) {
         youStatus.textContent =
-          "On Jupiter you would weigh " +
-          fmtMass(mass * (parseFloat(j.facts.gravity.value) / EARTH_G)) + " " + unit +
-          "; on Mercury, " +
-          fmtMass(mass * (parseFloat(me.facts.gravity.value) / EARTH_G)) + " " + unit + ".";
+          "Heaviest on " + extremes.hiName + " at " + fmtMass(extremes.hi) + " " + unit +
+          "; lightest on " + extremes.loName + " at " + fmtMass(extremes.lo) + " " + unit + ".";
+      } else if (youStatus) {
+        youStatus.textContent = "";
       }
     }
 

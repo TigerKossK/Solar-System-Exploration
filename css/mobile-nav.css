@@ -72,6 +72,7 @@
     color: var(--text-hi);
     box-shadow: 0 -24px 60px -24px rgba(0,0,0,.85);
     overflow: auto; overscroll-behavior: contain;
+    z-index: 70;   /* see the note in css/search.css - fallback path only */
   }
   .sheet::backdrop { background: rgba(4,10,9,.72); }
   .sheet__grip {
