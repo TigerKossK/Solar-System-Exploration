@@ -8,10 +8,12 @@ Explore Solar System Exploration directly from your browser:
 
 Discover the planets, the Sun, moons, space missions, and the incredible story of humanity's exploration of our Solar System.
 
-## 🎬 GIF Demo
+## 🎬 See It Live
 
-### Main New Features
-![Demo1](assets/Demo/Demo1.gif)
+The site is the demo — the orbital map, the scroll-driven intro and the planet
+dashboards all need motion and interaction to make any sense as stills:
+
+**[Open Solar System Exploration →](https://tigerkossk.github.io/Solar-System-Exploration/)**
 
 
 **Solar System Exploration** is a modern, interactive website created to help people explore and understand our Solar System in an engaging and visually appealing way.
