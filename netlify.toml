@@ -1,0 +1,41 @@
+# Netlify configuration
+#
+# WHY THIS FILE EXISTS
+# Without it, Netlify inspects package.json, finds a "build" script, and runs
+# `npm run build` -- which here is:
+#
+#     node scripts/build-planets.js && python scripts/build-search-index.py
+#
+# That must not run on Netlify. Both of those are LOCAL/CI generators whose
+# output (planet/*.html and js/search-index.js) is committed to the repository,
+# so the repo root already is the finished site -- exactly as GitHub Pages
+# serves it. Running them on a deploy adds a way for the deploy to fail
+# (the second command needs a `python` executable, which is not guaranteed on
+# Netlify's build image) while producing files that are already there.
+#
+# The drift check in .github/workflows/build-check.yml is what guarantees those
+# committed files are current. Netlify only needs to serve them.
+
+[build]
+  # The repo root IS the site. Nothing unpublishable is tracked: plans/,
+  # Improvements/, .claude/ and .agents/ are all gitignored, so the whole
+  # tracked tree is ~3.5 MB of real site files.
+  publish = "."
+
+  # Deliberately a no-op rather than an empty string, so the deploy log says
+  # why. Do NOT delete this key: with no `command` at all, the package.json
+  # auto-detection above comes straight back.
+  command = "echo 'No build step: planet/*.html and js/search-index.js are committed.'"
+
+[[headers]]
+  # This deploy exists to compare UI and UX on real devices, not to be found in
+  # search. Every page's <link rel="canonical"> already points at the GitHub
+  # Pages home, and this makes the intent explicit so a preview URL can never
+  # compete with the real site for indexing.
+  #
+  # Remove this block if Netlify ever becomes the primary host -- and update the
+  # canonical/og:url tags and sitemap.xml at the same time, since they all name
+  # the github.io origin.
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
