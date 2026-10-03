@@ -29,7 +29,15 @@
 
   /* accent — PLACEHOLDER (solar amber ≙ the Sun); TBD by user */
   --accent:      #f5b942;
+  /* --accent-warm is the Sun's own orange: correct inside the plasma gradients
+     (.sun__core, .sun-visual__core), where it sits between amber and a deep
+     ember and reads as heat. It is NOT right as half of a flat button fill --
+     at that size #ff9b3d reads as orange-red and fights the teal palette. So
+     buttons get --accent-deep: the same hue as --accent, just darker, which
+     keeps the amber identity and the vertical shading without leaving the
+     family. (Contrast against --accent-ink is unchanged: 8.4:1.) */
   --accent-warm: #ff9b3d;
+  --accent-deep: #e9a62c;
   --accent-ink:  #241703;
 
   /* geometry */

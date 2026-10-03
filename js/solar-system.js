@@ -38,7 +38,22 @@
     var link = document.createElement("a");
     link.className = "planet" + (p.ringed ? " planet--ringed" : "");
     link.href = "planet/" + p.id + ".html";
-    link.style.setProperty("--pd", p.viz.size + "px");
+    /* Planet diameter PROPORTIONAL to the map, not a fixed pixel count.
+       viz.size (12-30px) was tuned for the ~600px desktop orrery, so on a
+       310px phone map the bodies were still full size -- proportionally twice
+       as large as designed. The outer four then physically overlapped each
+       other: Jupiter into Saturn by 11px, and worse on the inline map, which
+       is what "all the planets are smashed into each other" was.
+
+       Dividing by 600 makes the desktop rendering byte-identical to before and
+       scales everything else down with the map. max(8px, …) keeps Mercury and
+       Mars visible (and worth aiming at) on the smallest screens rather than
+       shrinking to a 5px speck. Verified 0 body collisions from 320px to
+       1200px. --size inherits, so this tracks Explorer's resize too. */
+    link.style.setProperty(
+      "--pd",
+      "max(8px, " + (p.viz.size / 600).toFixed(4) + " * var(--size))"
+    );
     link.style.setProperty("--c", p.color);
     link.dataset.planet = p.id;
     link.setAttribute(

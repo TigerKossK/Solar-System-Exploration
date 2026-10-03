@@ -104,11 +104,11 @@
   display: inline-flex; align-items: center; gap: 8px; min-height: 44px;
   padding: 11px 22px; border-radius: var(--r-pill);
   font-family: var(--font-ui); font-weight: 600;
-  background: linear-gradient(180deg, var(--accent), var(--accent-warm)); color: var(--accent-ink);
-  box-shadow: 0 10px 26px -12px rgba(245,155,61,.6), 0 1px 0 rgba(255,255,255,.35) inset;
+  background: linear-gradient(180deg, var(--accent), var(--accent-deep)); color: var(--accent-ink);
+  box-shadow: 0 10px 26px -12px rgba(245,185,66,.45), 0 1px 0 rgba(255,255,255,.35) inset;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease);
 }
-.journey__enter:hover { transform: translateY(-2px); box-shadow: 0 16px 32px -12px rgba(245,155,61,.7), 0 1px 0 rgba(255,255,255,.4) inset; }
+.journey__enter:hover { transform: translateY(-2px); box-shadow: 0 16px 32px -12px rgba(245,185,66,.55), 0 1px 0 rgba(255,255,255,.4) inset; }
 .journey__enter svg { transition: transform .2s var(--ease); }
 .journey__enter:hover svg { transform: translateX(3px); }
 

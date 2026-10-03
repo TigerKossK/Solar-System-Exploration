@@ -59,11 +59,11 @@
 .btn:hover .btn__chev { transform: translateX(3px); }
 .btn--lg { padding: 14px 24px; font-size: 1rem; }
 .btn--primary {
-  background: linear-gradient(180deg, var(--accent), var(--accent-warm));
+  background: linear-gradient(180deg, var(--accent), var(--accent-deep));
   color: var(--accent-ink);
-  box-shadow: 0 10px 26px -10px rgba(245,155,61,.6), 0 1px 0 rgba(255,255,255,.35) inset;
+  box-shadow: 0 10px 26px -10px rgba(245,185,66,.45), 0 1px 0 rgba(255,255,255,.35) inset;
 }
-.btn--primary:hover { transform: translateY(-2px); box-shadow: 0 16px 32px -12px rgba(245,155,61,.68), 0 1px 0 rgba(255,255,255,.4) inset; }
+.btn--primary:hover { transform: translateY(-2px); box-shadow: 0 16px 32px -12px rgba(245,185,66,.55), 0 1px 0 rgba(255,255,255,.4) inset; }
 .btn--ghost { background: var(--glass-fill); border-color: var(--glass-brd); color: var(--text-hi); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 .btn--ghost:hover { border-color: var(--glass-brd-strong); background: rgba(255,255,255,.05); transform: translateY(-2px); }
 .btn--sm { padding: 8px 14px; font-size: .88rem; }
