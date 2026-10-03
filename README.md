@@ -255,7 +255,10 @@ Screenshots can be added here to show different parts of the Solar System Explor
 ![Playground](assets/Screenshots/Playground.png)
 
 ### 📱 Mobile Version
-![Mobile](assets/Screenshots/Mobile.png)
+
+<p align="center">
+  <img src="assets/Screenshots/Mobile.png" alt="Mobile" width="320">
+</p>
 
 
 ### 🚀 Exploration & Missions
