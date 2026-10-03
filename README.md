@@ -242,29 +242,24 @@ Want to see what the website looks like?
 
 Screenshots can be added here to show different parts of the Solar System Exploration experience.
 
-### 🌌 Main Experience
-
-*Add screenshot here*
+### 🌌 Main Menu
+![Mainscreen](assets/Screenshots/Mainscreen.png)
 
 ### 🪐 Explore Solar System
-
-*Add screenshot here*
+![SolarSystem](assets/Screenshots/SolarSystem.png)
 
 ### 🔎 Search Box
-
-*Add screenshot here*
+![SearchBox](assets/Screenshots/SearchBox.png)
 
 ### 🎮 Playground
-
-*Add screenshot here*
+![Playground](assets/Screenshots/Playground.png)
 
 ### 📱 Mobile Version
+![Mobile](assets/Screenshots/Mobile.png)
 
-*Add screenshot here*
 
 ### 🚀 Exploration & Missions
-
-*Add screenshot here*
+![Missions](assets/Screenshots/Missions.png)
 
 ---
 
