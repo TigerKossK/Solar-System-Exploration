@@ -84,13 +84,6 @@
     "title": "New view of the Pillars of Creation — visible (Hubble, 2014; released 5 January 2015)",
     "url": "https://esahubble.org/images/heic1501a/"
   },
-  "image-jwst-carina": {
-    "center": "STScI (Webb)",
-    "creator": "NASA ESA CSA STScI",
-    "nasa_id": "carina_nebula",
-    "title": "James Webb Space Telescope NIRCam Image of the “Cosmic Cliffs” in Carina Nebula",
-    "url": "https://images.nasa.gov/details/carina_nebula"
-  },
   "image-jwst-pillars": {
     "center": "ESA/Webb",
     "creator": "NASA, ESA, CSA, STScI; J. DePasquale, A. Koekemoer, A. Pagan (STScI)",
