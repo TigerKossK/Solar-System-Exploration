@@ -54,8 +54,18 @@
     return location.pathname.split("/").pop() || "index.html";
   }
 
+  /* localStorage that never throws. Private windows, blocked site data and some
+     file:// setups make every access throw; a remembered preference is a
+     convenience, so failing to remember one must never break the page. */
+  var store = {
+    get: function (k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } },
+    set: function (k, v) { try { window.localStorage.setItem(k, String(v)); } catch (e) { /* not stored */ } },
+    remove: function (k) { try { window.localStorage.removeItem(k); } catch (e) { /* nothing to do */ } },
+  };
+
   window.SolarUtil = {
     esc: esc, attr: attr,
     isTyping: isTyping, dialogOpen: dialogOpen, pageName: pageName,
+    store: store,
   };
 })();

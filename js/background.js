@@ -164,7 +164,8 @@
      viewport changed. On mobile that is guaranteed: the first scroll collapses
      the URL bar and fires resize. */
   window.addEventListener("resize", function () {
-    if (resize() && reduce) draw(0);
+    // also when the visitor has paused (no loop running to repaint it)
+    if (resize() && (reduce || !raf)) still();
   }, { passive: true });
   resize();
 
@@ -185,13 +186,30 @@
     draw(t);
   }
 
+  /* The frame on screen when the loop is not running: the last one drawn, so
+     pausing freezes the field where it is instead of snapping it to t=0. */
+  function still() { draw(lastFrame > 0 ? lastFrame : 0); }
+
+  /* Three independent reasons to be stopped -- a hidden tab, the visitor's
+     "Pause motion" switch (js/motion.js), a lost GPU context -- and ONE place
+     that checks all of them. Restarting used to check only the tab, so coming
+     back to it after a context loss restarted the loop on a dead context. */
+  function userPaused() { return !!(window.SolarMotion && window.SolarMotion.paused()); }
+  function start() {
+    if (raf || document.hidden || userPaused() || gl.isContextLost()) return;
+    raf = window.requestAnimationFrame(loop);
+  }
+  function stop() { if (raf) { window.cancelAnimationFrame(raf); raf = null; } }
+
   if (reduce) {
     draw(0); // one static frame, no continuous work
   } else {
-    raf = window.requestAnimationFrame(loop);
+    if (userPaused()) still(); else start();
     document.addEventListener("visibilitychange", function () {
-      if (document.hidden) { if (raf) { window.cancelAnimationFrame(raf); raf = null; } }
-      else if (!raf) { raf = window.requestAnimationFrame(loop); }
+      if (document.hidden) stop(); else start();
+    });
+    document.addEventListener("solar:motion", function (e) {
+      if (e.detail && e.detail.paused) stop(); else start();
     });
   }
 
@@ -202,11 +220,11 @@
      forever issuing no-op calls against a dead context. */
   canvas.addEventListener("webglcontextlost", function (e) {
     e.preventDefault();
-    if (raf) { window.cancelAnimationFrame(raf); raf = null; }
+    stop();
   }, false);
   canvas.addEventListener("webglcontextrestored", function () {
     if (!setupGL()) return;          // give up quietly; the CSS gradient shows
-    if (reduce) draw(0);
-    else if (!raf) raf = window.requestAnimationFrame(loop);
+    if (reduce || userPaused()) still();
+    else start();
   }, false);
 })();

@@ -214,6 +214,31 @@
 .orrery__stage.is-paused .planet__body,
 .orrery__stage.is-paused .planet__tagspin { animation-play-state: paused; }
 
+/* ── "Pause motion" (js/motion.js, WCAG 2.2.2) ──
+   The visitor's switch holds every decorative loop where it is -- the orbits,
+   both Suns and the scroll cue. The WebGL canvases stop themselves on the same
+   switch (js/background.js, js/liquid-chrome.js). */
+html[data-motion="paused"] .orbit__spin,
+html[data-motion="paused"] .planet__body,
+html[data-motion="paused"] .planet__tagspin,
+html[data-motion="paused"] .sun__core,
+html[data-motion="paused"] .sun__core::before,
+html[data-motion="paused"] .sun-visual__core,
+html[data-motion="paused"] .sun-visual__core::before,
+html[data-motion="paused"] .sun-visual__core::after,
+html[data-motion="paused"] .scroll-cue__dot { animation-play-state: paused !important; }
+
+/* the switch itself: an icon pill in the topbar, beside search */
+.motion-toggle {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 40px; height: 40px; border-radius: var(--r-pill);
+  border: 1px solid var(--glass-brd); background: var(--glass-fill);
+  color: var(--text-mid);
+  transition: color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+}
+.motion-toggle:hover { color: var(--text-hi); border-color: var(--glass-brd-strong); background: rgba(255,255,255,.06); }
+@media (pointer: coarse) { .motion-toggle { width: 44px; height: 44px; } }
+
 /* ── readout (frosted preview — name, type, one fact, explore) ──
    The panel is a pass-through overlay: the container takes NO pointer events
    (pointer-events: none) so moving the cursor across it still reaches the

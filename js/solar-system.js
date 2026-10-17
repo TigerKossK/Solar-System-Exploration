@@ -255,8 +255,14 @@
       '<button class="readout__arrow" type="button" data-dir="-1" aria-label="Preview the previous planet">' + chev(-1) + "</button>" +
       '<button class="readout__arrow" type="button" data-dir="1" aria-label="Preview the next planet">' + chev(1) + "</button>";
     readoutEl.appendChild(nav);
+    /* The motion switch sits right beside the thing that moves (WCAG 2.2.2) --
+       a second, synced copy of the one in the topbar (js/motion.js). */
+    if (window.SolarMotion && window.SolarMotion.offered) {
+      nav.appendChild(window.SolarMotion.button("readout__arrow readout__motion"));
+    }
     nav.addEventListener("click", function (e) {
-      var btn = e.target.closest(".readout__arrow");
+      // [data-dir]: the motion switch shares the arrow styling but must not step
+      var btn = e.target.closest(".readout__arrow[data-dir]");
       if (!btn) return;
       step(btn.getAttribute("data-dir") === "-1" ? -1 : 1);
     });
