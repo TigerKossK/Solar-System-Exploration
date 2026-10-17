@@ -300,6 +300,12 @@ body.is-exploring .readout {
 }
 .youform__unit--static { background: none; color: var(--text-lo); padding-right: 6px; }
 select.youform__unit { cursor: pointer; }
+/* Out-of-range input: the field's outline says which, the note says why. */
+.youform__row:has(.youform__input[aria-invalid="true"]) { border-color: var(--accent); }
+.youform__note {
+  margin: calc(-1 * clamp(6px, 1.2vh, 12px)) 0 clamp(14px, 2vh, 20px);
+  color: var(--accent); font-size: .92rem; font-weight: 600;
+}
 
 .you-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
 .you-card {

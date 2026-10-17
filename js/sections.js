@@ -101,8 +101,15 @@
   var youStatus = document.getElementById("youStatus");
 
   if (youGrid && youMass && youAge && youUnit) {
-    var EARTH_G = 9.80665;       // standard gravity, m/s^2
-    var EARTH_YEAR = 365.25;     // days, matching facts.orbital.days
+    /* Earth's own figures from the data, not textbook constants. Scaling by
+       standard gravity (9.80665) while Earth's tile says 9.8 made the home card
+       disagree with what the reader typed: 100 kg came back as "99.9 kg" on
+       Earth. Using the same values the cards are built from makes Earth echo
+       the input exactly. */
+    var earth = window.getPlanet ? getPlanet("earth") : null;
+    var EARTH_G = earth ? parseFloat(earth.facts.gravity.value) : 9.8;   // m/s^2
+    var EARTH_YEAR = earth ? earth.facts.orbital.days : 365.2;           // days
+    var youNote = document.getElementById("youNote");
 
     function fmtMass(v) {
       if (!isFinite(v)) return "—";
@@ -110,17 +117,44 @@
     }
     function fmtYears(v) {
       if (!isFinite(v)) return "—";
+      if (v > 0 && v < 0.01) return "< 0.01";
       if (v >= 100) return v.toFixed(0);
       if (v >= 10) return v.toFixed(1);
       return v.toFixed(2);
+    }
+    /* The inputs' own min/max, so the limits live in one place (index.html).
+       Nothing submits this form, so the browser never enforced them: 1e25 kg
+       rendered as "2.355e+25" and overflowed every card. */
+    function inRange(input, v) {
+      var lo = parseFloat(input.min), hi = parseFloat(input.max);
+      return isFinite(v) && (!isFinite(lo) || v >= lo) && (!isFinite(hi) || v <= hi);
+    }
+    function flag(input, bad) {
+      input.setAttribute("aria-invalid", bad ? "true" : "false");
+      if (bad) input.setAttribute("aria-describedby", "youNote");
+      else input.removeAttribute("aria-describedby");
     }
 
     function renderYou() {
       var mass = parseFloat(youMass.value);
       var age = parseFloat(youAge.value);
       var unit = youUnit.value === "lb" ? "lb" : "kg";
-      var haveMass = isFinite(mass) && mass > 0;
-      var haveAge = isFinite(age) && age >= 0;
+      var haveMass = inRange(youMass, mass);
+      var haveAge = inRange(youAge, age);
+
+      /* An empty field means "still typing", not an error; only a value that is
+         there and out of range gets the message. */
+      var badMass = !haveMass && youMass.value.trim() !== "";
+      var badAge = !haveAge && youAge.value.trim() !== "";
+      flag(youMass, badMass);
+      flag(youAge, badAge);
+      if (youNote) {
+        var msgs = [];
+        if (badMass) msgs.push("a weight from " + youMass.min + " to " + youMass.max);
+        if (badAge) msgs.push("an age from " + youAge.min + " to " + youAge.max);
+        youNote.textContent = msgs.length ? "Enter " + msgs.join(" and ") + "." : "";
+        youNote.hidden = !msgs.length;
+      }
 
       /* Collected during the same pass that builds the grid, rather than looked
          up again afterwards. The announcement needs the heaviest and lightest
