@@ -187,7 +187,7 @@
 .planet__label {
   position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 7px;
   white-space: nowrap; pointer-events: none;
-  font-family: var(--font-ui); font-weight: 600; font-size: .72rem; letter-spacing: .02em;
+  font-family: var(--font-ui); font-weight: 600; font-size: .75rem; letter-spacing: .02em;
   color: var(--text-mid); text-shadow: 0 1px 3px rgba(0,0,0,.72), 0 0 2px rgba(0,0,0,.6);
   opacity: .76; transition: opacity .25s var(--ease), color .25s var(--ease);
 }
@@ -270,7 +270,7 @@
 .selector__list a:hover, .selector__list a.is-active { color: var(--text-hi); background: rgba(255,255,255,.05); }
 
 /* ── data-source indicator ──────────────────────────────── */
-.source-tag { display: inline-flex; align-items: center; gap: 6px; color: var(--text-lo); font-size: .74rem; white-space: nowrap; }
+.source-tag { display: inline-flex; align-items: center; gap: 6px; color: var(--text-lo); font-size: .75rem; white-space: nowrap; }
 .source-tag a { color: var(--text-mid); text-decoration: underline; text-underline-offset: 2px; text-decoration-color: var(--glass-brd-strong); }
 .source-tag a:hover { color: var(--text-hi); }
 
@@ -349,7 +349,9 @@ button.mission-item:focus-visible .mission-item__more { opacity: 1; transform: t
   border-top: 1px solid rgba(150,205,210,.14);
 }
 .mission-dialog__linkrow { display: flex; flex-wrap: wrap; gap: 8px; }
-.mission-dialog__close { margin-top: 22px; }
+/* Top-right, first in the DOM: reachable without scrolling a long dialog, and
+   where showModal() puts focus. The title wraps beside it. */
+.mission-dialog__close { float: right; margin: 0 0 12px 16px; }
 
 /* ── liquid-chrome primary CTA (JS-enhanced; amber pill otherwise) ── */
 .btn.has-liquid { position: relative; overflow: hidden; background: #0a1512; border-color: var(--glass-brd-strong); color: var(--text-hi); box-shadow: 0 10px 26px -12px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.05) inset; }

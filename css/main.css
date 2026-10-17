@@ -7,6 +7,11 @@
    ============================================================ */
 
 :root {
+  /* The whole site is dark, so the browser's own controls must be too: without
+     this the kg/lb <select> opened a white system dropdown on Windows/Linux, and
+     scrollbars and form autofill painted light. */
+  color-scheme: dark;
+
   /* surfaces — deep teal / dark green-blue */
   --bg-void:  #08110f;
   --bg-deep:  #0a1e26;

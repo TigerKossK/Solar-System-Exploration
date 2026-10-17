@@ -12,9 +12,12 @@
    ============================================================ */
 
 /* ── reveal (JS adds .is-visible as elements enter view) ──
-   Gated on html.js (set by an inline script in index.html) so that
-   with JavaScript disabled nothing is hidden — the no-JS baseline. */
-.js .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
+   Gated on html.js (set by an inline script in each page's <head>) so that
+   with JavaScript disabled nothing is hidden — the no-JS baseline. And on
+   NOT .no-reveal: that same inline script adds it at DOMContentLoaded if
+   js/reveal.js never ran (a 404, a throw). "JS is on" was never proof that
+   the revealer loaded; trusting it blanked every article section. */
+.js:not(.no-reveal) .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
 .reveal.is-visible { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .js .reveal { opacity: 1; transform: none; transition: none; }
@@ -23,6 +26,12 @@
 /* ── fixed nav — a restrained 2-zone glass pill (brand · links) ──
    supports the map, never competes with it. ── */
 .topbar { position: fixed; inset: 0 0 auto 0; z-index: 30; padding: 14px var(--pad); }
+/* Every page carrying this fixed bar reserves its height for scrolling — anchor
+   jumps, search deep links AND keyboard focus (WCAG 2.4.11). It replaces the
+   per-target scroll-margin-top values (84px on .section and #planets, 90px on
+   .instrument) that covered anchors but left focused elements and article
+   headings tucked under the bar. */
+html { scroll-padding-top: 84px; }
 .topbar__inner {
   display: flex; align-items: center; justify-content: space-between; gap: 20px;
   padding: 9px 10px 9px 18px; border-radius: var(--r-pill);
@@ -41,7 +50,7 @@
 .scroll { display: block; }
 .section {
   position: relative; z-index: 0; /* local stacking context for the ambient glows below */
-  min-height: 100vh; min-height: 100svh; scroll-margin-top: 84px;
+  min-height: 100vh; min-height: 100svh;
   display: grid; place-items: center;
   padding: var(--space-section-y) var(--pad) clamp(64px, 9vh, 110px);
 }
@@ -77,8 +86,8 @@
 /* ── 3 · Main menu (hero + orrery) — spacing/rhythm only; the
    .hero/.orrery/.readout primitives themselves live in components.css ── */
 .section--menu .selector { margin-top: clamp(20px, 4vh, 40px); }
-/* the no-JS primary CTA jumps to #planets; clear the fixed topbar like .section does */
-#planets { scroll-margin-top: 84px; }
+/* (#planets — the no-JS CTA's target — clears the fixed topbar through the
+   html scroll-padding above.) */
 
 /* Simplify the explore model to Orbit + arrows: once the map has actually been
    built, drop the "The eight planets" heading + duplicate link list.

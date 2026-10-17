@@ -220,7 +220,7 @@
 
   set("missionsList", missions.map(function (m, i) {
     return (
-      '<button class="mission-item" type="button" data-mission="' + i + '">' +
+      '<button class="mission-item" type="button" aria-haspopup="dialog" data-mission="' + i + '">' +
       '<span class="mission-item__name">' + esc(m.name) + "</span>" +
       '<span class="mission-item__years tnum">' + esc(m.year) + "</span>" +
       '<span class="mission-item__note">' + esc(m.agency) + " — " + esc(m.note) + "</span>" +
@@ -232,9 +232,13 @@
   var dlg = document.createElement("dialog");
   dlg.className = "mission-dialog";
   dlg.setAttribute("aria-labelledby", "missionDialogTitle");
+  /* Close comes FIRST. showModal() focuses the first focusable element, and
+     with Close at the end that was the first "Where this leads" link — below
+     the title, the note and every highlight, so a screen reader started there
+     and a phone opened the dialog already scrolled past its own heading. */
   dlg.innerHTML =
-    '<div id="missionDialogBody"></div>' +
-    '<button class="mission-dialog__close btn btn--ghost btn--sm" type="button">Close</button>';
+    '<button class="mission-dialog__close btn btn--ghost btn--sm" type="button">Close</button>' +
+    '<div id="missionDialogBody"></div>';
   document.body.appendChild(dlg);
   var dlgBody = dlg.querySelector("#missionDialogBody");
 
@@ -256,7 +260,11 @@
   }
   function missionIdFromHash() {
     var h = /^#mission=([A-Za-z0-9%_-]+)$/.exec(location.hash || "");
-    return h ? decodeURIComponent(h[1]) : null;
+    if (!h) return null;
+    /* The pattern admits a bare "%", which decodeURIComponent rejects with a
+       URIError: index.html#mission=% threw here, and the credit line below
+       never rendered. A malformed id is simply no mission. */
+    try { return decodeURIComponent(h[1]); } catch (e) { return null; }
   }
   function closeDialog() {
     if (dlg.close) dlg.close();

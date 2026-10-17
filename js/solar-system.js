@@ -177,8 +177,11 @@
     fillFunFacts(p.funFacts);
     el.explore.href = "planet/" + p.id + ".html";
     el.exploreName.textContent = p.name;
+    /* Spoken only on focus, when the node's own aria-label has JUST been read
+       ("Mars, Terrestrial planet, planet 4 from the Sun") — repeating the name
+       and type made every keystroke say it twice. Add only what the label lacks. */
     if (speak) {
-      announce(p.name + ", " + p.type + ". " + p.facts.distance.km + " from the Sun, " +
+      announce(p.facts.distance.km + " from the Sun, " +
         moons + (moons === 1 ? " moon." : " moons."));
     }
   }
@@ -197,8 +200,8 @@
     fillFunFacts(SUN.funFacts);
     el.explore.href = "#sun-section";
     el.exploreName.textContent = "the Sun";
-    if (speak) {
-      announce(SUN.name + ", " + SUN.type + ". " + SUN.facts.massShare.value +
+    if (speak) {   // the button's label already names the Sun (see showPlanet)
+      announce(SUN.type + ". " + SUN.facts.massShare.value +
         ", surface " + SUN.facts.surface.value + ".");
     }
   }

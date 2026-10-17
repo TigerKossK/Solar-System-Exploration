@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script>document.documentElement.classList.add("js");</script>
+  <script>document.documentElement.classList.add("js");document.addEventListener("DOMContentLoaded",function(){if(!window.SolarReveal)document.documentElement.classList.add("no-reveal")});</script>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='6.5' fill='%23f5b942'/><ellipse cx='16' cy='16' rx='13' ry='6' fill='none' stroke='%232a7d8c' stroke-width='2' transform='rotate(-24 16 16)'/></svg>" />
   <title>Solar System — explore the worlds of our Sun</title>
   <meta name="description" content="A live, interactive map of the Solar System. Focus any planet to preview it, then open its page for real, sourced data — sizes, distances, moons and more." />
@@ -99,6 +99,10 @@
     </div>
   </header>
 
+  <!-- <main> opens BEFORE the hero: the page's h1 lives in it, and content
+       outside every landmark is skipped by landmark navigation. -->
+  <main class="scroll">
+
   <!-- ── 0 · Opening hero — an editorial, cinematic first frame built on ONE
        focal object: Earth from space. An oversized headline bleeds toward the
        planet; a slim glass bar anchors quick facts + the fast path to the map.
@@ -142,8 +146,6 @@
       </div>
     </div>
   </section>
-
-  <main class="scroll">
 
     <!-- ── 1 · Intro / About (context before the map) ── -->
     <section class="section section--intro" id="intro" aria-labelledby="intro-title">
@@ -315,7 +317,7 @@
             </div>
           </div>
           <div class="youform__field">
-            <label class="kicker-label" for="youAge">Your age</label>
+            <label class="kicker-label" for="youAge">Your age<span class="sr-only"> in Earth years</span></label>
             <div class="youform__row">
               <input class="youform__input" id="youAge" type="number" inputmode="decimal"
                      min="0" max="150" step="1" value="30" />

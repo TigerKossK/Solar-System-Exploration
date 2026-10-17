@@ -69,7 +69,7 @@
 .search__results { overflow-y: auto; overscroll-behavior: contain; padding: 8px; max-height: 52vh; }
 .search__group {
   font-family: var(--font-display); font-weight: 700;
-  font-size: .74rem; letter-spacing: .09em; text-transform: uppercase;
+  font-size: .75rem; letter-spacing: .09em; text-transform: uppercase;
   color: var(--text-lo);
   padding: 12px 10px 6px;
 }

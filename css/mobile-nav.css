@@ -38,11 +38,11 @@
     background: none; border: 0; cursor: pointer;
     display: grid; justify-items: center; align-content: center; gap: 3px;
     min-height: 56px; padding: 8px 4px;           /* comfortably past the 44px floor */
-    color: var(--text-mid); font: inherit; font-size: .72rem; font-weight: 600;
+    color: var(--text-mid); font: inherit; font-size: .75rem; font-weight: 600;
     letter-spacing: .01em; text-decoration: none;
     transition: color .2s var(--ease);
   }
-  .tabbar__item span { font-size: .72rem; }
+  .tabbar__item span { font-size: .75rem; }
   .tabbar__item:hover { color: var(--text-hi); }
   .tabbar__item[aria-current] { color: var(--accent); }
   .tabbar__item:active { color: var(--accent); }
@@ -51,6 +51,10 @@
      the last element sits permanently underneath it. */
   body { padding-bottom: calc(var(--tabbar-h) + 8px); }
   body.is-exploring { padding-bottom: 0; }
+  /* ...and keep keyboard focus and anchor targets from landing under it
+     (WCAG 2.4.11) — the bottom twin of the scroll-padding-top that clears the
+     fixed topbar in css/sections.css. */
+  html { scroll-padding-bottom: calc(var(--tabbar-h) + 8px); }
 
   /* Elements already anchored to the bottom of the viewport would otherwise sit
      BEHIND the new bar. The journey bar carries "Enter the map" -- the hero's

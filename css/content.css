@@ -114,7 +114,7 @@
   display: inline-flex; align-items: center; gap: 6px;
   padding: 2px 9px; border-radius: var(--r-pill);
   background: rgba(245, 185, 66, .1); border: 1px solid rgba(245, 185, 66, .3);
-  color: var(--accent); font-size: .74rem; font-weight: 600;
+  color: var(--accent); font-size: .75rem; font-weight: 600;
   text-transform: uppercase; letter-spacing: .06em; white-space: nowrap;
   vertical-align: middle;
 }
@@ -154,8 +154,8 @@
   transition: border-color .3s var(--ease), background .3s var(--ease);
 }
 .instrument:hover { border-color: var(--glass-brd-strong); background: rgba(255,255,255,.045); }
-/* each card is a link target from the landing's mission dialog; clear the fixed topbar */
-.instrument { scroll-margin-top: 90px; }
+/* each card is a link target from the landing's mission dialog; the fixed
+   topbar is cleared by the html scroll-padding in css/sections.css */
 /* brief highlight so a deep link makes obvious which card you were sent to */
 .instrument:target { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
 /* no photograph for this one — do not leave half the card empty */
@@ -198,7 +198,7 @@
   transform: translateY(-2px);
 }
 .content-next__label {
-  font-size: .74rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-lo);
+  font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-lo);
 }
 .content-next__title { font-family: var(--font-display); font-weight: 600; font-size: 1.02rem; }
 

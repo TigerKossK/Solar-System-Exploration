@@ -114,7 +114,7 @@ body[data-planet="neptune"] .planet-orb { --tex: url("../assets/textures/neptune
 .cmp__track { position: relative; height: 10px; border-radius: 999px; background: rgba(255,255,255,.06); overflow: hidden; margin-top: 6px; }
 .cmp__fill { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: linear-gradient(90deg, var(--teal-400), var(--pc)); box-shadow: 0 0 8px -4px var(--pc); }
 .cmp__earth { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--accent); box-shadow: 0 0 6px -1px var(--accent); }
-.cmp__scale { display: flex; justify-content: space-between; color: var(--text-lo); font-size: .72rem; margin-top: 6px; }
+.cmp__scale { display: flex; justify-content: space-between; color: var(--text-lo); font-size: .75rem; margin-top: 6px; }
 
 /* callout (composition / did you know) */
 .callout { background: linear-gradient(160deg, rgba(20,70,80,.32), rgba(9,24,30,.4)); border: 1px solid var(--glass-brd); border-radius: var(--r-md); padding: 20px 22px; }
