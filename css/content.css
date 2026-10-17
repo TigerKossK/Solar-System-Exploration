@@ -185,7 +185,7 @@
 
 /* ── cross-page navigation at the foot ──────────────────── */
 .content-next {
-  display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
   margin-top: 4px;
 }
 .content-next a {

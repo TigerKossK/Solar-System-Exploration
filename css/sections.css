@@ -116,7 +116,7 @@ html { scroll-padding-top: 84px; }
 .sun-feature { display: grid; grid-template-columns: minmax(0, .86fr) minmax(0, 1.14fr); gap: var(--space-stack-lg); align-items: center; }
 .sun-feature__figure { display: grid; place-items: center; }
 .sun-feature__data { display: grid; gap: 18px; }
-.section--sun .dash-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+.section--sun .dash-grid { grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 14px; }
 
 /* Sun — layered plasma sphere: a real texture (assets/textures/sun.jpg)
    under two independent, slow, low-opacity granulation passes (CSS
@@ -171,7 +171,7 @@ html { scroll-padding-top: 84px; }
 @keyframes sun-drift-b { to { background-position: 130% 70%; } }
 
 /* ── 5 · System statistics ── */
-.section--stats .dash-grid { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; }
+.section--stats .dash-grid { grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); gap: 16px; }
 .section--stats .dash-grid .stat__value { font-size: clamp(1.7rem, 2.6vw, 2.3rem); }
 
 /* ── 6 · Missions ── */
@@ -181,7 +181,7 @@ html { scroll-padding-top: 84px; }
 .section--outro .section__card { max-width: min(820px, 100%); text-align: center; }
 .section--outro .section__lead { margin-inline: auto; }
 .section--outro .intro__actions { justify-content: center; }
-.section--outro .source-tag { justify-content: center; margin-top: 6px; }
+.section--outro .source-tag { text-align: center; margin-top: 6px; }
 
 /* ── scroll cue ── */
 .scroll-cue { position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); width: 26px; height: 42px; border: 1px solid var(--glass-brd-strong); border-radius: 999px; display: grid; justify-items: center; padding-top: 7px; transition: border-color .25s var(--ease), opacity .25s var(--ease); }
@@ -316,7 +316,7 @@ select.youform__unit { cursor: pointer; }
   color: var(--accent); font-size: .92rem; font-weight: 600;
 }
 
-.you-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.you-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 10px; }
 .you-card {
   display: grid; gap: 4px; padding: 14px 15px;
   border-radius: var(--r-md);
@@ -338,16 +338,14 @@ select.youform__unit { cursor: pointer; }
 .you-card__stat--age b { font-size: 1.05rem; font-weight: 600; color: var(--text-mid); }
 
 @media (max-width: 460px) {
-  .you-grid { grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); gap: 8px; }
+  .you-grid { grid-template-columns: repeat(auto-fit, minmax(min(132px, 100%), 1fr)); gap: 8px; }
   .you-card { padding: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .you-card { transition: none; }
 }
 
-/* .source-tag is nowrap by default (it is normally three or four words), but
-   this one carries the full scale disclaimer from SOLAR_SYSTEM.meta.scaleNote
-   — a whole sentence, which would otherwise run straight off the card. */
-/* display:block, not the inherited inline-flex: flex would keep the sentence
-   on one un-wrappable line however permissive white-space is. */
-#scaleTag { display: block; white-space: normal; max-width: 68ch; line-height: 1.45; }
+/* This tag carries the full scale disclaimer from SOLAR_SYSTEM.meta.scaleNote —
+   a whole sentence — so it gets a comfortable reading measure. (It was the one
+   tag that wrapped before .source-tag itself became a wrapping block.) */
+#scaleTag { max-width: 68ch; }

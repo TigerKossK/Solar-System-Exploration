@@ -91,8 +91,8 @@ body[data-planet="neptune"] .planet-orb { --tex: url("../assets/textures/neptune
 
 /* ── dashboard ──────────────────────────────────────────── */
 .dash-section { margin-top: clamp(30px, 4vw, 56px); }
-.dash-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
-.dash-grid--wide { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.dash-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); }
+.dash-grid--wide { grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
 
 .widget {
   background: var(--glass-fill); border: 1px solid var(--glass-brd); border-radius: var(--r-md);
@@ -133,7 +133,7 @@ body[data-planet="neptune"] .planet-orb { --tex: url("../assets/textures/neptune
 .feature-list li::before { content: ""; position: absolute; left: 0; top: .62em; width: 6px; height: 6px; border-radius: 50%; background: var(--pc); }
 
 /* fun-facts list */
-.fact-list { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.fact-list { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
 .fact-item {
   position: relative; padding: 15px 18px 15px 40px; border-radius: var(--r-md);
   background: var(--glass-fill); border: 1px solid var(--glass-brd);

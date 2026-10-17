@@ -270,7 +270,13 @@
 .selector__list a:hover, .selector__list a.is-active { color: var(--text-hi); background: rgba(255,255,255,.05); }
 
 /* ── data-source indicator ──────────────────────────────── */
-.source-tag { display: inline-flex; align-items: center; gap: 6px; color: var(--text-lo); font-size: .75rem; white-space: nowrap; }
+/* A block of ordinary wrapping text. It used to be nowrap inline-flex, which
+   clipped every credit line longer than its card (the card is overflow:hidden):
+   planet-page footers on every phone, and the landing's credit line even on a
+   desktop — failing WCAG 1.4.10 reflow. Flex also made each comma its own item,
+   so "NASA Science, JPL Voyager" rendered with a gap before the comma. The
+   markup's own spaces and " · " separators now do the spacing. */
+.source-tag { display: block; max-width: 100%; color: var(--text-lo); font-size: .75rem; line-height: 1.45; }
 .source-tag a { color: var(--text-mid); text-decoration: underline; text-underline-offset: 2px; text-decoration-color: var(--glass-brd-strong); }
 .source-tag a:hover { color: var(--text-hi); }
 
