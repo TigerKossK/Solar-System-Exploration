@@ -627,14 +627,14 @@ const SOLAR_SYSTEM = {
 function getPlanet(id) {
   return SOLAR_SYSTEM.planets.find((p) => p.id === id) || null;
 }
+/* The worlds either side in orbit order — NOT wrapping. The old modulo made
+   Neptune's "Next" Mercury and Mercury's "previous" Neptune, under a nav
+   labelled "Nearby planets"; the ends now simply have one neighbour. */
 function getNeighbours(id) {
   const list = SOLAR_SYSTEM.planets;
   const i = list.findIndex((p) => p.id === id);
   if (i === -1) return { prev: null, next: null };
-  return {
-    prev: list[(i - 1 + list.length) % list.length],
-    next: list[(i + 1) % list.length],
-  };
+  return { prev: list[i - 1] || null, next: list[i + 1] || null };
 }
 
 /* expose for classic (non-module) browser scripts */

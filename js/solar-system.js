@@ -207,6 +207,19 @@
   if (sunBtn) {
     sunBtn.addEventListener("mouseenter", function () { showSun(); });
     sunBtn.addEventListener("focus", function () { showSun(true); });
+    /* Activating the Sun used to do nothing at all, while the same Enter or
+       click on any planet opened it. It now follows the readout's own "Open"
+       link, with the planets' touch rule: first tap previews, second opens. */
+    var sunTapActive = false, sunPointer = "";
+    sunBtn.addEventListener("pointerdown", function (e) {
+      sunPointer = e.pointerType || "";
+      sunTapActive = sunBtn.classList.contains("is-active");
+    });
+    sunBtn.addEventListener("click", function (e) {
+      showSun();
+      if (sunPointer === "touch" && e.detail > 0 && !sunTapActive) return;
+      if (el.explore) el.explore.click();
+    });
   }
 
   /* ---- prev / next planet stepper (arrow navigation) ----------
@@ -259,6 +272,9 @@
   document.addEventListener("keydown", function (e) {
     if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
+    /* Explorer counted as "in the map" wherever focus was — so ←/→ inside the
+       search box stepped the planets behind it instead of moving the cursor. */
+    if (window.SolarUtil.isTyping(e) || window.SolarUtil.dialogOpen()) return;
     var ae = document.activeElement;
     var inMap = document.body.classList.contains("is-exploring") ||
       (ae && ae.closest && ae.closest(".orrery, .readout__nav"));

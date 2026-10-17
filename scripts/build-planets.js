@@ -101,9 +101,17 @@ function render(p) {
   const hasTexture = p.texture && fs.existsSync(path.join(__dirname, "..", p.texture));
   const orbNote = hasTexture ? "Texture: Solar System Scope (CC BY 4.0)" : "Illustrative — not real imagery";
 
-  // neighbour nav (prev: dot then name, next: name then dot)
-  const prevLink = `<a href="${nb.prev.id}.html"><span class="dot" style="--nc:${attr(nb.prev.color)}"></span>${esc(nb.prev.name)}</a>`;
-  const nextLink = `<a href="${nb.next.id}.html">${esc(nb.next.name)}<span class="dot" style="--nc:${attr(nb.next.color)}"></span></a>`;
+  // neighbour nav (prev: dot then name, next: name then dot); the first and
+  // last worlds have only one neighbour — getNeighbours no longer wraps.
+  const prevLink = nb.prev
+    ? `<a href="${nb.prev.id}.html"><span class="dot" style="--nc:${attr(nb.prev.color)}"></span>${esc(nb.prev.name)}</a>`
+    : "";
+  const nextLink = nb.next
+    ? `<a href="${nb.next.id}.html">${esc(nb.next.name)}<span class="dot" style="--nc:${attr(nb.next.color)}"></span></a>`
+    : "";
+  const nextCta = nb.next
+    ? `\n            <a class="btn btn--ghost btn--lg" href="${nb.next.id}.html">Next: ${esc(nb.next.name)} →</a>`
+    : "";
 
   // Key facts
   const keyFacts =
@@ -238,8 +246,7 @@ function render(p) {
       <!-- top bar: home + neighbour navigation -->
       <div class="planet-topbar">${BRAND}
         <nav class="neighbors" aria-label="Nearby planets">
-          ${prevLink}
-          ${nextLink}
+          ${[prevLink, nextLink].filter(Boolean).join("\n          ")}
         </nav>
       </div>
 
@@ -256,11 +263,10 @@ function render(p) {
                  button — and made the same page's primary action render amber or
                  near-black depending on the visitor's hardware. The amber pill is the
                  right treatment for this control, and phones get one less GL context. -->
-            <a class="btn btn--primary btn--lg" id="backToSystem" href="../index.html">
+            <a class="btn btn--primary btn--lg" id="backToSystem" href="../index.html#menu">
               Back to the Solar System
               ${CHEV}
-            </a>
-            <a class="btn btn--ghost btn--lg" href="${nb.next.id}.html">Next: ${esc(nb.next.name)} →</a>
+            </a>${nextCta}
           </div>
         </div>
         <figure class="planet-figure">
@@ -275,7 +281,7 @@ function render(p) {
 
       <!-- foot -->
       <footer class="planet-foot">
-        <a class="back" href="../index.html">
+        <a class="back" href="../index.html#menu">
           <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Back to the Solar System
         </a>

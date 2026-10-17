@@ -466,13 +466,11 @@
 
   /* ---------- triggers ---------------------------------------------------
      "/" and Cmd/Ctrl+K were both verified unbound on this site. Escape is
-     handled by <dialog> itself, which also stops it reaching js/explorer.js's
-     document-level handler — so opening search inside Explorer mode and
-     pressing Escape closes the search, not both at once. */
+     handled by <dialog> itself — but the keydown still bubbles to the
+     document first, so js/explorer.js checks SolarUtil.dialogOpen() before
+     leaving: one Escape closes the search, not search and Explorer at once. */
   document.addEventListener("keydown", function (e) {
-    var tag = (e.target && e.target.tagName) || "";
-    var typing = /^(INPUT|TEXTAREA|SELECT)$/.test(tag) ||
-      !!(e.target && e.target.isContentEditable);
+    var typing = window.SolarUtil.isTyping(e);
     if ((e.key === "k" || e.key === "K") && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       open();
@@ -485,6 +483,10 @@
   });
 
   window.SolarSearch = { open: open, close: close };
+
+  /* Leaving through a result left the dialog open in the back/forward-cache
+     snapshot, so Back returned to a page still covered by search. */
+  window.addEventListener("pagehide", function () { if (dlg.open) close(); });
 
   /* Topbar trigger, added as a sibling of .nav__links so the mobile rule that
      hides those links leaves it alone. js/mobile-nav.js adds the tab-bar one. */

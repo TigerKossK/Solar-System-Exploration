@@ -74,6 +74,8 @@
   }
 
   cta.addEventListener("click", function (e) {
+    // modifier / middle clicks keep their browser meaning (new tab), as on every other link here
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || (e.button && e.button > 0)) return;
     e.preventDefault();
     enter();
   });
@@ -96,6 +98,10 @@
   }
   document.addEventListener("keydown", function (e) {
     if (e.key !== "Escape" || !isOn()) return;
+    /* An open dialog (search, the tab-bar sheet) is what this Escape is for —
+       it closes itself. The keydown still bubbles here first, and leaving too
+       used to close search AND Explorer with one press. */
+    if (window.SolarUtil && SolarUtil.dialogOpen()) return;
     leave();
   });
   window.addEventListener("popstate", function () {

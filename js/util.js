@@ -3,12 +3,9 @@
    ------------------------------------------------------------
    esc() was duplicated verbatim in js/solar-system.js and
    js/sections.js, so it lives here once instead. Load this
-   BEFORE any script that uses it.
-
-   formation/exploration/instruments.html also load this file
-   although nothing on them consumes it yet — kept in place
-   deliberately, since the site search planned for those pages
-   needs both helpers below.
+   BEFORE any script that uses it — every page does, and site
+   search, the map, Explorer and the tab bar all rely on it.
+   Add shared helpers HERE rather than copying them per file.
 
    Deliberately a plain global (no modules) to match the rest of
    the site: every script is a classic <script>, so the pages keep
@@ -34,5 +31,31 @@
     return esc(s).replace(/"/g, "&quot;");
   }
 
-  window.SolarUtil = { esc: esc, attr: attr };
+  /* True while the visitor is typing. Every keyboard shortcut on the site must
+     stand aside then — ←/→ moved the map behind the search box while it held
+     the cursor. */
+  function isTyping(e) {
+    var t = e && e.target;
+    if (!t) return false;
+    return /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName || "") || !!t.isContentEditable;
+  }
+
+  /* A modal <dialog> owns the keyboard while it is open. Escape in the search
+     box reached Explorer's document-level handler too, and closed both. */
+  function dialogOpen() {
+    return !!document.querySelector("dialog[open]");
+  }
+
+  /* This page's file name. The site is served from /Solar-System-Exploration/,
+     so the landing's canonical URL ends in "/" and its empty last segment IS
+     index.html. The old inline version stripped trailing slashes first and so
+     answered "Solar-System-Exploration" on the live homepage. */
+  function pageName() {
+    return location.pathname.split("/").pop() || "index.html";
+  }
+
+  window.SolarUtil = {
+    esc: esc, attr: attr,
+    isTyping: isTyping, dialogOpen: dialogOpen, pageName: pageName,
+  };
 })();

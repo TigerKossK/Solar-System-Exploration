@@ -246,6 +246,7 @@
   /* Did WE create the current #mission= history entry, or did we arrive at it?
      Closing must step back only in the first case — see the close handler. */
   var pushedByUs = false;
+  var openIdx = -1;      // index of the mission currently shown in the dialog
 
   function missionIndexById(id) {
     for (var k = 0; k < missions.length; k++) {
@@ -271,13 +272,22 @@
        at #mission=... — a deep link, or the return trip from a planet page — the
        previous entry is that planet page, and going back would send the visitor
        forwards instead of closing. Strip the hash in place instead. */
-    if (pushedByUs && history.length > 1) history.back();
-    else history.replaceState({}, "", location.pathname + location.search);
+    if (pushedByUs) { history.back(); return; }
+    history.replaceState({}, "", location.pathname + location.search);
+    /* Arrived via a planet page's "Back to <mission>": the landing loaded at
+       its very top, behind the dialog. Closing should leave the visitor at the
+       mission they came back for, not at the opening hero. */
+    var row = document.querySelector('#missionsList [data-mission="' + openIdx + '"]');
+    if (row) {
+      row.scrollIntoView({ block: "center" });
+      row.focus({ preventScroll: true });
+    }
   });
 
   function openMission(i, push) {
     var m = missions[i];
     if (!m) return;
+    openIdx = i;
 
     var meta = [esc(m.agency), "Launched " + esc(m.year)];
     if (m.status) meta.push(esc(m.status));
