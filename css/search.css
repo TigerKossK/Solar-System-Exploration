@@ -150,7 +150,10 @@
     height: 100dvh; max-height: 100dvh;
     border: 0; border-radius: 0;
     padding-top: env(safe-area-inset-top, 0px);
+    padding-left: env(safe-area-inset-left, 0px);    /* sideways: clear the notch */
+    padding-right: env(safe-area-inset-right, 0px);
   }
+  .search__seed { min-height: 44px; }
   .search__bar { flex: 0 0 auto; }
   /* min-height:0 overrides the flex default of min-content, which would
      otherwise stop this from ever shrinking enough to scroll. */

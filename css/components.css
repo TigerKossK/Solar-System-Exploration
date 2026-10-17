@@ -76,7 +76,11 @@
    width/height simply read it, so it can be transitioned as one typed
    custom property (registered in main.css) without distorting into an oval. */
 .orrery {
-  --size: min(48vw, 600px);
+  /* Height counts too. Sized by width alone, the map arrived on a 1366x768
+     laptop ~260px down the screen and 600px tall -- cropped, with the readout
+     (and the hint that teaches the map) below the fold. Lengths only: --size is
+     a registered <length>, so a percentage here would silently become 480px. */
+  --size: max(280px, min(48vw, 600px, calc(100svh - 300px)));
   position: relative; width: var(--size); height: var(--size);
   transition: --size .5s var(--ease);
 }

@@ -75,7 +75,9 @@
   --font-serif:   "Spectral", Georgia, "Times New Roman", serif;
 
   --maxw: 1360px;
-  --pad:  clamp(14px, 2.4vw, 34px);
+  /* Never less than the device's side safe areas: with viewport-fit=cover a
+     phone held sideways puts the notch and rounded corners inside the page. */
+  --pad:  max(clamp(14px, 2.4vw, 34px), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
 
   /* rhythm — shared vertical spacing scale for the landing sections */
   --space-section-y: clamp(96px, 12vh, 150px);
