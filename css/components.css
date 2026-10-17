@@ -18,7 +18,10 @@
      real glass is kept for chrome that FLOATS over content (topbar, readout,
      dialogs), which is where it still means something. Touch devices drop the
      blur entirely (css/responsive.css). */
-  background: linear-gradient(150deg, rgba(17,58,67,.62) 0%, rgba(10,29,36,.76) 44%, rgba(8,17,15,.88) 100%);
+  /* Opacity floor .80 (was .62 at the lightest stop): text contrast on these
+     cards must not depend on how bright the canvas happens to be behind them.
+     Computed with --text-lo in css/main.css. */
+  background: linear-gradient(150deg, rgba(17,58,67,.80) 0%, rgba(10,29,36,.86) 44%, rgba(8,17,15,.92) 100%);
   border: 1px solid var(--glass-brd);
   box-shadow: var(--shadow-card);
   backdrop-filter: blur(14px) saturate(1.06);
@@ -27,7 +30,7 @@
 }
 .panel::before { /* top edge sheen */
   content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
-  background: linear-gradient(180deg, var(--glass-hi), transparent 22%); opacity:.5;
+  background: linear-gradient(180deg, var(--glass-hi), transparent 22%); opacity:.25; /* halved: the brightest band was the worst contrast spot */
 }
 .panel > * { position: relative; z-index: 1; }
 

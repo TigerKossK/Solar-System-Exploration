@@ -283,7 +283,7 @@ body.is-exploring .readout {
 .youform__field { display: grid; gap: 7px; }
 .youform__row {
   display: flex; align-items: stretch; gap: 8px;
-  border: 1px solid var(--glass-brd); border-radius: var(--r-md);
+  border: 1px solid var(--field-brd); border-radius: var(--r-md);
   background: var(--glass-fill); padding: 4px 4px 4px 12px;
 }
 .youform__row:focus-within { border-color: var(--accent); }

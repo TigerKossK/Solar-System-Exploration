@@ -24,7 +24,16 @@
   /* text (tinted from the hue, never flat grey) */
   --text-hi:  #eaf1f1;
   --text-mid: #b7c9cb;
-  --text-lo:  #8fa6a8;
+  /* #9db2b4, up from #8fa6a8. Desktop cards are partly see-through over the
+     animated canvas, and the old value fell to 4.0:1 in a card's top sheen and
+     4.3:1 on a widget over a typical frame (3.0:1 at the shader's peak) --
+     below WCAG AA. Paired with the firmer .panel fill in css/components.css it
+     computes >= 4.9:1 on every card surface over a typical frame and >= 4.2:1
+     even at peak, while staying a clear step below --text-mid. */
+  --text-lo:  #9db2b4;
+  /* Form-field boundary: >= 3:1 against a card (WCAG 1.4.11). --glass-brd is
+     ~1.4:1 -- fine for decorative edges, too faint to show where an input is. */
+  --field-brd: rgba(150, 205, 210, .5);
 
   /* liquid glass */
   --glass-fill:       rgba(228, 246, 246, 0.045);
