@@ -65,9 +65,12 @@ function callout(title, text, isFact) {
               <p>${esc(text)}</p>
             </div>`;
 }
+/* The section carries an id as well as its heading: callouts inside it are h3s
+   with no id of their own, so search results for "Atmosphere" or "Rings" fell
+   back to the page-wide #dashboard and opened at the top of the data. */
 function section(id, title, gridInner, wide) {
   return `
-        <section class="dash-section" aria-labelledby="h-${id}">
+        <section class="dash-section" id="${id}" aria-labelledby="h-${id}">
           <div class="section-head"><h2 id="h-${id}">${esc(title)}</h2></div>
           <div class="dash-grid${wide ? " dash-grid--wide" : ""}">${gridInner}
           </div>

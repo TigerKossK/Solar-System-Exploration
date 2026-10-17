@@ -30,6 +30,19 @@
      href has to be rewritten relative to wherever we are. */
   var PREFIX = /\/planet\//.test(location.pathname) ? "../" : "";
 
+  /* Is a result on THIS page? Then link to its #anchor alone. The landing is
+     shared as the bare /Solar-System-Exploration/ address, so "index.html#…"
+     was a DIFFERENT url there: picking a landing result reloaded the whole page
+     (and dropped the calculator's inputs) instead of scrolling. */
+  function isThisPage(u) {
+    try {
+      var there = new URL(PREFIX + u, location.href).pathname;
+      var here = location.pathname;
+      if (/\/$/.test(here)) here += "index.html";
+      return there === here;
+    } catch (e) { return false; }
+  }
+
   /* ---------- text normalisation --------------------------------------
      js/data.js is full of typographic characters a visitor will never type:
      U+00D7 multiplication signs, U+2212 minus, en dashes, degree signs and
@@ -207,9 +220,11 @@
     if (!parts.length) return null;
     /* Longest first, so "planetary" wins over "planet" and the mark covers the
        whole word. The trailing \w* completes a prefix match — typing "plan"
-       highlights all of "planets", not a fragment of it. */
+       highlights all of "planets", not a fragment of it. The leading \b anchors
+       it to the START of a word: without it "art" marked the "arth" inside
+       "Earth", and the deep link then asked the page for text it couldn't find. */
     parts.sort(function (a, b) { return b.length - a.length; });
-    return new RegExp("(?:" + parts.join("|") + ")\\w*", "gi");
+    return new RegExp("\\b(?:" + parts.join("|") + ")\\w*", "gi");
   }
 
   /* Escapes everything and injects only <mark>. The query reaches element
@@ -248,7 +263,7 @@
      this matched". Silently ignored where unsupported, and the plain #anchor
      still does its job there. */
   function hrefFor(doc, re) {
-    var url = PREFIX + doc.u + "#" + (doc.a || "");
+    var url = (isThisPage(doc.u) ? "" : PREFIX + doc.u) + "#" + (doc.a || "");
     if (!re) return url;
     re.lastIndex = 0;
     var m = re.exec(doc.b);
@@ -319,6 +334,16 @@
     }
 
     var hits = search(query, 24);
+    /* Group by kind, groups in the order their best result ranks, rank kept
+       within each. Sorting by score alone interleaved the kinds, and a heading
+       was printed at every switch: "Articles / Planets / Articles". */
+    var order = [], byKind = {};
+    hits.forEach(function (h) {
+      var k = h.doc.k;
+      if (!byKind[k]) { byKind[k] = []; order.push(k); }
+      byKind[k].push(h);
+    });
+    hits = [].concat.apply([], order.map(function (k) { return byKind[k]; }));
     if (!hits.length) {
       results.innerHTML = '<p class="search__empty">No matches for “' + esc(query) +
         '”. Try a shorter word, or one of these: ' +
@@ -375,23 +400,38 @@
     var v = input.value;
     /* 120ms. The whole search is in-memory, so this is about not re-rendering
        the result list on every keystroke of a burst, not about latency. */
-    debounce = window.setTimeout(function () { render(v); }, 120);
+    debounce = window.setTimeout(function () { debounce = null; render(v); }, 120);
   });
 
   results.addEventListener("click", function (e) {
     var seed = e.target.closest(".search__seed");
-    if (!seed) return;
-    input.value = seed.textContent;
-    render(input.value);
-    input.focus();
+    if (seed) {
+      input.value = seed.textContent;
+      render(input.value);
+      input.focus();
+      return;
+    }
+    /* Picking a result navigates — close first, or a result on THIS page
+       scrolled invisibly behind the still-open dialog and looked like nothing
+       had happened. Modifier clicks open a new tab, so search stays open. */
+    if (e.metaKey || e.ctrlKey || e.shiftKey || (e.button && e.button > 0)) return;
+    if (e.target.closest(".search__row")) close();
   });
 
   dlg.addEventListener("keydown", function (e) {
     if (e.key === "ArrowDown") { e.preventDefault(); setActive(active + 1); }
     else if (e.key === "ArrowUp") { e.preventDefault(); setActive(active - 1); }
-    else if (e.key === "Enter" && active > -1 && rows[active]) {
-      e.preventDefault();
-      rows[active].click();
+    else if (e.key === "Enter") {
+      /* Typing then pressing Enter within the 120 ms debounce acted on the
+         PREVIOUS query's list. Render now; then open the highlighted row, or
+         the top result when none is highlighted. */
+      if (debounce) {
+        window.clearTimeout(debounce);
+        debounce = null;
+        render(input.value);
+      }
+      var row = rows[active > -1 ? active : 0];
+      if (row) { e.preventDefault(); row.click(); }
     }
   });
   dlg.querySelector(".search__close").addEventListener("click", close);
@@ -460,6 +500,10 @@
     input.focus();
   }
   function close() {
+    // a pending keystroke render would otherwise land after reopening, showing
+    // results for a query that is no longer in the box
+    window.clearTimeout(debounce);
+    debounce = null;
     if (dlg.close) dlg.close();
     else dlg.removeAttribute("open");
   }
@@ -489,8 +533,10 @@
   window.addEventListener("pagehide", function () { if (dlg.open) close(); });
 
   /* Topbar trigger, added as a sibling of .nav__links so the mobile rule that
-     hides those links leaves it alone. js/mobile-nav.js adds the tab-bar one. */
-  var topbar = document.querySelector(".topbar__inner");
+     hides those links leaves it alone. js/mobile-nav.js adds the tab-bar one.
+     Planet pages have their own .planet-topbar — without it, 8 of 12 pages had
+     no visible way into search on a desktop (only the unadvertised "/"). */
+  var topbar = document.querySelector(".topbar__inner") || document.querySelector(".planet-topbar");
   if (topbar) {
     var btn = document.createElement("button");
     btn.className = "search-trigger";
