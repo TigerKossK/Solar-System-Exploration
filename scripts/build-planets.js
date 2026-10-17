@@ -218,12 +218,12 @@ function render(p) {
   <meta property="og:image" content="${SITE}/assets/og-cover.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Earth seen from space, the Sun cresting beyond its horizon." />
+  <meta property="og:image:alt" content="Earth photographed by the Artemis II crew from the Orion spacecraft, April 2026." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${cardTitle}" />
   <meta name="twitter:description" content="${desc}" />
   <meta name="twitter:image" content="${SITE}/assets/og-cover.jpg" />
-  <meta name="twitter:image:alt" content="Earth seen from space, the Sun cresting beyond its horizon." />
+  <meta name="twitter:image:alt" content="Earth photographed by the Artemis II crew from the Orion spacecraft, April 2026." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="${FONTS}" rel="stylesheet" />

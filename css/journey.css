@@ -31,12 +31,27 @@
   isolation: isolate;
 }
 
-/* focal object — cinematic Earth, full-bleed behind the composition */
+/* focal object — Earth photographed by the Artemis II crew (NASA art002e023506),
+   full-bleed behind the composition. The 16:9 file extends the 3:2 photograph
+   to the LEFT with its own space colour (nothing invented), so Earth's disc sits
+   at x 31-85%, y 7.5-84% of the frame -- centre 58% 46%, which is where the
+   fly-in zooms. Swapping the image means re-measuring these numbers. */
 .journey__earth {
   position: absolute; inset: 0; z-index: 0;
   width: 100%; height: 100%;
   object-fit: cover; object-position: 54% 50%;
-  transform-origin: 56% 46%;
+  transform-origin: 58% 46%;
+}
+
+/* The photograph's credit. Imagery on this site always carries one
+   (css/content.css); the hero was the one image that did not. Top-right sits on
+   empty space in every crop, below the fixed topbar. */
+.journey__credit {
+  position: absolute; z-index: 4; right: var(--pad);
+  top: calc(84px + env(safe-area-inset-top, 0px));
+  max-width: min(34ch, 60%); text-align: right;
+  color: var(--text-lo); font-size: .75rem; line-height: 1.4;
+  text-shadow: 0 1px 8px rgba(0,0,0,.9);
 }
 
 /* dark diagonal seat — carries the headline at ≥4.5:1 and gives the
@@ -142,6 +157,7 @@
   opacity: var(--bar-op, 1);
   transform: translateX(-50%) translateY(calc(var(--bar-shift, 0) * 1px));
 }
+.js .journey__credit { opacity: var(--copy-op, 1); }   /* leaves with the headline */
 
 /* ── reduced motion: no pin, no scrub — a calm static hero ── */
 @media (prefers-reduced-motion: reduce) {
@@ -155,7 +171,9 @@
 
 /* ── narrower screens: headline leads at the top, gentler seat ── */
 @media (max-width: 820px) {
-  .journey__earth { object-position: 48% 42%; }
+  /* a portrait screen shows a narrow vertical slice of the 16:9 frame:
+     centre it on the sunlit side of the disc (brightness centroid ~53%) */
+  .journey__earth { object-position: 53% 42%; }
   .journey__veil {
     background: linear-gradient(168deg,
       rgba(6,14,12,.9) 0%, rgba(6,14,12,.55) 44%, rgba(6,14,12,.2) 72%, transparent 100%);
