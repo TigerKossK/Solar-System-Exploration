@@ -2,11 +2,15 @@ name: Build check
 
 # The eight planet/*.html pages are GENERATED from js/data.js by
 # scripts/build-planets.js. If someone edits the data and forgets to
-# regenerate (or has no Node.js installed locally, which is the usual
-# case here), the site silently serves stale numbers with nothing to
+# regenerate, the site silently serves stale numbers with nothing to
 # catch it. This workflow is that missing check: it regenerates the
-# pages on a runner that does have Node, and fails if the committed
-# output differs by so much as a byte.
+# pages on a runner and fails if the committed output differs by so
+# much as a byte.
+#
+# (Locally the generator runs without a Node install, through the Node
+# that ships inside VS Code:
+#   ELECTRON_RUN_AS_NODE=1 "<VS Code>/Code.exe" scripts/build-planets.js
+# It is Node 24 there too, matching the version pinned below.)
 
 on:
   push:
@@ -14,16 +18,22 @@ on:
   pull_request:
   workflow_dispatch:
 
+# Least privilege: this job only reads the repository.
+permissions:
+  contents: read
+
 jobs:
   planet-pages-in-sync:
     name: planet/*.html matches js/data.js
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      # v7 of each action runs on the node24 runtime; the v4/v5 majors pinned
+      # here before ran on node20, which reached end of life in April 2026.
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Regenerate the planet pages
         run: node scripts/build-planets.js
@@ -46,8 +56,8 @@ jobs:
       # js/search-index.js is generated from the BUILT pages, so this has to run
       # after the regeneration above -- otherwise a data change would be checked
       # against the stale HTML it was about to replace. Python rather than Node
-      # because, unlike the planet generator, this one can also be run locally.
-      - uses: actions/setup-python@v5
+      # so it can also be run locally with nothing but Python installed.
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
 
@@ -60,7 +70,9 @@ jobs:
           if [ -n "$CHANGES" ]; then
             echo "::error::js/search-index.js is out of sync with the site's pages."
             echo "Run 'python scripts/build-search-index.py' and commit the result."
-            git diff -- js/search-index.js | head -40
+            # --stat, not the diff itself: the index is one long line, so a
+            # textual diff would print the entire 50 KB file into the log.
+            git diff --stat -- js/search-index.js
             exit 1
           fi
           echo "Search index is in sync with the pages."
