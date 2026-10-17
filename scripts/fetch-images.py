@@ -70,6 +70,14 @@ BUDGET_MB = 2.0
 
 # slot -> search query. Add "nasa_id" to pin an exact asset once you have found
 # one you like (its id is shown in the contact sheet and in credits.json).
+#
+# PIN EVERY SLOT ONCE IT HAS BEEN LOOKED AT. Keyword scoring trusts the
+# archive's titles, and those titles describe the EVENT, not the frame: the
+# pick for "Space Shuttle launch" was 201102240008HQ, titled "Space Shuttle
+# Discovery Launch" -- a launch-day buffet; "Perseverance rover Mars selfie"
+# returned an engineer's selfie titled "NASA Perseverance Rover Lands on Mars";
+# Chandra's slot held an astronaut portrait and Parker's a cargo plane. All
+# four shipped for a month. The pinned ids below were each viewed before use.
 MANIFEST = [
     # Queries deliberately avoid naming an observatory unless the subject IS the
     # observatory: "Orion Nebula Hubble" surfaces Hubble programme-history pages
@@ -84,20 +92,27 @@ MANIFEST = [
     {"slot": "exploration-apollo11", "query": "Apollo 11 astronaut lunar surface"},
     {"slot": "exploration-earthrise", "query": "Earthrise"},
     {"slot": "exploration-iss", "query": "International Space Station orbit"},
-    {"slot": "exploration-shuttle", "query": "Space Shuttle launch"},
-    {"slot": "exploration-perseverance", "query": "Perseverance rover Mars selfie"},
+    {"slot": "exploration-shuttle", "query": "Space Shuttle launch", "nasa_id": "s29-s-026"},
+    {"slot": "exploration-perseverance", "query": "Perseverance rover Mars selfie", "nasa_id": "PIA25681"},
     {"slot": "exploration-pale-blue-dot", "query": "Pale Blue Dot"},
 
     # --- instruments.html: the hardware ---
     {"slot": "instrument-hubble", "query": "Hubble Space Telescope deployed orbit"},
     {"slot": "instrument-jwst", "query": "James Webb Space Telescope primary mirror"},
-    {"slot": "instrument-chandra", "query": "Chandra Observatory spacecraft payload"},
-    {"slot": "instrument-parker", "query": "Parker Solar Probe spacecraft"},
+    {"slot": "instrument-chandra", "query": "Chandra Observatory spacecraft payload", "nasa_id": "KSC-99pp0772"},
+    {"slot": "instrument-parker", "query": "Parker Solar Probe spacecraft", "nasa_id": "KSC-20180419-PH_KLS01_0009"},
     {"slot": "instrument-voyager", "query": "Voyager spacecraft"},
 
     # --- instruments.html: what the hardware produced ---
-    {"slot": "image-hubble-pillars", "query": "Pillars of Creation"},
-    {"slot": "image-jwst-carina", "query": "Cosmic Cliffs Carina Nebula"},
+    # The page compares the SAME object through two telescopes, so these two are
+    # a matched pair: Hubble's 2014 visible-light Pillars (the earlier pick here
+    # was the near-INFRARED version, contradicting "Hubble sees dust as opaque")
+    # and Webb's 2022 NIRCam Pillars (replacing the Carina "Cosmic Cliffs", a
+    # different nebula). NASA's library has neither in usable form, so both come
+    # from the official ESA releases (CC BY 4.0), are credited by hand in
+    # credits.json, and are never re-fetched by this script ("manual").
+    {"slot": "image-hubble-pillars", "manual": "https://esahubble.org/images/heic1501a/"},
+    {"slot": "image-jwst-pillars", "manual": "https://esawebb.org/images/weic2216a/"},
     {"slot": "image-cassini-saturn", "query": "Saturn rings spacecraft view"},
 ]
 
@@ -327,7 +342,7 @@ def main():
             return 1
     if args.list:
         for e in entries:
-            print("  %-32s %s" % (e["slot"], e.get("nasa_id") or e["query"]))
+            print("  %-32s %s" % (e["slot"], e.get("nasa_id") or e.get("manual") or e["query"]))
         print("\n%d slots." % len(entries))
         return 0
 
@@ -335,6 +350,9 @@ def main():
     for e in entries:
         slot = e["slot"]
         dest = os.path.join(OUT_DIR, slot + ".webp")
+        if e.get("manual"):
+            print("  manual %-32s %s (not fetched here)" % (slot, e["manual"]))
+            continue
 
         if os.path.exists(dest) and not args.force:
             print("  skip   %-32s %7.1f KB (exists)" % (slot, os.path.getsize(dest) / 1024))
