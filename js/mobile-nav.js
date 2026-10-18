@@ -153,14 +153,8 @@
       if (SolarUtil.toast) SolarUtil.toast("Visited planets forgotten");
       return;
     }
-    /* Backdrop only. e.target === dialog is ALSO true for clicks on the
-       dialog's own padding, so hit-test the border box -- the same trap
-       js/sections.js hit with the mission dialog. */
-    if (e.target !== sheet || !e.detail) return;
-    var r = sheet.getBoundingClientRect();
-    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) {
-      closeSheet();
-    }
+    // backdrop only, not the sheet's own padding (SolarUtil.backdropHit)
+    if (SolarUtil.backdropHit(sheet, e)) closeSheet();
   });
 
   /* "You are here" on every page, not only the landing: Map there, Planets on

@@ -445,12 +445,8 @@
   });
   dlg.querySelector(".search__close").addEventListener("click", close);
   dlg.addEventListener("click", function (e) {
-    /* Backdrop only. e.target === dialog is also true for its own padding —
-       the same trap js/sections.js hit with the mission dialog. */
-    if (e.target !== dlg || !e.detail) return;
-    var r = dlg.getBoundingClientRect();
-    if (e.clientX < r.left || e.clientX > r.right ||
-        e.clientY < r.top || e.clientY > r.bottom) close();
+    // backdrop only, not the dialog's own padding (SolarUtil.backdropHit)
+    if (window.SolarUtil.backdropHit(dlg, e)) close();
   });
 
   /* ---------- lazy index load -------------------------------------------

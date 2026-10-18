@@ -415,17 +415,9 @@
       }
       return;
     }
-    /* A backdrop click reports the <dialog> itself as the target — but so does a
-       click on the dialog's OWN padding (clamp(20px,3vw,32px)), because that is
-       inside its box. Testing e.target === dlg alone therefore closed the dialog
-       when you clicked the gutter beside the title or next to a link row.
-       Hit-test the border box instead. e.detail guards against synthetic clicks,
-       whose clientX/Y are 0 and would read as "outside". */
-    if (e.target !== dlg || !e.detail) return;
-    var r = dlg.getBoundingClientRect();
-    var inside = e.clientX >= r.left && e.clientX <= r.right &&
-                 e.clientY >= r.top && e.clientY <= r.bottom;
-    if (!inside) closeDialog();
+    /* Backdrop only — not the dialog's own padding, which also reports the
+       <dialog> as the target (SolarUtil.backdropHit tests the border box). */
+    if (window.SolarUtil.backdropHit(dlg, e)) closeDialog();
   });
 
   function syncFromHash() {

@@ -101,7 +101,7 @@ body[data-planet="neptune"] .planet-orb { --tex: url("../assets/textures/neptune
 
 .widget {
   background: var(--glass-fill); border: 1px solid var(--glass-brd); border-radius: var(--r-md);
-  padding: 20px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  padding: 20px;   /* no backdrop-filter: always inside a .panel that already blurs */
   display: flex; flex-direction: column; gap: 8px;
   transition: transform .3s var(--ease), border-color .3s var(--ease), background .3s var(--ease);
 }

@@ -35,7 +35,6 @@
   padding: var(--space-section-y) var(--pad) clamp(64px, 9vh, 110px);
 }
 .section__card { position: relative; }
-.section__card--bare { background: none; border: 0; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; padding: 0; text-align: center; }
 
 .section__head { margin-bottom: clamp(20px, 3vw, 34px); max-width: 60ch; }
 .section__title { font-size: clamp(1.9rem, 4vw, 3rem); line-height: 1.05; letter-spacing: -.02em; }

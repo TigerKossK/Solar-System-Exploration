@@ -216,11 +216,6 @@ main h1[tabindex="-1"]:focus-visible { outline: none; }   /* "Back to top" lands
 .container { width: 100%; max-width: var(--maxw); margin-inline: auto; }
 
 /* ── typography scale ───────────────────────────────────── */
-.eyebrow-none { display: none; } /* no kickers/eyebrows — banned */
-.display {
-  font-family: var(--font-display); font-weight: 800; letter-spacing: -.035em; line-height: .98;
-  text-wrap: balance;
-}
 .serif {
   font-family: var(--font-serif); font-weight: 500; letter-spacing: -.01em; line-height: 1.04;
   text-wrap: balance;

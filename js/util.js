@@ -102,7 +102,8 @@
   /* Was this click on a modal <dialog>'s backdrop? A backdrop click reports the
      dialog itself as the target -- but so does a click on the dialog's own
      padding, so test the border box. e.detail is 0 for synthetic and keyboard
-     clicks, whose clientX/Y of 0 would otherwise read as "outside". */
+     clicks, whose clientX/Y of 0 would otherwise read as "outside". Used by
+     every dialog on the site: mission, search, the tab-bar sheet, shortcuts. */
   function backdropHit(dlg, e) {
     if (e.target !== dlg || !e.detail) return false;
     var r = dlg.getBoundingClientRect();
