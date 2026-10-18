@@ -162,6 +162,12 @@ body[data-planet="neptune"] .planet-orb { --tex: url("../assets/textures/neptune
 .mission-item__years { color: var(--text-lo); font-size: .82rem; font-variant-numeric: tabular-nums; }
 .mission-item__note { grid-column: 1 / -1; color: var(--text-mid); font-size: .92rem; }
 
+/* previous / next at the end of the page (cards are .content-next, in
+   css/components.css). Two fixed columns, so Mercury's lone "Next" still sits
+   on the right and Neptune's lone "Previous" on the left. */
+.planet-pager { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: clamp(28px, 4vw, 48px); }
+.planet-pager a[rel="next"] { grid-column: 2; text-align: right; }
+
 /* page footer: source + back */
 .planet-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: clamp(28px, 4vw, 48px); padding-top: 22px; border-top: 1px solid rgba(150,205,210,.12); }
 

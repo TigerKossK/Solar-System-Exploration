@@ -99,7 +99,7 @@
   .panel, .hero, .selector { animation: none !important; }
   .btn, .btn__chev, .planet__body, .back svg, .orbit,
   .widget, .mission-item, .mission-item__more, .readout, .readout__arrow,
-  .explainer__toggle, .explainer__toggle svg,
+  .explainer__toggle, .explainer__toggle svg, .content-next a,
   .orrery, .section--menu > .section__card { transition: none !important; }
 }
 

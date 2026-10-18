@@ -127,6 +127,13 @@ function render(p) {
     : "";
   // where this world sits in the sequence: "you are here", between its neighbours
   const position = `<span class="neighbors__pos">Planet ${p.order} of ${SOLAR_SYSTEM.planets.length}</span>`;
+  // the same neighbours again at the end of the page, where "what next?" is asked
+  const pagerPrev = nb.prev
+    ? `<a href="${nb.prev.id}.html" rel="prev"><span class="content-next__label">Previous</span><span class="content-next__title">← ${esc(nb.prev.name)}</span></a>`
+    : "";
+  const pagerNext = nb.next
+    ? `<a href="${nb.next.id}.html" rel="next"><span class="content-next__label">Next</span><span class="content-next__title">${esc(nb.next.name)} →</span></a>`
+    : "";
   const nextCta = nb.next
     ? `\n            <a class="btn btn--ghost btn--lg" href="${nb.next.id}.html">Next: ${esc(nb.next.name)} →</a>`
     : "";
@@ -297,6 +304,11 @@ ${TOPBAR}
       <!-- dashboard -->
       <div id="dashboard" tabindex="-1">${section("key", "Key facts", keyFacts)}${section("time", "Time & motion", timeMotion, true)}${section("mass", "Mass & physical characteristics", massPhysical)}${section("atmos", "Atmosphere & magnetosphere", atmosphere, true)}${section("moons", "Moons & rings", moonsRings, true)}${section("about", "Make-up", makeup, true)}${funFacts}${missions}
       </div>
+
+      <!-- pager: previous / next planet -->
+      <nav class="content-next planet-pager" aria-label="Previous and next planet">
+        ${[pagerPrev, pagerNext].filter(Boolean).join("\n        ")}
+      </nav>
 
       <!-- foot -->
       <footer class="planet-foot">

@@ -344,6 +344,26 @@ html[data-motion="paused"] .sun-visual__core::after { animation-play-state: paus
 .back svg { transition: transform .25s var(--ease); }
 .back:hover svg { transform: translateX(-3px); }
 
+/* ── cross-page cards at the foot: "Read next" on the landing and articles,
+   the previous/next pager on planet pages (css/planet.css) ── */
+.content-next {
+  display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  margin-top: 4px;
+}
+.content-next a {
+  display: grid; gap: 4px; padding: 16px 18px; border-radius: var(--r-md);
+  background: var(--glass-fill); border: 1px solid var(--glass-brd);
+  transition: border-color .25s var(--ease), background .25s var(--ease), transform .25s var(--ease);
+}
+.content-next a:hover {
+  border-color: var(--glass-brd-strong); background: rgba(255,255,255,.05);
+  transform: translateY(-2px);
+}
+.content-next__label {
+  font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-lo);
+}
+.content-next__title { font-family: var(--font-display); font-weight: 600; font-size: 1.02rem; }
+
 /* ── landing hero (restrained lede; the orrery dominates) ── */
 .hero { flex: 1; display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); align-items: center; gap: clamp(24px, 4vw, 64px); padding: clamp(18px, 3vw, 44px) 0; }
 .hero__lede { max-width: 32ch; }
