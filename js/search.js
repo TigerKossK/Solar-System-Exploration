@@ -288,11 +288,19 @@
         '<path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>' +
       '<input class="search__input" type="search" autocomplete="off" spellcheck="false" ' +
         'placeholder="Search planets, missions, facts…" role="combobox" ' +
-        'aria-expanded="false" aria-controls="searchResults" aria-autocomplete="list" ' +
+        'aria-expanded="false" aria-controls="searchList" aria-autocomplete="list" ' +
         'aria-label="Search the site" />' +
       '<button class="search__close btn btn--ghost btn--sm" type="button">Close</button>' +
     "</div>" +
-    '<div class="search__results" id="searchResults" role="listbox" aria-label="Search results"></div>' +
+    /* The scroll area holds two things: the listbox, which may contain ONLY
+       options and groups of options (WAI-ARIA), and a sibling for every other
+       state -- the "Try ..." suggestions, Loading, no matches, failure -- which
+       used to be rendered inside the listbox as non-options. The listbox is
+       always present so the combobox's aria-controls never points at nothing. */
+    '<div class="search__results" id="searchResults">' +
+      '<div class="search__list" id="searchList" role="listbox" aria-label="Search results"></div>' +
+      '<div class="search__msg"></div>' +
+    "</div>" +
     '<p class="search__status sr-only" role="status" aria-live="polite"></p>' +
     '<p class="search__hint"><kbd>↑</kbd><kbd>↓</kbd> move · <kbd>Enter</kbd> open · <kbd>Esc</kbd> close · ' +
       '<button class="search__keys" type="button">All shortcuts</button></p>';
@@ -308,7 +316,11 @@
 
   var input = dlg.querySelector(".search__input");
   var results = dlg.querySelector(".search__results");
+  var list = dlg.querySelector(".search__list");
+  var msg = dlg.querySelector(".search__msg");
   var status = dlg.querySelector(".search__status");
+  // any state that is not a list of results: it never goes inside the listbox
+  function message(html) { list.innerHTML = ""; msg.innerHTML = html; }
   var active = -1, rows = [];
 
   var SEEDS = ["Jupiter", "moons", "Voyager", "frost line"];
@@ -322,10 +334,10 @@
        one. Otherwise opening the palette flashed "Loading…" and only then the
        suggestions, which made an instant, in-memory search feel slow. */
     if (!query.trim()) {
-      results.innerHTML = '<p class="search__empty">Try ' +
+      message('<p class="search__empty">Try ' +
         SEEDS.map(function (s) {
           return '<button class="search__seed" type="button">' + esc(s) + "</button>";
-        }).join("") + "</p>";
+        }).join("") + "</p>");
       input.setAttribute("aria-expanded", "false");
       status.textContent = "";
       return;
@@ -336,7 +348,7 @@
        declarations hoist, so calling loadIndex from above it is fine.) */
     if (indexState !== "ready") {
       if (indexState !== "failed") {
-        results.innerHTML = '<p class="search__empty">Loading…</p>';
+        message('<p class="search__empty">Loading…</p>');
         loadIndex(function () { render(query); });
       }
       return;
@@ -352,39 +364,43 @@
       if (!byKind[k]) { byKind[k] = []; order.push(k); }
       byKind[k].push(h);
     });
-    hits = [].concat.apply([], order.map(function (k) { return byKind[k]; }));
     if (!hits.length) {
-      results.innerHTML = '<p class="search__empty">No matches for “' + esc(query) +
+      message('<p class="search__empty">No matches for “' + esc(query) +
         '”. Try a shorter word, or one of these: ' +
         SEEDS.map(function (s) {
           return '<button class="search__seed" type="button">' + esc(s) + "</button>";
-        }).join("") + "</p>";
+        }).join("") + "</p>");
       input.setAttribute("aria-expanded", "false");
       status.textContent = "No results";
       return;
     }
 
-    var html = "", lastKind = "", n = 0;
-    for (var i = 0; i < hits.length; i++) {
-      var h = hits[i], doc = h.doc;
-      var re = buildRegex(h.terms);
-      if (doc.k !== lastKind) {
-        lastKind = doc.k;
-        html += '<p class="search__group">' + esc(KIND_LABEL[doc.k] || doc.k) + "</p>";
-      }
-      html +=
-        '<a class="search__row" role="option" id="sr' + n + '" aria-selected="false" ' +
-          'tabindex="-1" href="' + attr(hrefFor(doc, re)) + '">' +
-          '<span class="search__where">' +
-            highlight(doc.t.replace(/\s*—\s*Solar System$/, ""), re) + "</span>" +
-          '<span class="search__title">' + highlight(doc.s, re) + "</span>" +
-          '<span class="search__snippet">' + snippet(doc.b, re) + "</span>" +
-        "</a>";
-      n++;
-    }
-    results.innerHTML = html;
+    /* One role="group" per kind, labelled by its heading, which is
+       role="presentation" so the group's only real children are options --
+       the WAI-ARIA APG grouped-listbox pattern. A bare heading between
+       options was a non-option inside the listbox. */
+    var html = "", n = 0;
+    order.forEach(function (k, g) {
+      html += '<div class="search__grp" role="group" aria-labelledby="sg' + g + '">' +
+        '<div class="search__group" role="presentation" id="sg' + g + '">' + esc(KIND_LABEL[k] || k) + "</div>";
+      byKind[k].forEach(function (h) {
+        var doc = h.doc, re = buildRegex(h.terms);
+        html +=
+          '<a class="search__row" role="option" id="sr' + n + '" aria-selected="false" ' +
+            'tabindex="-1" href="' + attr(hrefFor(doc, re)) + '">' +
+            '<span class="search__where">' +
+              highlight(doc.t.replace(/\s*—\s*Solar System$/, ""), re) + "</span>" +
+            '<span class="search__title">' + highlight(doc.s, re) + "</span>" +
+            '<span class="search__snippet">' + snippet(doc.b, re) + "</span>" +
+          "</a>";
+        n++;
+      });
+      html += "</div>";
+    });
+    msg.innerHTML = "";
+    list.innerHTML = html;
     results.scrollTop = 0;
-    rows = results.querySelectorAll(".search__row");
+    rows = list.querySelectorAll(".search__row");
     input.setAttribute("aria-expanded", "true");
     status.textContent = n + (n === 1 ? " result" : " results");
   }
@@ -484,8 +500,8 @@
     };
     tag.onerror = function () {
       indexState = "failed";
-      results.innerHTML = '<p class="search__empty">Search could not load. ' +
-        "Please reload the page and try again.</p>";
+      message('<p class="search__empty">Search could not load. ' +
+        "Please reload the page and try again.</p>");
       status.textContent = "Search unavailable";
     };
     document.head.appendChild(tag);
@@ -499,7 +515,7 @@
     if (indexState === "ready") {
       render(input.value);
     } else {
-      results.innerHTML = '<p class="search__empty">Loading…</p>';
+      message('<p class="search__empty">Loading…</p>');
       loadIndex(function () { render(input.value); });
     }
     input.focus();
