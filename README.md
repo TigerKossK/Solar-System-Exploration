@@ -23,7 +23,7 @@ An interactive astronomy website that brings the Sun, the planets, scientific di
 A closer look
 
 <p align="center">
-  <img src="assets/Screenshots/Mainscreen.png" alt="Solar System Exploration main menu" width="920">
+  <img src="assets/Screenshots/MainMenu.png" alt="Solar System Exploration main menu" width="920">
 </p>
 
 <p align="center"><em>A visual, approachable way to explore our cosmic neighborhood.</em></p>
@@ -71,21 +71,21 @@ A visual tour of the interface, from the main Solar System view to search and ed
   <tr>
     <td width="50%" valign="top">
       <p><strong>01 · Solar System view</strong></p>
-      <img src="assets/Screenshots/SolarSystem.png" alt="The interactive Solar System view" width="100%">
+      <img src="assets/Screenshots/Orbitview.png" alt="The interactive Solar System view" width="100%">
     </td>
     <td width="50%" valign="top">
       <p><strong>02 · Search</strong></p>
-      <img src="assets/Screenshots/SearchBox.png" alt="Searching for information across the website" width="100%">
+      <img src="assets/Screenshots/Searchbox.png" alt="Searching for information across the website" width="100%">
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
       <p><strong>03 · Missions and discoveries</strong></p>
-      <img src="assets/Screenshots/Missions.png" alt="Educational information about space missions" width="100%">
+      <img src="assets/Screenshots/MissionsDiscoveries.png" alt="Educational information about space missions" width="100%">
     </td>
     <td width="50%" valign="top" align="center">
       <p><strong>04 · Mobile experience</strong></p>
-      <img src="assets/Screenshots/Mobile.png" alt="Solar System Exploration on a mobile screen" width="330">
+      <img src="assets/Screenshots/Mobile.png" alt="Solar System Exploration on a mobile screen (Old Version! The new version is still in development" width="330">
     </td>
   </tr>
 </table>
@@ -152,10 +152,6 @@ Navigate to the previous planet
 →
 
 Navigate to the next planet
-
-?
-
-Open the keyboard-shortcut list
 
 Shortcuts may be unavailable while a text field or another control has keyboard focus.
 
