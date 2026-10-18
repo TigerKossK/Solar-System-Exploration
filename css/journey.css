@@ -9,7 +9,8 @@
 
    Motion: a single scroll progress --p (0→1, js/journey.js) drives layered
    parallax — Earth scales / rises / turns as you fly in while the headline
-   and bar clear — opacity + transform only, GPU-friendly, no layout.
+   clears — opacity + transform only, GPU-friendly, no layout. The control
+   bar holds still: "Enter the map" is visible for the whole beat.
 
    Degrades cleanly:
    - No JS  → the full static hero (Earth + headline + bar), one viewport.
@@ -74,7 +75,7 @@
 }
 
 /* soft edge vignette + a bottom fade to the site's void so the hero melts
-   into the Intro's dark field on hand-off (no hard cut) */
+   into the map band's dark field on hand-off (no hard cut) */
 .journey__vignette {
   position: absolute; inset: 0; z-index: 3; pointer-events: none;
   background:
@@ -127,8 +128,11 @@
 .journey__enter svg { transition: transform .2s var(--ease); }
 .journey__enter:hover svg { transform: translateX(3px); }
 
-/* ── JS-enhanced: tall runway + pinned stage + scroll scrub ── */
-.js .journey { height: 300svh; }                /* runway the beat spans */
+/* ── JS-enhanced: tall runway + pinned stage + scroll scrub ──
+   200svh = one screen of fly-in while the stage is pinned, then one screen as
+   it scrolls away and the map arrives. It was 300svh, followed by a full-height
+   intro band: about four screens of scrolling before the map. */
+.js .journey { height: 200svh; }                /* runway the beat spans */
 .js .journey__stage { position: sticky; top: 0; height: 100vh; height: 100svh; }
 
 .js .journey__earth {
@@ -142,8 +146,7 @@
    resident as its own composited layer for the life of the page, which on a 3x DPR
    phone is several megabytes of GPU texture held while it is 6,000px behind you. */
 .js .journey.is-scrubbing .journey__earth { will-change: transform; }
-.js .journey.is-scrubbing .journey__copy,
-.js .journey.is-scrubbing .journey__bar { will-change: transform, opacity; }
+.js .journey.is-scrubbing .journey__copy { will-change: transform, opacity; }
 .js .journey__wedge { opacity: var(--wedge-op, 1); }
 .js .journey__copy {
   opacity: var(--copy-op, 1);
@@ -152,10 +155,6 @@
      forced a GPU filter pass on the headline on every frame of the single most
      scroll-intensive stretch of the page. Opacity plus the lift already read as
      depth. */
-}
-.js .journey__bar {
-  opacity: var(--bar-op, 1);
-  transform: translateX(-50%) translateY(calc(var(--bar-shift, 0) * 1px));
 }
 .js .journey__credit { opacity: var(--copy-op, 1); }   /* leaves with the headline */
 
@@ -166,7 +165,6 @@
   .js .journey__earth { transform: none; }
   .js .journey__wedge { opacity: 1; }
   .js .journey__copy { opacity: 1; transform: none; }
-  .js .journey__bar  { opacity: 1; transform: translateX(-50%); }
 }
 
 /* ── narrower screens: headline leads at the top, gentler seat ── */

@@ -60,11 +60,10 @@
 
   /* Elements already anchored to the bottom of the viewport would otherwise sit
      BEHIND the new bar. The journey bar carries "Enter the map" -- the hero's
-     primary action and the advertised fast path past the intro -- so this is
-     not cosmetic. (Explorer hides the bar, the hero and the cue together, so
-     none of these three ever compete.) */
+     primary action and the fast path to the map -- so this is
+     not cosmetic. (Explorer hides the tab bar and the hero together, so the
+     two never compete.) */
   .journey__bar { bottom: calc(var(--tabbar-h) + clamp(12px, 2vh, 24px)); }
-  .scroll-cue { bottom: calc(var(--tabbar-h) + 14px); }
 
   /* ── the sheet ────────────────────────────────────────────
      Rises from the bottom edge so it belongs to the bar that opened it. */

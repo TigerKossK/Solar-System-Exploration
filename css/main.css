@@ -236,7 +236,6 @@ img, canvas { display: block; max-width: 100%; }
    avoiding orphans and bad hyphen breaks. Both degrade to normal wrapping
    where unsupported, so no fallback is needed. */
 .section__title,
-.intro__title,
 .journey__title,
 .hero__title,
 .planet-hero__name,
@@ -249,7 +248,6 @@ img, canvas { display: block; max-width: 100%; }
 .sheet__title { text-wrap: balance; }
 
 .section__lead,
-.intro__lead,
 .journey__sub,
 .hero__sub,
 .planet-hero__desc,

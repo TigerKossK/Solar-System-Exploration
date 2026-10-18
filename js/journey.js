@@ -2,8 +2,10 @@
    Solar System — journey.js
    The opening hero as ONE scroll-scrubbed beat: the visitor "flies in"
    toward Earth. A single scroll progress p (0→1) drives layered parallax —
-   Earth scales up, rises and turns a touch, while the headline lifts away
-   and the control bar sinks and fades. Every layer moves by opacity +
+   Earth scales up, rises and turns a touch, while the headline lifts away.
+   The control bar does NOT move: "Enter the map" stays put and visible for
+   the whole beat. (It used to fade to opacity 0 while staying clickable and
+   in the tab order -- an invisible stop.) Every layer moves by opacity +
    transform only (custom properties on .journey, read in css/journey.css),
    so there is no per-frame layout. rAF-throttled, passive listener.
 
@@ -68,10 +70,6 @@
     // Headline — leads out early so the planet takes the frame.
     s.setProperty("--copy-op", (1 - seg(p, 0.05, 0.42)).toFixed(3));
     s.setProperty("--copy-shift", (seg(p, 0, 0.42) * -70).toFixed(1));       // px, lifts away
-
-    // Control bar — sinks and fades with a touch of lag.
-    s.setProperty("--bar-op", (1 - seg(p, 0.08, 0.40)).toFixed(3));
-    s.setProperty("--bar-shift", (seg(p, 0, 0.40) * 34).toFixed(1));         // px, settles down
 
     // Ambient teal seat — brightens into the fly-in, then clears for hand-off.
     s.setProperty("--wedge-op", (0.7 + seg(p, 0, 0.5) * 0.3 - seg(p, 0.6, 1) * 0.75).toFixed(3));

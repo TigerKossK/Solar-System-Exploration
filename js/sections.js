@@ -50,7 +50,6 @@
     }, { threshold: 0 }).observe(el);
   }
   pauseOffscreen(sunVisual);
-  pauseOffscreen(document.querySelector(".scroll-cue"));
   set("sunStats",
     tile("Type", sf.type.value, "", "") +
     tile("Diameter", sf.diameter.value, "", sf.diameter.vsEarth || "") +

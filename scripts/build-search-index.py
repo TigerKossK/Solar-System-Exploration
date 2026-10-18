@@ -55,7 +55,7 @@ VOID_TAGS = {
 }
 SKIP_CLASSES = {
     "topbar", "tabbar", "sheet", "skip-link", "cosmos", "nav__links",
-    "neighbors", "content-next", "source-tag", "backlink-bar", "scroll-cue",
+    "neighbors", "content-next", "source-tag", "backlink-bar",
     "selector__list", "figure__credit", "planet-orb__note",
     # Interface, not content: the map's preview panel ships placeholder text
     # ("Hover, tap, or tab a planet… Open Earth →") and the calculator's labels

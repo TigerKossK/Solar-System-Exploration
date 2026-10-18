@@ -95,11 +95,11 @@
 @media (prefers-reduced-motion: reduce) {
   .orbit__spin, .planet__body, .planet__body::after, .planet__tagspin,
   .sun__core, .sun__core::before,
-  .sun-visual__core, .sun-visual__core::before, .sun-visual__core::after,
-  .scroll-cue__dot { animation: none !important; }
+  .sun-visual__core, .sun-visual__core::before, .sun-visual__core::after { animation: none !important; }
   .panel, .hero, .selector { animation: none !important; }
   .btn, .btn__chev, .planet__body, .back svg, .orbit,
-  .widget, .mission-item, .mission-item__more, .readout, .readout__arrow, .scroll-cue,
+  .widget, .mission-item, .mission-item__more, .readout, .readout__arrow,
+  .explainer__toggle, .explainer__toggle svg,
   .orrery, .section--menu > .section__card { transition: none !important; }
 }
 
@@ -222,13 +222,6 @@
   .btn--sm { min-height: 44px; padding: 10px 16px; }
   .back { min-height: 44px; padding: 10px 16px; }
   .mission-item { min-height: 44px; }
-
-  /* The scroll cue is a real link but only 26px wide. Widen the HIT AREA with
-     a pseudo-element instead of the element, so the slim pill design survives.
-     (No `position: relative` here: the cue is already absolutely positioned,
-     which is all ::after needs -- the override dropped it into the flow, where
-     its left:50% and bottom offset threw it right and up on every touch device.) */
-  .scroll-cue::after { content: ""; position: absolute; inset: -6px -9px; }
 
   /* 44px targets by INPUT, not by width. These lived only in the <=720px block,
      so touch tablets (721-1366px) kept 40px arrows, ~37px neighbour links and

@@ -1,8 +1,8 @@
 /* ============================================================
    Solar System — "Pause motion" (WCAG 2.2.2 Pause, Stop, Hide)
    ------------------------------------------------------------
-   Everything on the site that moves by itself -- the orbits, both Suns and
-   the scroll cue (CSS, keyed off html[data-motion="paused"]) plus the WebGL
+   Everything on the site that moves by itself -- the orbits and both Suns
+   (CSS, keyed off html[data-motion="paused"]) plus the WebGL
    background and button (js/background.js, js/liquid-chrome.js, which
    listen for the "solar:motion" event) -- stops with one switch, remembered
    across pages and visits. Until now the only ways to stop it were the OS
