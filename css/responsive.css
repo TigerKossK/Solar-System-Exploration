@@ -317,7 +317,11 @@
   .orrery-ready .section--menu .selector__list { display: flex; }
   body.is-exploring .section--menu .selector { display: flex; }
 
-  .selector { padding-top: 14px; row-gap: 10px; }
+  /* The same weight as css/sections.css's `.orrery-ready .section--menu
+     .selector` (0,3,0), which zeroes padding-top for the desktop map. As a bare
+     `.selector` this 14px never applied once the map was built. */
+  .selector,
+  .orrery-ready .section--menu .selector { padding-top: 14px; row-gap: 10px; }
   .selector__label { width: 100%; }
 
   /* One scrollable row rather than a wrapped block: four rows of pills would
@@ -359,7 +363,10 @@
      size this to its CONTENT -- and a content-sized box never scrolls, it just
      overflows and gets clipped. The strip has to span the card to have
      somewhere to scroll inside. */
-  body.is-exploring .selector {
+  /* .section--menu included for weight (0,3,1): as `body.is-exploring
+     .selector` (0,2,1) the padding and margin here lost to the desktop
+     `.orrery-ready .section--menu .selector` (0,3,0) and never applied. */
+  body.is-exploring .section--menu .selector {
     border-top: 0; padding-top: 6px; margin-top: 0;
     justify-self: stretch; width: 100%;
   }

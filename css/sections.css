@@ -16,11 +16,16 @@
    with JavaScript disabled nothing is hidden — the no-JS baseline. And on
    NOT .no-reveal: that same inline script adds it at DOMContentLoaded if
    js/reveal.js never ran (a 404, a throw). "JS is on" was never proof that
-   the revealer loaded; trusting it blanked every article section. */
+   the revealer loaded; trusting it blanked every article section.
+
+   SPECIFICITY: the hide rule is (0,3,0) -- :not(.no-reveal) counts as a
+   class. The show and reduced-motion rules MUST carry the same prefix. As
+   bare `.reveal.is-visible` / `.js .reveal` (0,2,0) they lost to it, and every
+   revealed block on the site stayed at opacity 0 for good. */
 .js:not(.no-reveal) .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
-.reveal.is-visible { opacity: 1; transform: none; }
+.js:not(.no-reveal) .reveal.is-visible { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
-  .js .reveal { opacity: 1; transform: none; transition: none; }
+  .js:not(.no-reveal) .reveal { opacity: 1; transform: none; transition: none; }
 }
 
 /* (The fixed .topbar moved to css/components.css: planet pages, which do not
