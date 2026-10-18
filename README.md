@@ -4,7 +4,7 @@
 
 Explore the planets. Discover the missions. Look beyond Earth.
 
-An interactive astronomy website that brings the Sun, the planets, scientific discoveries, and humanity's exploration of space together in one place.
+An interactive astronomy website for discovering the planets, exploring space missions, and learning how humanity studies our cosmic neighborhood.
 
 <p>
   <a href="https://tigerkossk.github.io/Solar-System-Exploration/"><strong>🚀 Open the Website</strong></a>
@@ -13,133 +13,102 @@ An interactive astronomy website that brings the Sun, the planets, scientific di
 </p>
 
 <p>
-  <img src="https://img.shields.io/github/license/Tigerkossk/Solar-System-Exploration?style=flat-square&label=license" alt="MIT License">
-  <img src="https://img.shields.io/badge/experience-interactive-635bff?style=flat-square" alt="Interactive experience">
-  <img src="https://img.shields.io/badge/focus-astronomy-0b8f87?style=flat-square" alt="Astronomy education">
+  <img src="https://img.shields.io/github/license/Tigerkossk/Solar-System-Exploration?style=flat-square" alt="License">
+  <img src="https://img.shields.io/badge/Experience-Interactive-635BFF?style=flat-square" alt="Interactive experience">
+  <img src="https://img.shields.io/badge/Focus-Astronomy-0B8F87?style=flat-square" alt="Astronomy education">
 </p>
 
 </div>
 
-A closer look
+✨ Explore the experience
 
-<p align="center">
-  <img src="assets/Screenshots/MainMenu.png" alt="Solar System Exploration main menu" width="920">
-</p>
+Solar System Exploration brings visual exploration and educational content together in one place. Move between planets, customize the orbit view, discover scientific missions, and navigate information with tools designed to make learning about space feel clear and engaging.
 
-<p align="center"><em>A visual, approachable way to explore our cosmic neighborhood.</em></p>
+🖼️ A closer look
 
-✨ What you can do
+Select any screenshot to view it at full size.
+
+<table>
+  <tr>
+    <td width="50%" align="center">
+      <a href="assets/Screenshots/MainMenu.png">
+        <img src="assets/Screenshots/MainMenu.png" alt="Solar System Exploration main menu" width="100%">
+      </a>
+      <strong>01 · Main menu</strong><br>
+      <sub>A starting point for exploring the website.</sub>
+    </td>
+    <td width="50%" align="center">
+      <a href="assets/Screenshots/Orbitview.png">
+        <img src="assets/Screenshots/Orbitview.png" alt="Interactive Solar System orbit view" width="100%">
+      </a>
+      <strong>02 · Solar System view</strong><br>
+      <sub>Explore the planetary layout and available orbit styles.</sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="center">
+      <a href="assets/Screenshots/Searchbox.png">
+        <img src="assets/Screenshots/Searchbox.png" alt="Search across Solar System Exploration" width="100%">
+      </a>
+      <strong>03 · Search</strong><br>
+      <sub>Find available information across the website.</sub>
+    </td>
+    <td width="50%" align="center">
+      <a href="assets/Screenshots/MissionsDiscoveries.png">
+        <img src="assets/Screenshots/MissionsDiscoveries.png" alt="Missions and scientific discoveries" width="100%">
+      </a>
+      <strong>04 · Missions & discoveries</strong><br>
+      <sub>Connect scientific discoveries with space exploration.</sub>
+    </td>
+  </tr>
+</table>
+
+<details>
+  <summary><strong>📱 Mobile preview</strong> <em>— older interface</em></summary>
+  <p><em>This image shows an older version of the mobile interface; it does not represent the latest design.</em></p>
+  <p align="center">
+    <a href="assets/Screenshots/Mobile.png">
+      <img src="assets/Screenshots/Mobile.png" alt="Older mobile interface preview" width="320">
+    </a>
+  </p>
+</details>
+
+🚀 What you can do
 
 <table>
   <tr>
     <td width="50%" valign="top">
-      <h3>🪐 Explore the planets</h3>
-      Browse planet information and move between planets with the keyboard or on-screen navigation. Visited-planet marks help you keep track of where you've been.
+      <h3>🪐 Explore planets</h3>
+      Browse planet information, move between planets, and use visited marks to keep track of the worlds you've explored.
     </td>
     <td width="50%" valign="top">
-      <h3>🛰️ Discover space exploration</h3>
-      Learn about missions, scientific instruments, discoveries, and the story of how we study the Solar System.
+      <h3>🔭 Customize the orbit view</h3>
+      Switch between available orbit-view styles to explore the Solar System your way.
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <h3>📚 Read and navigate articles</h3>
-      Explore educational topics with clearer information layouts and an **On this page** contents list for jumping to a section.
+      <h3>🛰️ Discover missions</h3>
+      Learn about scientific instruments, exploration milestones, and discoveries that have expanded our understanding of space.
     </td>
     <td width="50%" valign="top">
-      <h3>🔭 Customize the orbit view</h3>
-      Switch between available orbit-view styles to explore the Solar System in a way that suits you.
+      <h3>📚 Navigate articles</h3>
+      Use the <strong>On this page</strong> contents list in supported articles to jump straight to a topic.
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
       <h3>🧮 Use learning tools</h3>
-      Use the built-in calculator, convert kilograms and pounds (**kg ↔ lb**), and look up astronomy terms in the glossary.
+      Convert kilograms ↔ pounds in the calculator and look up astronomy terms in the glossary.
     </td>
     <td width="50%" valign="top">
-      <h3>🔗 Share what you discover</h3>
-      Use Share buttons or copy a direct link to a specific section so others can open the same information.
+      <h3>🔗 Share what you find</h3>
+      Use Share buttons or copy a direct link to a specific section for easy reference.
     </td>
   </tr>
 </table>
 
-🖼️ Screenshots
-
-A visual tour of the interface, from the main Solar System view to search and educational content.
-
-<table>
-  <tr>
-    <td width="50%" valign="top">
-      <p><strong>01 · Solar System view</strong></p>
-      <img src="assets/Screenshots/Orbitview.png" alt="The interactive Solar System view" width="100%">
-    </td>
-    <td width="50%" valign="top">
-      <p><strong>02 · Search</strong></p>
-      <img src="assets/Screenshots/Searchbox.png" alt="Searching for information across the website" width="100%">
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <p><strong>03 · Missions and discoveries</strong></p>
-      <img src="assets/Screenshots/MissionsDiscoveries.png" alt="Educational information about space missions" width="100%">
-    </td>
-    <td width="50%" valign="top" align="center">
-      <p><strong>04 · Mobile experience</strong></p>
-      <img src="assets/Screenshots/Mobile.png" alt="Solar System Exploration on a mobile screen (Old Version! The new version is still in development" width="330">
-    </td>
-  </tr>
-</table>
-
-<!--
-Add screenshots of the updated interface to assets/Screenshots/ and insert them into the gallery above:
-- OrbitStyles.png          — orbit view with the style selector open
-- TopicsAndContents.png    — improved topic page and its “On this page” list
-- Sharing.png              — Share button and copy-section-link control
-- Calculator.png           — calculator showing kg ↔ lb conversion
-- Glossary.png             — astronomy glossary
-- Accessibility.png        — Pause motion and accessibility options
-- KeyboardShortcuts.png    — the shortcut list opened with ?
-- VisitedPlanets.png       — planet navigation with visited marks
-Use descriptive alt text for each image. Keep captures cropped to the relevant UI and avoid including personal information.
--->
-
-🧭 Features
-
-Navigation that gets out of the way
-
-Previous / next planet: use ← and → to move between planets.
-
-Keyboard help: press ? to open the shortcut list.
-
-Visited marks: see which planets you've already explored.
-
-Direct section links: copy a link to a particular section of a page.
-
-Share buttons: share useful information with others.
-
-On this page: jump straight to a heading inside supported articles.
-
-A more comfortable reading experience
-
-Pause motion switch for reducing animation while browsing.
-
-Print support for suitable pages and articles.
-
-Accessibility improvements, including WCAG AA color contrast, Windows contrast-theme support, and reduced-motion and reduced-transparency preferences.
-
-Educational content and tools
-
-Information about the Sun and planets.
-
-Sections about Solar System formation, scientific instruments, missions, and discoveries.
-
-A glossary for astronomy terminology.
-
-A built-in calculator with kilogram-to-pound and pound-to-kilogram conversion.
-
-Search tools to help find available information around the site.
-
-⌨️ Keyboard shortcuts
+⌨️ Navigation shortcuts
 
 Shortcut
 
@@ -147,44 +116,73 @@ Action
 
 ←
 
-Navigate to the previous planet
+Navigate to the previous planet.
 
 →
 
-Navigate to the next planet
+Navigate to the next planet.
 
-Shortcuts may be unavailable while a text field or another control has keyboard focus.
+?
 
-♿ Accessibility
+Open the keyboard-shortcut list.
 
-Accessibility is part of the browsing experience, not an afterthought. Current support includes:
+<sub>Shortcuts may be unavailable while a text field or another interactive control has focus.</sub>
 
-WCAG AA color-contrast improvements.
+📖 Learning content
 
-Windows contrast themes.
+Explore educational information about:
 
-Reduced-motion and reduced-transparency preferences.
+☀️ The Sun and the planets
+
+🌌 Solar System formation
+
+🔭 Scientific instruments and the technologies used to study space
+
+🚀 Missions, exploration milestones, and discoveries
+
+🧰 Small tools, useful details
+
+Search: find available information across the website.
+
+Calculator: includes kilogram-to-pound and pound-to-kilogram conversion (kg ↔ lb).
+
+Astronomy glossary: look up terms and concepts.
+
+Article contents: jump to headings using On this page where available.
+
+Section links: copy a direct link to a particular section.
+
+Share buttons: share useful pages and information.
+
+Pause motion: reduce animation while browsing.
+
+♿ Accessibility & reading comfort
+
+Accessibility and comfortable reading are part of the experience. The project includes:
+
+Color-contrast improvements targeting WCAG AA contrast levels.
+
+Support for Windows contrast themes.
+
+Consideration for reduced-motion and reduced-transparency preferences.
 
 A Pause motion control.
 
-Print-friendly pages where supported.
+Print support for suitable pages and articles.
 
 🎯 Project goal
 
-Solar System Exploration aims to make astronomy easier to approach without making the experience feel like a textbook. It combines visual exploration, focused educational content, and practical navigation tools to encourage curiosity about the worlds around us and the missions that have helped us understand them.
+Solar System Exploration aims to make astronomy easier to approach by combining visual exploration, focused educational content, and convenient navigation. It connects the worlds we study with the missions and technologies that help us understand them.
 
-We've learned a great deal about the Solar System—but there is still much left to discover.
+We've learned a great deal about our Solar System—but there is still much left to discover.
 
 <div align="center">
 
-🚀 Explore. Discover. Learn. Look beyond Earth.
+🌠 Explore. Discover. Learn. Look beyond Earth.
 
 Open Solar System Exploration →
 
-<sub>Solar System Exploration · An interactive journey through our cosmic neighborhood.</sub>
+<sub>Solar System Exploration · Discover the worlds around us.</sub>
 
 </div>
----
-
-*Solar System Exploration — Discover the worlds around us.*
 
