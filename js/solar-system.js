@@ -271,7 +271,7 @@
     // and the stage label no longer points at the (JS-hidden) list below
     if (stage) stage.setAttribute(
       "aria-label",
-      "Interactive map of the Solar System. Focus a planet or use the arrow buttons to preview it, then open it for its page."
+      "Interactive map of the Solar System. Tab to a planet or use the arrow buttons to preview it, then press Enter to open its page."
     );
   }
 

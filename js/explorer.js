@@ -1,14 +1,15 @@
 /* ============================================================
    Solar System — in-page Explorer mode
-   "Explore the planets" opens a focused, full-screen version of the SAME
+   "Full-screen map" opens a focused, full-screen version of the SAME
    map without a reload: body.is-exploring lets CSS grow the orrery and
    recede the surrounding page, and reveals the shared preview panel's
    Return control + fun-facts. Planet interaction is unchanged from the
    menu (hover / focus / tap previews, via js/solar-system.js) — Explorer
    only changes the layout, so the map behaves identically in both places.
    Browser Back / Esc / the Return button all leave. Reflected in the URL
-   (#explore) so history works. Without JS the CTA scrolls to the planet
-   list, which still navigates.
+   (#explore) so history works, and a modifier-click opens it in a new tab.
+   The CTA is hidden in the markup until this script shows it: without JS
+   there is no full-screen map to open.
    ============================================================ */
 (function () {
   "use strict";
@@ -19,6 +20,7 @@
   var funFacts = document.getElementById("readoutFunFacts");
   var explore = document.getElementById("readoutExplore");
   if (!cta || !panel) return;
+  cta.hidden = false;
 
   var isOn = function () { return body.classList.contains("is-exploring"); };
 

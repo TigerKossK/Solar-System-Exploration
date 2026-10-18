@@ -108,7 +108,7 @@
   }
 
   function openSheet(kind) {
-    sheetTitle.textContent = kind === "planets" ? "The eight planets" : "Go deeper";
+    sheetTitle.textContent = kind === "planets" ? "The eight planets" : "Learn more";
     sheetBody.innerHTML = kind === "planets" ? planetRows() : articleRows();
     if (sheet.showModal) sheet.showModal();
     else sheet.setAttribute("open", "");

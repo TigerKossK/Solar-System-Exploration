@@ -267,7 +267,7 @@ function render(p) {
                  near-black depending on the visitor's hardware. The amber pill is the
                  right treatment for this control, and phones get one less GL context. -->
             <a class="btn btn--primary btn--lg" id="backToSystem" href="../index.html#menu">
-              Back to the Solar System
+              Back to the map
               ${CHEV}
             </a>${nextCta}
           </div>
@@ -286,7 +286,7 @@ function render(p) {
       <footer class="planet-foot">
         <a class="back" href="../index.html#menu">
           <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Back to the Solar System
+          Back to the map
         </a>
         <span class="source-tag">
           Data: <a href="${attr(SOLAR_SYSTEM.meta.sourceUrl)}" target="_blank" rel="noopener">NASA Planetary Fact Sheet</a>
