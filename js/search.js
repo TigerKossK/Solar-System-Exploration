@@ -294,8 +294,17 @@
     "</div>" +
     '<div class="search__results" id="searchResults" role="listbox" aria-label="Search results"></div>' +
     '<p class="search__status sr-only" role="status" aria-live="polite"></p>' +
-    '<p class="search__hint"><kbd>↑</kbd><kbd>↓</kbd> move · <kbd>Enter</kbd> open · <kbd>Esc</kbd> close</p>';
+    '<p class="search__hint"><kbd>↑</kbd><kbd>↓</kbd> move · <kbd>Enter</kbd> open · <kbd>Esc</kbd> close · ' +
+      '<button class="search__keys" type="button">All shortcuts</button></p>';
   document.body.appendChild(dlg);
+
+  /* The way into the shortcut list (js/keyboard.js) that does not need "?",
+     which a visitor may have switched off. */
+  dlg.querySelector(".search__keys").addEventListener("click", function () {
+    if (!window.SolarKeys) return;
+    close();
+    window.SolarKeys.open();
+  });
 
   var input = dlg.querySelector(".search__input");
   var results = dlg.querySelector(".search__results");
@@ -520,7 +529,8 @@
       open();
       return;
     }
-    if (e.key === "/" && !typing && !e.metaKey && !e.ctrlKey && !e.altKey) {
+    // "/" is a single-character shortcut, so it obeys the WCAG 2.1.4 switch
+    if (e.key === "/" && !typing && !e.metaKey && !e.ctrlKey && !e.altKey && window.SolarUtil.singleKeys()) {
       e.preventDefault();
       open();
     }

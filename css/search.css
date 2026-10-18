@@ -124,6 +124,11 @@
   border: 1px solid var(--glass-brd); border-radius: 4px;
   padding: 0 5px; margin: 0 1px;
 }
+.search__keys {
+  color: var(--text-mid); font-size: inherit; font-weight: 600;
+  text-decoration: underline; text-underline-offset: 2px; text-decoration-color: var(--glass-brd-strong);
+}
+.search__keys:hover { color: var(--text-hi); text-decoration-color: var(--accent); }
 
 /* ── phones: a full-height sheet, and no keyboard hints ──
    The palette is a comfortable floating card on a desktop, but on a phone the

@@ -63,6 +63,24 @@
     remove: function (k) { try { window.localStorage.removeItem(k); } catch (e) { /* nothing to do */ } },
   };
 
+  /* Single-character shortcuts ("/" for search, "?" for the shortcut list)
+     can be switched off -- WCAG 2.1.4: a speech-input user saying a word can
+     fire them by accident. The switch lives in the shortcut list
+     (js/keyboard.js); Ctrl/Cmd+K is not a single key and always works. */
+  function singleKeys() {
+    return store.get("solar.keys") !== "off";
+  }
+
+  /* Was this click on a modal <dialog>'s backdrop? A backdrop click reports the
+     dialog itself as the target -- but so does a click on the dialog's own
+     padding, so test the border box. e.detail is 0 for synthetic and keyboard
+     clicks, whose clientX/Y of 0 would otherwise read as "outside". */
+  function backdropHit(dlg, e) {
+    if (e.target !== dlg || !e.detail) return false;
+    var r = dlg.getBoundingClientRect();
+    return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+  }
+
   /* This page's shareable address, optionally with a fragment. Query strings
      are dropped: ?from= is a private return trip (js/backlink.js), not part of
      what someone else should be sent. */
@@ -153,7 +171,7 @@
   window.SolarUtil = {
     esc: esc, attr: attr,
     isTyping: isTyping, dialogOpen: dialogOpen, pageName: pageName,
-    store: store,
+    store: store, singleKeys: singleKeys, backdropHit: backdropHit,
     pageUrl: pageUrl, copyText: copyText, toast: toast, share: share,
   };
 })();

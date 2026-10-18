@@ -333,6 +333,7 @@ ${TOPBAR}
   <script src="../js/backlink.js"></script>
   <script src="../js/search.js"></script>
   <script src="../js/share.js"></script>
+  <script src="../js/keyboard.js"></script>
   <script src="../js/mobile-nav.js"></script>
 </body>
 </html>
