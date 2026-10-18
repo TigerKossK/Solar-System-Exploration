@@ -122,12 +122,15 @@
    barely shifts on a dark ground — what disappears is the per-frame work.
    Desktop keeps the real thing (and Phase 3 tones it down there too).
 
+   The same opaque surfaces answer prefers-reduced-transparency: a visitor
+   who has asked the system for solid backgrounds gets exactly these.
+
    Opacity was raised alongside removing the blur, not just as a look:
    the blur was also doing the legibility work, muting the moving nebula
    behind body text. Drop one without the other and the canvas shows
    straight through the copy.
    ============================================================ */
-@media (max-width: 900px), (pointer: coarse) {
+@media (max-width: 900px), (pointer: coarse), (prefers-reduced-transparency: reduce) {
   .panel {
     background: linear-gradient(150deg, rgba(16,52,60,.94) 0%, rgba(10,28,35,.96) 44%, rgba(8,17,15,.98) 100%);
     backdrop-filter: none; -webkit-backdrop-filter: none;
@@ -378,6 +381,45 @@
    this is a visual change only, not an information one. */
 @media (max-width: 560px) {
   .planet__label { display: none; }
+}
+
+/* ============================================================
+   PREFERENCES — more contrast; forced colours
+   (Reduced transparency shares the opaque-glass block above.)
+   ============================================================ */
+@media (prefers-contrast: more) {
+  :root {
+    --text-mid: #dfe9ea;
+    --text-lo:  #c7d5d6;
+    --glass-brd: rgba(170, 220, 225, 0.45);
+    --glass-brd-strong: rgba(190, 235, 240, 0.75);
+  }
+  .panel {
+    background: linear-gradient(150deg, rgba(14,46,54,.97), rgba(8,17,15,.99));
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+  .planet__label { opacity: 1; color: var(--text-hi); }
+}
+
+/* Forced colours (Windows contrast themes) swap every colour for the system
+   palette and drop background colours and gradients. Two kinds of thing here
+   would vanish outright: things that ARE colour -- the planets and the Sun on
+   the map, a planet's globe, the gravity bar -- and states shown only by a
+   tint -- the current tab, the current contents entry. The first keep their
+   own colours; the second get an underline. forced-color-adjust inherits, so
+   a planet's ::after banding comes along. */
+@media (forced-colors: active) {
+  .planet__body, .sun__core, .sun-visual__core, .planet-orb,
+  .readout__dot, .sheet__dot, .neighbors .dot, .selector__list a::before,
+  .cmp__fill, .cmp__earth { forced-color-adjust: none; }
+  .nav__links a[aria-current], .tabbar__item[aria-current], .toc a[aria-current],
+  .sheet__row[aria-current], .selector__list a.is-active {
+    text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px;
+  }
+  /* the calculator's error edge was colour + an inset shadow, both dropped */
+  .youform__row:has(.youform__input[aria-invalid="true"]) { outline: 2px dashed CanvasText; outline-offset: 2px; }
+  .youform__note::before { forced-color-adjust: none; background: CanvasText; }
+  .planet.is-visited::before { border-color: Highlight; }
 }
 
 /* ── Explorer on a phone held sideways ──
