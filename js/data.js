@@ -39,7 +39,7 @@ const SOLAR_SYSTEM = {
       tagline: "The swift, sun-scorched world",
       description:
         "The smallest planet and the closest to the Sun, Mercury races around its orbit " +
-        "while turning on its axis only slowly — so its day is far longer than its year.",
+        "while turning on its axis only slowly — so one solar day, sunrise to sunrise, lasts two of its years.",
       color: "#a9a29b",
       viz: { orbit: 0.22, size: 12, period: 16 },
       texture: "assets/textures/mercury.jpg",
@@ -69,7 +69,7 @@ const SOLAR_SYSTEM = {
       missions: [
         { name: "Mariner 10", years: "1974–75", note: "First flybys; mapped about 45% of the surface." },
         { name: "MESSENGER", years: "2011–15", note: "First orbiter; found polar ice and mapped composition." },
-        { name: "BepiColombo", years: "2018–", note: "ESA/JAXA mission arriving to orbit Mercury." },
+        { name: "BepiColombo", years: "2018–", note: "ESA/JAXA mission, due to enter Mercury orbit on 21 November 2026." },
       ],
       composition: "Rocky world with a large iron core and almost no atmosphere.",
       funFacts: [
@@ -125,7 +125,7 @@ const SOLAR_SYSTEM = {
       missions: [
         { name: "Pioneer Venus", years: "1978–92", note: "First US orbiter; early radar mapping." },
         { name: "Magellan", years: "1990–94", note: "Radar-mapped 98% of the surface." },
-        { name: "Akatsuki", years: "2015–", note: "JAXA orbiter studying the atmosphere and clouds." },
+        { name: "Akatsuki", years: "2015–24", note: "JAXA orbiter that studied the atmosphere and clouds until contact was lost in 2024." },
       ],
       composition: "Thick CO₂ atmosphere with sulphuric-acid clouds; a runaway greenhouse.",
       funFacts: [
@@ -157,7 +157,9 @@ const SOLAR_SYSTEM = {
         distance: { au: "1.00", km: "149.6 million km" },
         orbital: { days: 365.2, human: "365.2 days", context: "This is the reference year for the whole system." },
         rotation: { hours: 23.9, human: "23.9 hours", context: "The reference day for every comparison here." },
-        temperature: { mean: "15", unit: "°C", range: "−88 to 58 °C" },
+        /* Records per the WMO archive: −89.2 °C (Vostok, 1983) and 56.7 °C (Death
+           Valley, 1913). The 58 °C El Azizia reading was invalidated by the WMO in 2012. */
+        temperature: { mean: "15", unit: "°C", range: "−89 to 57 °C" },
         moons: { count: 1, note: "One moon — the Moon.", notable: ["The Moon"] },
         density: { value: "5.51", unit: "g/cm³" },
         escapeVelocity: { value: "11.2", unit: "km/s" },
@@ -174,7 +176,7 @@ const SOLAR_SYSTEM = {
       magneticField: "A strong dipole field that shields the surface from the solar wind.",
       features: ["The Mariana Trench (~11 km deep) and Mount Everest (~8.8 km tall) mark its extremes."],
       missions: [
-        { name: "Apollo 11–17", years: "1969–72", note: "Carried twelve astronauts to the Moon." },
+        { name: "Apollo 11–17", years: "1969–72", note: "Landed twelve astronauts on the Moon." },
         { name: "International Space Station", years: "1998–", note: "A continuously crewed orbital laboratory." },
         { name: "Landsat", years: "1972–", note: "Half a century of continuous Earth observation." },
       ],
@@ -184,7 +186,7 @@ const SOLAR_SYSTEM = {
         "It is the only known world with liquid water on its surface — and with life.",
         "Its molten-iron core generates a magnetic field that shields us from the solar wind.",
         "The Moon drifts away from Earth by about 3.8 cm every year.",
-        "Earth's oxygen-rich air is produced by photosynthetic life over billions of years.",
+        "Earth's oxygen-rich air was produced by photosynthetic life over billions of years.",
       ],
       imagery: { alt: "Earth — a blue planet with white clouds and green continents." },
     },
@@ -223,7 +225,7 @@ const SOLAR_SYSTEM = {
       discovery: "Known since antiquity",
       magneticField: "No global field today — only patchy magnetism frozen into the crust.",
       features: [
-        "Olympus Mons — the tallest volcano in the Solar System, about 22 km high.",
+        "Olympus Mons — the tallest volcano in the Solar System, about 26 km above the plains around it.",
         "Valles Marineris — a canyon system more than 4,000 km long.",
       ],
       missions: [
@@ -328,7 +330,7 @@ const SOLAR_SYSTEM = {
         has: true,
         description: "The brightest rings in the Solar System — mostly water ice, split by the Cassini Division.",
       },
-      discovery: "Known since antiquity (rings first seen by Huygens, 1655)",
+      discovery: "Known since antiquity (rings first glimpsed by Galileo in 1610; recognised as a ring by Huygens in 1655)",
       magneticField: "A strong field, unusually well aligned with the planet's rotation axis.",
       features: [
         "The bright ring system, spanning about 280,000 km yet only tens of metres thick.",
@@ -474,8 +476,8 @@ const SOLAR_SYSTEM = {
       diameter: { value: "1.39 million km", vsEarth: "≈ 109× Earth" },
       surface: { value: "≈ 5,500 °C" },
       core: { value: "≈ 15 million °C" },
-      mass: { value: "1.989 × 10³⁰ kg", vsEarth: "≈ 333,000× Earth" },
-      massShare: { value: "99.86% of the Solar System" },
+      mass: { value: "1.988 × 10³⁰ kg", vsEarth: "≈ 333,000× Earth" },   // NSSDC: 1,988,400 × 10²⁴ kg
+      massShare: { value: "99.86% of the Solar System's mass" },
       composition: { value: "≈ 91% hydrogen, 9% helium" },
       age: { value: "≈ 4.6 billion years" },
     },
@@ -600,7 +602,7 @@ const SOLAR_SYSTEM = {
         highlights: [
           "The fastest object ever built, reaching roughly 192 km/s.",
           "Came within about 6.1 million km of the Sun's surface in December 2024.",
-          "A 4.24 m carbon shield holds around 1,400 K on its front face while the instruments behind stay near room temperature.",
+          "A carbon-composite shield 2.4 m across and 11.4 cm thick faces about 1,370 °C on its front while the instruments behind it stay near room temperature.",
           "Flying through the corona to work out why it is hundreds of times hotter than the surface below it.",
         ],
       },

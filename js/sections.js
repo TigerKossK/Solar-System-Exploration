@@ -56,7 +56,7 @@
     tile("Diameter", sf.diameter.value, "", sf.diameter.vsEarth || "") +
     tile("Surface", sf.surface.value, "", "Photosphere") +
     tile("Core", sf.core.value, "", "Where fusion happens") +
-    tile("Composition", sf.composition.value, "", "By mass") +
+    tile("Composition", sf.composition.value, "", "By number of atoms") +
     tile("Age", sf.age.value, "", "About halfway through its life")
   );
   set("sunFunFacts", facts(sun.funFacts));
