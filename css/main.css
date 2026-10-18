@@ -156,7 +156,9 @@ img, canvas { display: block; max-width: 100%; }
 #article[tabindex="-1"]:focus,
 #article[tabindex="-1"]:focus-visible,
 #dashboard[tabindex="-1"]:focus,
-#dashboard[tabindex="-1"]:focus-visible { outline: none; }
+#dashboard[tabindex="-1"]:focus-visible,
+main h1[tabindex="-1"]:focus,
+main h1[tabindex="-1"]:focus-visible { outline: none; }   /* "Back to top" lands here (js/toc.js) */
 * { scrollbar-width: thin; scrollbar-color: var(--teal-600) transparent; }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-thumb { background: var(--teal-600); border-radius: 999px; border: 2px solid var(--bg-void); }
