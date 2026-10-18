@@ -21,6 +21,7 @@
   transition: color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
 }
 .search-trigger:hover { color: var(--text-hi); border-color: var(--glass-brd-strong); background: rgba(255,255,255,.06); }
+.no-single-keys .search-trigger__kbd { display: none; }   /* "/" switched off (js/keyboard.js) */
 .search-trigger__kbd {
   font-family: var(--font-ui); font-size: .74rem; font-weight: 600;
   color: var(--text-lo); border: 1px solid var(--glass-brd);

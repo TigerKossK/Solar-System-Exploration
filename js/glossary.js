@@ -25,7 +25,7 @@
   var TERMS = [
     { id: "au", re: /\bAU\b/, title: "Astronomical unit (AU)",
       def: "The average distance between Earth and the Sun, fixed at exactly 149,597,870.7 km (about 150 million km). Sunlight crosses it in about 8 minutes 19 seconds." },
-    { id: "light-year", re: /\blight-years?\b/, title: "Light-year",
+    { id: "light-year", re: /\blight-years?\b/i, title: "Light-year",
       def: "The distance light travels in a year: about 9.46 trillion km, or roughly 63,000 AU. A distance, not a time." },
     { id: "escape-velocity", re: /\b[Ee]scape velocity\b/, title: "Escape velocity",
       def: "The speed something needs to coast away from a world's gravity for good, with no further push (ignoring the drag of any air)." },

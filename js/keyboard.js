@@ -49,10 +49,18 @@
       cmdK + " always opens search.</p>";
   document.body.appendChild(dlg);
 
+  /* The topbar's search button advertises "/"; with single keys off that hint
+     would be a lie (css/search.css hides it under this class). */
+  function syncHint() {
+    document.documentElement.classList.toggle("no-single-keys", !U.singleKeys());
+  }
+  syncHint();
+
   var box = dlg.querySelector("#keysSingle");
   box.addEventListener("change", function () {
     if (box.checked) U.store.remove("solar.keys");
     else U.store.set("solar.keys", "off");
+    syncHint();
   });
 
   function open() {
@@ -79,7 +87,9 @@
       open();
       return;
     }
-    if (!onPlanet || e.shiftKey) return;
+    /* A held arrow auto-repeats: without e.repeat it raced through planet
+       after planet while the next page was still loading. */
+    if (!onPlanet || e.shiftKey || e.repeat) return;
     var link = e.key === "ArrowLeft" ? prev : e.key === "ArrowRight" ? next : null;
     if (!link) return;
     e.preventDefault();

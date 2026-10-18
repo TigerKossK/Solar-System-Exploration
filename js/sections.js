@@ -191,25 +191,35 @@
       youGrid.innerHTML = html;
 
       /* Screen readers get the two ends of the range rather than all eight
-         cards read out in sequence, which is the point the grid is making. */
-      if (youStatus && extremes) {
-        youStatus.textContent =
-          "Heaviest on " + extremes.hiName + " at " + fmtMass(extremes.hi) + " " + unit +
-          "; lightest on " + extremes.loName + " at " + fmtMass(extremes.lo) + " " + unit + ".";
-      } else if (youStatus) {
-        youStatus.textContent = "";
+         cards read out in sequence, which is the point the grid is making --
+         once typing pauses. Set on every keystroke, "70" was announced as the
+         result for 7 and then again for 70. */
+      if (youStatus) {
+        var say = extremes
+          ? "Heaviest on " + extremes.hiName + " at " + fmtMass(extremes.hi) + " " + unit +
+            "; lightest on " + extremes.loName + " at " + fmtMass(extremes.lo) + " " + unit + "."
+          : "";
+        window.clearTimeout(statusTimer);
+        statusTimer = window.setTimeout(function () { youStatus.textContent = say; }, 700);
       }
     }
+    var statusTimer = 0;
 
     /* Switching kg <-> lb converts the number already typed. Relabelling 70
-       from "kg" to "lb" silently made the reader 32 kg lighter. The limits
-       follow the unit (1000 kg is about 2205 lb), so a converted heavy weight
-       is not suddenly "out of range". */
+       from "kg" to "lb" silently made the reader 32 kg lighter. BOTH limits
+       follow the unit, converted the same way as the value (to 0.1): 1-1000 kg
+       is 2.2-2204.6 lb, so a value that is valid in one unit is still valid
+       after switching, at either end. (Converting only the maximum let 2 lb
+       become 0.9 kg -- "out of range" -- and 2205 lb become 1000.2 kg.) */
     var LB_PER_KG = 2.20462;
+    var MIN_KG = parseFloat(youMass.min) || 1;
     var MAX_KG = parseFloat(youMass.max) || 1000;
     var lastUnit = youUnit.value === "lb" ? "lb" : "kg";
+    function toTenth(v) { return Math.round(v * 10) / 10; }
     function setMassLimit(unit) {
-      youMass.max = String(unit === "lb" ? Math.round(MAX_KG * LB_PER_KG) : MAX_KG);
+      var f = unit === "lb" ? LB_PER_KG : 1;
+      youMass.min = String(toTenth(MIN_KG * f));
+      youMass.max = String(toTenth(MAX_KG * f));
     }
 
     /* Remembered for this tab only (SolarUtil.session): open Mars, come back,
@@ -235,8 +245,7 @@
       var unit = youUnit.value === "lb" ? "lb" : "kg";
       var v = parseFloat(youMass.value);
       if (unit !== lastUnit && isFinite(v)) {
-        var converted = unit === "lb" ? v * LB_PER_KG : v / LB_PER_KG;
-        youMass.value = String(Math.round(converted * 10) / 10);
+        youMass.value = String(toTenth(unit === "lb" ? v * LB_PER_KG : v / LB_PER_KG));
       }
       lastUnit = unit;
       setMassLimit(unit);

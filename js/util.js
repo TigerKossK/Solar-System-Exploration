@@ -164,7 +164,15 @@
       toastEl.setAttribute("role", "status");
       toastEl.setAttribute("aria-live", "polite");
     }
-    if (toastEl.parentNode !== host()) host().appendChild(toastEl);
+    var h = host();
+    if (toastEl.parentNode !== h) h.appendChild(toastEl);
+    /* Shown inside a dialog that then closes (Share, then Close at once), the
+       toast would vanish with it. Hand it back to <body> to finish there. */
+    if (h !== document.body) {
+      h.addEventListener("close", function () {
+        if (toastEl.parentNode === h) document.body.appendChild(toastEl);
+      }, { once: true });
+    }
     var show = function () {
       clearTimeout(toastTimer);
       clearTimeout(clearTimer);

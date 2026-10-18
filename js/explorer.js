@@ -20,6 +20,11 @@
   var funFacts = document.getElementById("readoutFunFacts");
   var explore = document.getElementById("readoutExplore");
   if (!cta || !panel) return;
+  /* Only a BUILT map can go full screen. js/solar-system.js (which runs first)
+     sets .orrery-ready once the planets exist; if js/data.js failed, the CTA
+     used to appear anyway and open an empty full-screen box. Without the map,
+     the CTA stays hidden and a #explore link simply shows the page. */
+  if (!document.documentElement.classList.contains("orrery-ready")) return;
   cta.hidden = false;
 
   var isOn = function () { return body.classList.contains("is-exploring"); };

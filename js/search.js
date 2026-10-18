@@ -444,6 +444,11 @@
   });
 
   dlg.addEventListener("keydown", function (e) {
+    /* Only the search box drives the list. The handler sits on the whole
+       dialog, so Enter on Close or "All shortcuts" used to open the top result
+       instead of pressing the button. A result row that took focus from a
+       click is a real link: Enter opens it natively. */
+    if (e.target !== input) return;
     if (e.key === "ArrowDown") { e.preventDefault(); setActive(active + 1); }
     else if (e.key === "ArrowUp") { e.preventDefault(); setActive(active - 1); }
     else if (e.key === "Enter") {
@@ -536,6 +541,11 @@
      leaving: one Escape closes the search, not search and Explorer at once. */
   document.addEventListener("keydown", function (e) {
     var typing = window.SolarUtil.isTyping(e);
+    /* Another dialog (a mission, the shortcut list, the tab-bar sheet) owns the
+       keyboard: opening search over it stacked two modals, and Escape then
+       closed only the top one. Search itself being open is fine -- open()
+       just returns. */
+    if (!dlg.open && window.SolarUtil.dialogOpen()) return;
     if ((e.key === "k" || e.key === "K") && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       open();
