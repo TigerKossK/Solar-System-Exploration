@@ -65,9 +65,9 @@
    hovered planet's glow simply covers it. */
 .planet.is-visited::before {
   content: ""; position: absolute; inset: -4px; border-radius: 50%; pointer-events: none;
-  border: 1.5px solid rgba(245,185,66,.55);
+  border: 1.5px solid rgb(var(--accent-rgb) / .55);
 }
-.selector__list a.is-visited::before { box-shadow: 0 0 0 2px var(--bg-void), 0 0 0 3.5px rgba(245,185,66,.7); }
+.selector__list a.is-visited::before { box-shadow: 0 0 0 2px var(--bg-void), 0 0 0 3.5px rgb(var(--accent-rgb) / .7); }
 .visited-note { width: 100%; color: var(--text-lo); font-size: .82rem; }
 .visited-note strong { color: var(--text-mid); font-weight: 600; }
 .visited-note:focus { outline: none; }    /* a status line, not a control */
@@ -122,7 +122,7 @@
 /* ── 4 · The Sun ── */
 .section--sun::before {
   content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background: radial-gradient(42vw 42vw at 76% 28%, rgba(245,185,66,.09), transparent 70%);
+  background: radial-gradient(42vw 42vw at 76% 28%, rgb(var(--accent-rgb) / .09), transparent 70%);
 }
 .sun-feature { display: grid; grid-template-columns: minmax(0, .86fr) minmax(0, 1.14fr); gap: var(--space-stack-lg); align-items: center; }
 .sun-feature__figure { display: grid; place-items: center; }
@@ -148,7 +148,7 @@
   background-position: center, 0 0;
   background-repeat: no-repeat, no-repeat;
   box-shadow:
-    0 0 50px 10px rgba(245,185,66,.38),
+    0 0 50px 10px rgb(var(--accent-rgb) / .38),
     0 0 130px 34px rgba(255,155,61,.2),
     inset 0 0 54px 10px rgba(138,67,16,.4);
   animation: sun-breathe 10s ease-in-out infinite;
@@ -175,8 +175,8 @@
   animation: sun-drift-b 48s linear infinite reverse;
 }
 @keyframes sun-breathe {
-  0%, 100% { box-shadow: 0 0 50px 10px rgba(245,185,66,.38), 0 0 130px 34px rgba(255,155,61,.2), inset 0 0 54px 10px rgba(138,67,16,.4); }
-  50%      { box-shadow: 0 0 64px 15px rgba(245,185,66,.48), 0 0 152px 40px rgba(255,155,61,.26), inset 0 0 54px 10px rgba(138,67,16,.4); }
+  0%, 100% { box-shadow: 0 0 50px 10px rgb(var(--accent-rgb) / .38), 0 0 130px 34px rgba(255,155,61,.2), inset 0 0 54px 10px rgba(138,67,16,.4); }
+  50%      { box-shadow: 0 0 64px 15px rgb(var(--accent-rgb) / .48), 0 0 152px 40px rgba(255,155,61,.26), inset 0 0 54px 10px rgba(138,67,16,.4); }
 }
 @keyframes sun-drift-a { to { background-position: 100% 30%, -20% 140%; } }
 @keyframes sun-drift-b { to { background-position: 130% 70%; } }
@@ -344,7 +344,7 @@ select.youform__unit { cursor: pointer; }
   transition: background .2s var(--ease), border-color .2s var(--ease), transform .2s var(--ease);
 }
 .you-card:hover { background: rgba(255,255,255,.07); transform: translateY(-2px); }
-.you-card--home { background: rgba(245,185,66,.08); }
+.you-card--home { background: rgb(var(--accent-rgb) / .08); }
 .you-card__name {
   font-family: var(--font-display); font-weight: 700; font-size: .96rem;
   letter-spacing: -.01em; margin-bottom: 2px;

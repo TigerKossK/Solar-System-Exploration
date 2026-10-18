@@ -104,7 +104,7 @@
   }
   .sheet__row--stack { flex-direction: column; align-items: flex-start; gap: 2px; }
   .sheet__row:hover { background: rgba(255,255,255,.07); }
-  .sheet__row[aria-current] { border-color: var(--accent); background: rgba(245,185,66,.1); }
+  .sheet__row[aria-current] { border-color: var(--accent); background: rgb(var(--accent-rgb) / .1); }
   .sheet__dot {
     width: 14px; height: 14px; border-radius: 50%; flex: none;
     background: var(--c, var(--accent));

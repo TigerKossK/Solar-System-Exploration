@@ -84,7 +84,7 @@
 /* The highlighted row is the ONLY sign of what Enter will open -- focus stays in
    the input (aria-activedescendant) -- so it must clear 3:1 (WCAG 1.4.11). The
    old white wash measured 1.19:1. */
-.search__row.is-active { background: rgba(245,185,66,.10); border-color: var(--accent); }
+.search__row.is-active { background: rgb(var(--accent-rgb) / .10); border-color: var(--accent); }
 .search__where { color: var(--text-lo); font-size: .76rem; font-weight: 600; letter-spacing: .02em; }
 .search__title { font-family: var(--font-display); font-weight: 600; font-size: 1.02rem; letter-spacing: -.01em; }
 .search__snippet { color: var(--text-mid); font-size: .88rem; line-height: 1.5; }
@@ -93,7 +93,7 @@
    Amber echoes ::selection in css/main.css, and the underline carries the
    signal for anyone who cannot separate the two colours. */
 .search mark {
-  background: rgba(245,185,66,.2);
+  background: rgb(var(--accent-rgb) / .2);
   color: var(--text-hi);
   border-radius: 3px;
   padding: 0 2px;

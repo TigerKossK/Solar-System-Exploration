@@ -188,7 +188,7 @@
 .unsettled {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 2px 9px; border-radius: var(--r-pill);
-  background: rgba(245, 185, 66, .1); border: 1px solid rgba(245, 185, 66, .3);
+  background: rgb(var(--accent-rgb) / .1); border: 1px solid rgb(var(--accent-rgb) / .3);
   color: var(--accent); font-size: .75rem; font-weight: 600;
   text-transform: uppercase; letter-spacing: .06em; white-space: nowrap;
   vertical-align: middle;
@@ -255,7 +255,7 @@
   color: var(--text-hi); font-weight: 600; text-align: right;
   font-variant-numeric: tabular-nums;
 }
-.chip--live { color: var(--accent); border-color: rgba(245,185,66,.35); }
+.chip--live { color: var(--accent); border-color: rgb(var(--accent-rgb) / .35); }
 .chip--retired { color: var(--text-lo); }
 
 /* (.content-next, the cross-page cards at the foot, lives in

@@ -43,6 +43,9 @@
 
   /* accent — PLACEHOLDER (solar amber ≙ the Sun); TBD by user */
   --accent:      #f5b942;
+  /* the same amber as channels, for every tint: rgb(var(--accent-rgb) / .2).
+     Change the two together -- they were 22 hand-copied rgba()s. */
+  --accent-rgb:  245 185 66;
   /* --accent-warm is the Sun's own orange: correct inside the plasma gradients
      (.sun__core, .sun-visual__core), where it sits between amber and a deep
      ember and reads as heat. It is NOT right as half of a flat button fill --
@@ -151,7 +154,7 @@ img, canvas { display: block; max-width: 100%; }
 }
 
 /* ── themed browser surfaces (the cheap tell of a built page) ── */
-::selection { background: rgba(245,185,66,.26); color: #fff; }
+::selection { background: rgb(var(--accent-rgb) / .26); color: #fff; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
 /* Skip-link landmark targets carry tabindex="-1" so focus actually lands there.
    They are not in the tab order and are not operable, so WCAG's visible-focus
