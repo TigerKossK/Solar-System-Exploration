@@ -235,8 +235,10 @@
      with Close at the end that was the first "Where this leads" link — below
      the title, the note and every highlight, so a screen reader started there
      and a phone opened the dialog already scrolled past its own heading. */
+  /* Share follows Close, for the same reason: Close stays the first stop. */
   dlg.innerHTML =
     '<button class="mission-dialog__close btn btn--ghost btn--sm" type="button">Close</button>' +
+    '<button class="mission-dialog__share btn btn--ghost btn--sm" type="button">Share</button>' +
     '<div id="missionDialogBody"></div>';
   document.body.appendChild(dlg);
   var dlgBody = dlg.querySelector("#missionDialogBody");
@@ -361,6 +363,16 @@
   }
   dlg.addEventListener("click", function (e) {
     if (e.target.closest(".mission-dialog__close")) { closeDialog(); return; }
+    if (e.target.closest(".mission-dialog__share")) {
+      var shown = missions[openIdx];
+      if (shown && shown.id && window.SolarUtil && SolarUtil.share) {
+        SolarUtil.share({
+          title: shown.name + " — Solar System",
+          url: SolarUtil.pageUrl("mission=" + encodeURIComponent(shown.id)),
+        });
+      }
+      return;
+    }
     /* A backdrop click reports the <dialog> itself as the target — but so does a
        click on the dialog's OWN padding (clamp(20px,3vw,32px)), because that is
        inside its box. Testing e.target === dlg alone therefore closed the dialog

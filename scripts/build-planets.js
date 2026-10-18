@@ -190,14 +190,14 @@ function render(p) {
 
   // Fun facts
   const funFacts = `
-        <section class="dash-section" aria-labelledby="h-facts">
+        <section class="dash-section" id="facts" aria-labelledby="h-facts">
           <div class="section-head"><h2 id="h-facts">Fun facts</h2></div>
           <ul class="fact-list">${(p.funFacts || []).map((x) => `<li class="fact-item">${esc(x)}</li>`).join("")}</ul>
         </section>`;
 
   // Exploration / missions
   const missions = `
-        <section class="dash-section" aria-labelledby="h-missions">
+        <section class="dash-section" id="missions" aria-labelledby="h-missions">
           <div class="section-head"><h2 id="h-missions">Exploration</h2></div>
           <div class="mission-list">${(p.missions || [])
             .map(
@@ -332,6 +332,7 @@ ${TOPBAR}
   <script src="../js/background.js"></script>
   <script src="../js/backlink.js"></script>
   <script src="../js/search.js"></script>
+  <script src="../js/share.js"></script>
   <script src="../js/mobile-nav.js"></script>
 </body>
 </html>

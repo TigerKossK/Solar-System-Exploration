@@ -434,6 +434,44 @@ button.mission-item:focus-visible .mission-item__more { opacity: 1; transform: t
 /* Top-right, first in the DOM: reachable without scrolling a long dialog, and
    where showModal() puts focus. The title wraps beside it. */
 .mission-dialog__close { float: right; margin: 0 0 12px 16px; }
+.mission-dialog__share { float: right; margin: 0 0 12px 8px; }   /* sits left of Close */
+
+/* ── copy a section link · share a page (js/share.js) ───────
+   The link button lives inside its heading, after the text. Negative block
+   margins keep a 30px target from stretching the heading's line box. */
+.heading-link {
+  position: relative; display: inline-grid; place-items: center; vertical-align: middle;
+  width: 30px; height: 30px; margin: -7px 0 -7px .3em; border-radius: 50%;
+  color: var(--text-lo);
+  transition: color .2s var(--ease), background .2s var(--ease), opacity .2s var(--ease);
+}
+.heading-link:hover { color: var(--accent); background: rgba(255,255,255,.06); }
+/* With a mouse it appears with the heading; on touch, where nothing hovers,
+   it is always there. Keyboard focus always shows it. */
+@media (hover: hover) {
+  .heading-link { opacity: 0; }
+  :is(h2, h3):hover > .heading-link, .heading-link:focus-visible { opacity: 1; }
+}
+@media (pointer: coarse) { .heading-link::after { content: ""; position: absolute; inset: -7px; } }
+
+.share-btn svg { flex: none; }
+.planet-topbar .share-btn { margin-left: auto; }
+.content-hero .share-btn { justify-self: start; }
+
+/* ── toast (SolarUtil.toast) — one short confirmation, above the tab bar ── */
+.toast {
+  position: fixed; left: 50%; z-index: 80;
+  bottom: calc(var(--tabbar-h, env(safe-area-inset-bottom, 0px)) + 20px);
+  transform: translate(-50%, 12px);
+  max-width: min(440px, calc(100vw - 32px));
+  padding: 11px 18px; border-radius: var(--r-pill);
+  background: linear-gradient(150deg, rgba(16,52,60,.97), rgba(8,17,15,.98));
+  border: 1px solid var(--glass-brd-strong); box-shadow: var(--shadow-soft);
+  color: var(--text-hi); font-size: .92rem; font-weight: 600; text-align: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s var(--ease), transform .25s var(--ease);
+}
+.toast.is-shown { opacity: 1; transform: translate(-50%, 0); }
 
 /* ── liquid-chrome primary CTA (JS-enhanced; amber pill otherwise) ── */
 .btn.has-liquid { position: relative; overflow: hidden; background: #0a1512; border-color: var(--glass-brd-strong); color: var(--text-hi); box-shadow: 0 10px 26px -12px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.05) inset; }
