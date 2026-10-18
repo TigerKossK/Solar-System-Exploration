@@ -54,14 +54,22 @@
     return location.pathname.split("/").pop() || "index.html";
   }
 
-  /* localStorage that never throws. Private windows, blocked site data and some
+  /* Web storage that never throws. Private windows, blocked site data and some
      file:// setups make every access throw; a remembered preference is a
-     convenience, so failing to remember one must never break the page. */
-  var store = {
-    get: function (k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } },
-    set: function (k, v) { try { window.localStorage.setItem(k, String(v)); } catch (e) { /* not stored */ } },
-    remove: function (k) { try { window.localStorage.removeItem(k); } catch (e) { /* nothing to do */ } },
-  };
+     convenience, so failing to remember one must never break the page.
+     store = localStorage (preferences); session = sessionStorage, for things
+     that should not outlive the tab -- like the weight and age typed into the
+     calculator, which the next person at a shared computer has no business
+     seeing. */
+  function webStore(kind) {
+    return {
+      get: function (k) { try { return window[kind].getItem(k); } catch (e) { return null; } },
+      set: function (k, v) { try { window[kind].setItem(k, String(v)); } catch (e) { /* not stored */ } },
+      remove: function (k) { try { window[kind].removeItem(k); } catch (e) { /* nothing to do */ } },
+    };
+  }
+  var store = webStore("localStorage");
+  var session = webStore("sessionStorage");
 
   /* Planets this browser has opened: a quiet "where have I been?" mark on the
      map and in the Planets sheet. A convenience kept in localStorage only,
@@ -191,7 +199,7 @@
   window.SolarUtil = {
     esc: esc, attr: attr,
     isTyping: isTyping, dialogOpen: dialogOpen, pageName: pageName,
-    store: store, visited: visited, singleKeys: singleKeys, backdropHit: backdropHit,
+    store: store, session: session, visited: visited, singleKeys: singleKeys, backdropHit: backdropHit,
     pageUrl: pageUrl, copyText: copyText, toast: toast, share: share,
   };
 })();

@@ -151,8 +151,11 @@
         var msgs = [];
         if (badMass) msgs.push("a weight from " + youMass.min + " to " + youMass.max);
         if (badAge) msgs.push("an age from " + youAge.min + " to " + youAge.max);
-        youNote.textContent = msgs.length ? "Enter " + msgs.join(" and ") + "." : "";
-        youNote.hidden = !msgs.length;
+        /* Never `hidden`: the note is a live region, and one that appears from
+           display:none already holding its text is not reliably announced.
+           Empty, it collapses to nothing (css/sections.css). */
+        var say = msgs.length ? "Enter " + msgs.join(" and ") + "." : "";
+        if (youNote.textContent !== say) youNote.textContent = say;
       }
 
       /* Collected during the same pass that builds the grid, rather than looked
@@ -198,9 +201,48 @@
       }
     }
 
-    youMass.addEventListener("input", renderYou);
-    youAge.addEventListener("input", renderYou);
-    youUnit.addEventListener("change", renderYou);
+    /* Switching kg <-> lb converts the number already typed. Relabelling 70
+       from "kg" to "lb" silently made the reader 32 kg lighter. The limits
+       follow the unit (1000 kg is about 2205 lb), so a converted heavy weight
+       is not suddenly "out of range". */
+    var LB_PER_KG = 2.20462;
+    var MAX_KG = parseFloat(youMass.max) || 1000;
+    var lastUnit = youUnit.value === "lb" ? "lb" : "kg";
+    function setMassLimit(unit) {
+      youMass.max = String(unit === "lb" ? Math.round(MAX_KG * LB_PER_KG) : MAX_KG);
+    }
+
+    /* Remembered for this tab only (SolarUtil.session): open Mars, come back,
+       and your numbers are still there -- but a weight and an age are personal,
+       so they are not kept for the next person at a shared computer. */
+    var KEY = "solar.you";
+    var session = window.SolarUtil && SolarUtil.session;
+    function save() {
+      if (session) session.set(KEY, [youMass.value, youUnit.value, youAge.value].join("|"));
+    }
+    (function restore() {
+      var s = session && session.get(KEY);
+      if (!s) return;
+      var part = s.split("|");
+      if (part[1] === "kg" || part[1] === "lb") { youUnit.value = part[1]; lastUnit = part[1]; setMassLimit(part[1]); }
+      if (/^\d{1,4}(\.\d{1,2})?$/.test(part[0])) youMass.value = part[0];
+      if (/^\d{1,3}(\.\d{1,2})?$/.test(part[2])) youAge.value = part[2];
+    })();
+
+    youMass.addEventListener("input", function () { save(); renderYou(); });
+    youAge.addEventListener("input", function () { save(); renderYou(); });
+    youUnit.addEventListener("change", function () {
+      var unit = youUnit.value === "lb" ? "lb" : "kg";
+      var v = parseFloat(youMass.value);
+      if (unit !== lastUnit && isFinite(v)) {
+        var converted = unit === "lb" ? v * LB_PER_KG : v / LB_PER_KG;
+        youMass.value = String(Math.round(converted * 10) / 10);
+      }
+      lastUnit = unit;
+      setMassLimit(unit);
+      save();
+      renderYou();
+    });
     renderYou();
     var youSection = document.getElementById("you");
     if (youSection) youSection.hidden = false;

@@ -54,6 +54,12 @@
   --accent-deep: #e9a62c;
   --accent-ink:  #241703;
 
+  /* errors — coral, so "this needs fixing" never looks like amber "this has
+     focus". 4.6:1 on the lightest desktop panel over the brightest canvas
+     (the --text-lo contrast model); always paired with an icon or a thicker
+     edge, never colour alone. */
+  --danger:      #ff9b8f;
+
   /* geometry */
   --r-card: 30px;
   --r-lg:   20px;

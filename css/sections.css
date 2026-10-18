@@ -312,12 +312,27 @@ body.is-exploring .readout {
 }
 .youform__unit--static { background: none; color: var(--text-lo); padding-right: 6px; }
 select.youform__unit { cursor: pointer; }
-/* Out-of-range input: the field's outline says which, the note says why. */
-.youform__row:has(.youform__input[aria-invalid="true"]) { border-color: var(--accent); }
-.youform__note {
-  margin: calc(-1 * clamp(6px, 1.2vh, 12px)) 0 clamp(14px, 2vh, 20px);
-  color: var(--accent); font-size: .92rem; font-weight: 600;
+/* Out-of-range input: the field's edge says which, the note says why. Coral
+   and a doubled edge, so an error never looks like amber focus -- the two used
+   to be identical. The note carries an icon too: colour is never the only cue. */
+.youform__row:has(.youform__input[aria-invalid="true"]) {
+  border-color: var(--danger); box-shadow: 0 0 0 1px var(--danger) inset;
 }
+.youform__note {
+  display: flex; align-items: flex-start; gap: 8px;
+  margin: calc(-1 * clamp(6px, 1.2vh, 12px)) 0 clamp(14px, 2vh, 20px);
+  color: var(--danger); font-size: .92rem; font-weight: 600;
+}
+.youform__note::before {
+  content: ""; flex: none; width: 16px; height: 16px; margin-top: .15em;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1.5 15 14H1z' fill='none' stroke='black' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M8 6v3.6' stroke='black' stroke-width='1.7' stroke-linecap='round'/%3E%3Ccircle cx='8' cy='11.8' r='1' fill='black'/%3E%3C/svg%3E") center / contain no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1.5 15 14H1z' fill='none' stroke='black' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M8 6v3.6' stroke='black' stroke-width='1.7' stroke-linecap='round'/%3E%3Ccircle cx='8' cy='11.8' r='1' fill='black'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+/* Empty (all valid), it takes no space -- but stays rendered, because it is
+   the live region that announces the message when one appears. */
+.youform__note:empty { margin: 0; }
+.youform__note:empty::before { display: none; }
 
 .you-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 10px; }
 .you-card {
