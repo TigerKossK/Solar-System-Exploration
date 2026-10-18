@@ -36,17 +36,30 @@ function attr(s) {
 }
 const CHEV =
   '<svg class="btn__chev" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-const BRAND = `
-        <a class="brand" href="../index.html" aria-label="Solar System — home">
-          <span class="brand__mark" aria-hidden="true">
-            <svg viewBox="0 0 32 32" width="22" height="22" fill="none">
-              <circle cx="16" cy="16" r="4" fill="currentColor"/>
-              <ellipse cx="16" cy="16" rx="13" ry="6.2" stroke="currentColor" stroke-width="1.3" opacity=".65" transform="rotate(-24 16 16)"/>
-              <circle cx="27" cy="10.2" r="1.9" fill="currentColor"/>
-            </svg>
-          </span>
-          <span class="brand__word">Solar&nbsp;System</span>
-        </a>`;
+/* The same fixed topbar as the landing and the three articles, so a planet page
+   is no longer the one place without the site's navigation. js/search.js and
+   js/motion.js add their buttons to it, as they do on every other page. */
+const TOPBAR = `
+  <header class="topbar">
+    <div class="topbar__inner container">
+      <a class="brand" href="../index.html" aria-label="Solar System — home">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="26" height="26" fill="none">
+            <circle cx="16" cy="16" r="4" fill="currentColor"/>
+            <ellipse cx="16" cy="16" rx="13" ry="6.2" stroke="currentColor" stroke-width="1.3" opacity=".65" transform="rotate(-24 16 16)"/>
+            <circle cx="27" cy="10.2" r="1.9" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="brand__word">Solar&nbsp;System</span>
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="../index.html#menu">Map</a>
+        <a href="../formation.html">Formation</a>
+        <a href="../exploration.html">Exploration</a>
+        <a href="../instruments.html">Instruments</a>
+      </nav>
+    </div>
+  </header>`;
 
 function statWidget(label, value, unit, context, span2) {
   const unitHtml = unit ? `<span class="unit">${esc(unit)}</span>` : "";
@@ -65,9 +78,12 @@ function callout(title, text, isFact) {
               <p>${esc(text)}</p>
             </div>`;
 }
+/* The section carries an id as well as its heading: callouts inside it are h3s
+   with no id of their own, so search results for "Atmosphere" or "Rings" fell
+   back to the page-wide #dashboard and opened at the top of the data. */
 function section(id, title, gridInner, wide) {
   return `
-        <section class="dash-section" aria-labelledby="h-${id}">
+        <section class="dash-section" id="${id}" aria-labelledby="h-${id}">
           <div class="section-head"><h2 id="h-${id}">${esc(title)}</h2></div>
           <div class="dash-grid${wide ? " dash-grid--wide" : ""}">${gridInner}
           </div>
@@ -101,9 +117,26 @@ function render(p) {
   const hasTexture = p.texture && fs.existsSync(path.join(__dirname, "..", p.texture));
   const orbNote = hasTexture ? "Texture: Solar System Scope (CC BY 4.0)" : "Illustrative — not real imagery";
 
-  // neighbour nav (prev: dot then name, next: name then dot)
-  const prevLink = `<a href="${nb.prev.id}.html"><span class="dot" style="--nc:${attr(nb.prev.color)}"></span>${esc(nb.prev.name)}</a>`;
-  const nextLink = `<a href="${nb.next.id}.html">${esc(nb.next.name)}<span class="dot" style="--nc:${attr(nb.next.color)}"></span></a>`;
+  // neighbour nav (prev: dot then name, next: name then dot); the first and
+  // last worlds have only one neighbour — getNeighbours no longer wraps.
+  const prevLink = nb.prev
+    ? `<a href="${nb.prev.id}.html"><span class="dot" style="--nc:${attr(nb.prev.color)}"></span>${esc(nb.prev.name)}</a>`
+    : "";
+  const nextLink = nb.next
+    ? `<a href="${nb.next.id}.html">${esc(nb.next.name)}<span class="dot" style="--nc:${attr(nb.next.color)}"></span></a>`
+    : "";
+  // where this world sits in the sequence: "you are here", between its neighbours
+  const position = `<span class="neighbors__pos">Planet ${p.order} of ${SOLAR_SYSTEM.planets.length}</span>`;
+  // the same neighbours again at the end of the page, where "what next?" is asked
+  const pagerPrev = nb.prev
+    ? `<a href="${nb.prev.id}.html" rel="prev"><span class="content-next__label">Previous</span><span class="content-next__title">← ${esc(nb.prev.name)}</span></a>`
+    : "";
+  const pagerNext = nb.next
+    ? `<a href="${nb.next.id}.html" rel="next"><span class="content-next__label">Next</span><span class="content-next__title">${esc(nb.next.name)} →</span></a>`
+    : "";
+  const nextCta = nb.next
+    ? `\n            <a class="btn btn--ghost btn--lg" href="${nb.next.id}.html">Next: ${esc(nb.next.name)} →</a>`
+    : "";
 
   // Key facts
   const keyFacts =
@@ -157,14 +190,14 @@ function render(p) {
 
   // Fun facts
   const funFacts = `
-        <section class="dash-section" aria-labelledby="h-facts">
+        <section class="dash-section" id="facts" aria-labelledby="h-facts">
           <div class="section-head"><h2 id="h-facts">Fun facts</h2></div>
           <ul class="fact-list">${(p.funFacts || []).map((x) => `<li class="fact-item">${esc(x)}</li>`).join("")}</ul>
         </section>`;
 
   // Exploration / missions
   const missions = `
-        <section class="dash-section" aria-labelledby="h-missions">
+        <section class="dash-section" id="missions" aria-labelledby="h-missions">
           <div class="section-head"><h2 id="h-missions">Exploration</h2></div>
           <div class="mission-list">${(p.missions || [])
             .map(
@@ -193,7 +226,7 @@ function render(p) {
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <link rel="icon" href="${FAVICON}" />
   <title>${esc(p.name)} — Solar System</title>
   <meta name="description" content="${desc}" />
@@ -207,12 +240,12 @@ function render(p) {
   <meta property="og:image" content="${SITE}/assets/og-cover.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Earth seen from space, the Sun cresting beyond its horizon." />
+  <meta property="og:image:alt" content="Earth photographed by the Artemis II crew from the Orion spacecraft, April 2026." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${cardTitle}" />
   <meta name="twitter:description" content="${desc}" />
   <meta name="twitter:image" content="${SITE}/assets/og-cover.jpg" />
-  <meta name="twitter:image:alt" content="Earth seen from space, the Sun cresting beyond its horizon." />
+  <meta name="twitter:image:alt" content="Earth photographed by the Artemis II crew from the Orion spacecraft, April 2026." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="${FONTS}" rel="stylesheet" />
@@ -222,6 +255,7 @@ function render(p) {
   <link rel="stylesheet" href="../css/responsive.css" />
   <link rel="stylesheet" href="../css/mobile-nav.css" />
   <link rel="stylesheet" href="../css/search.css" />
+  <link rel="stylesheet" href="../css/print.css" media="print" />
 </head>
 <body data-planet="${attr(p.id)}">
   <!-- Generated by scripts/build-planets.js from js/data.js — do not edit by hand. -->
@@ -232,14 +266,14 @@ function render(p) {
   </div>
 
   <a class="skip-link" href="#dashboard">Skip to the data</a>
+${TOPBAR}
 
   <main class="stage">
     <div class="panel container planet-page" style="--pc: ${attr(p.color)}">
-      <!-- top bar: home + neighbour navigation -->
-      <div class="planet-topbar">${BRAND}
+      <!-- position in the sequence + neighbour navigation (site nav is the topbar) -->
+      <div class="planet-topbar">
         <nav class="neighbors" aria-label="Nearby planets">
-          ${prevLink}
-          ${nextLink}
+          ${[prevLink, position, nextLink].filter(Boolean).join("\n          ")}
         </nav>
       </div>
 
@@ -256,11 +290,10 @@ function render(p) {
                  button — and made the same page's primary action render amber or
                  near-black depending on the visitor's hardware. The amber pill is the
                  right treatment for this control, and phones get one less GL context. -->
-            <a class="btn btn--primary btn--lg" id="backToSystem" href="../index.html">
-              Back to the Solar System
+            <a class="btn btn--primary btn--lg" id="backToSystem" href="../index.html#menu">
+              Back to the map
               ${CHEV}
-            </a>
-            <a class="btn btn--ghost btn--lg" href="${nb.next.id}.html">Next: ${esc(nb.next.name)} →</a>
+            </a>${nextCta}
           </div>
         </div>
         <figure class="planet-figure">
@@ -273,11 +306,16 @@ function render(p) {
       <div id="dashboard" tabindex="-1">${section("key", "Key facts", keyFacts)}${section("time", "Time & motion", timeMotion, true)}${section("mass", "Mass & physical characteristics", massPhysical)}${section("atmos", "Atmosphere & magnetosphere", atmosphere, true)}${section("moons", "Moons & rings", moonsRings, true)}${section("about", "Make-up", makeup, true)}${funFacts}${missions}
       </div>
 
+      <!-- pager: previous / next planet -->
+      <nav class="content-next planet-pager" aria-label="Previous and next planet">
+        ${[pagerPrev, pagerNext].filter(Boolean).join("\n        ")}
+      </nav>
+
       <!-- foot -->
       <footer class="planet-foot">
-        <a class="back" href="../index.html">
+        <a class="back" href="../index.html#menu">
           <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Back to the Solar System
+          Back to the map
         </a>
         <span class="source-tag">
           Data: <a href="${attr(SOLAR_SYSTEM.meta.sourceUrl)}" target="_blank" rel="noopener">NASA Planetary Fact Sheet</a>
@@ -291,9 +329,13 @@ function render(p) {
        which no longer exists on these pages (see the back link above). Loading it
        here cost a request and a parse to reach an early return. -->
   <script src="../js/util.js"></script>
+  <script src="../js/motion.js"></script>
   <script src="../js/background.js"></script>
   <script src="../js/backlink.js"></script>
   <script src="../js/search.js"></script>
+  <script src="../js/share.js"></script>
+  <script src="../js/keyboard.js"></script>
+  <script src="../js/glossary.js"></script>
   <script src="../js/mobile-nav.js"></script>
 </body>
 </html>

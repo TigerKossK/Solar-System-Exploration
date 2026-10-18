@@ -30,6 +30,19 @@
      href has to be rewritten relative to wherever we are. */
   var PREFIX = /\/planet\//.test(location.pathname) ? "../" : "";
 
+  /* Is a result on THIS page? Then link to its #anchor alone. The landing is
+     shared as the bare /Solar-System-Exploration/ address, so "index.html#…"
+     was a DIFFERENT url there: picking a landing result reloaded the whole page
+     (and dropped the calculator's inputs) instead of scrolling. */
+  function isThisPage(u) {
+    try {
+      var there = new URL(PREFIX + u, location.href).pathname;
+      var here = location.pathname;
+      if (/\/$/.test(here)) here += "index.html";
+      return there === here;
+    } catch (e) { return false; }
+  }
+
   /* ---------- text normalisation --------------------------------------
      js/data.js is full of typographic characters a visitor will never type:
      U+00D7 multiplication signs, U+2212 minus, en dashes, degree signs and
@@ -207,9 +220,11 @@
     if (!parts.length) return null;
     /* Longest first, so "planetary" wins over "planet" and the mark covers the
        whole word. The trailing \w* completes a prefix match — typing "plan"
-       highlights all of "planets", not a fragment of it. */
+       highlights all of "planets", not a fragment of it. The leading \b anchors
+       it to the START of a word: without it "art" marked the "arth" inside
+       "Earth", and the deep link then asked the page for text it couldn't find. */
     parts.sort(function (a, b) { return b.length - a.length; });
-    return new RegExp("(?:" + parts.join("|") + ")\\w*", "gi");
+    return new RegExp("\\b(?:" + parts.join("|") + ")\\w*", "gi");
   }
 
   /* Escapes everything and injects only <mark>. The query reaches element
@@ -248,7 +263,7 @@
      this matched". Silently ignored where unsupported, and the plain #anchor
      still does its job there. */
   function hrefFor(doc, re) {
-    var url = PREFIX + doc.u + "#" + (doc.a || "");
+    var url = (isThisPage(doc.u) ? "" : PREFIX + doc.u) + "#" + (doc.a || "");
     if (!re) return url;
     re.lastIndex = 0;
     var m = re.exec(doc.b);
@@ -273,18 +288,39 @@
         '<path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>' +
       '<input class="search__input" type="search" autocomplete="off" spellcheck="false" ' +
         'placeholder="Search planets, missions, facts…" role="combobox" ' +
-        'aria-expanded="false" aria-controls="searchResults" aria-autocomplete="list" ' +
+        'aria-expanded="false" aria-controls="searchList" aria-autocomplete="list" ' +
         'aria-label="Search the site" />' +
       '<button class="search__close btn btn--ghost btn--sm" type="button">Close</button>' +
     "</div>" +
-    '<div class="search__results" id="searchResults" role="listbox" aria-label="Search results"></div>' +
+    /* The scroll area holds two things: the listbox, which may contain ONLY
+       options and groups of options (WAI-ARIA), and a sibling for every other
+       state -- the "Try ..." suggestions, Loading, no matches, failure -- which
+       used to be rendered inside the listbox as non-options. The listbox is
+       always present so the combobox's aria-controls never points at nothing. */
+    '<div class="search__results" id="searchResults">' +
+      '<div class="search__list" id="searchList" role="listbox" aria-label="Search results"></div>' +
+      '<div class="search__msg"></div>' +
+    "</div>" +
     '<p class="search__status sr-only" role="status" aria-live="polite"></p>' +
-    '<p class="search__hint"><kbd>↑</kbd><kbd>↓</kbd> move · <kbd>Enter</kbd> open · <kbd>Esc</kbd> close</p>';
+    '<p class="search__hint"><kbd>↑</kbd><kbd>↓</kbd> move · <kbd>Enter</kbd> open · <kbd>Esc</kbd> close · ' +
+      '<button class="search__keys" type="button">All shortcuts</button></p>';
   document.body.appendChild(dlg);
+
+  /* The way into the shortcut list (js/keyboard.js) that does not need "?",
+     which a visitor may have switched off. */
+  dlg.querySelector(".search__keys").addEventListener("click", function () {
+    if (!window.SolarKeys) return;
+    close();
+    window.SolarKeys.open();
+  });
 
   var input = dlg.querySelector(".search__input");
   var results = dlg.querySelector(".search__results");
+  var list = dlg.querySelector(".search__list");
+  var msg = dlg.querySelector(".search__msg");
   var status = dlg.querySelector(".search__status");
+  // any state that is not a list of results: it never goes inside the listbox
+  function message(html) { list.innerHTML = ""; msg.innerHTML = html; }
   var active = -1, rows = [];
 
   var SEEDS = ["Jupiter", "moons", "Voyager", "frost line"];
@@ -298,10 +334,10 @@
        one. Otherwise opening the palette flashed "Loading…" and only then the
        suggestions, which made an instant, in-memory search feel slow. */
     if (!query.trim()) {
-      results.innerHTML = '<p class="search__empty">Try ' +
+      message('<p class="search__empty">Try ' +
         SEEDS.map(function (s) {
           return '<button class="search__seed" type="button">' + esc(s) + "</button>";
-        }).join("") + "</p>";
+        }).join("") + "</p>");
       input.setAttribute("aria-expanded", "false");
       status.textContent = "";
       return;
@@ -312,45 +348,59 @@
        declarations hoist, so calling loadIndex from above it is fine.) */
     if (indexState !== "ready") {
       if (indexState !== "failed") {
-        results.innerHTML = '<p class="search__empty">Loading…</p>';
+        message('<p class="search__empty">Loading…</p>');
         loadIndex(function () { render(query); });
       }
       return;
     }
 
     var hits = search(query, 24);
+    /* Group by kind, groups in the order their best result ranks, rank kept
+       within each. Sorting by score alone interleaved the kinds, and a heading
+       was printed at every switch: "Articles / Planets / Articles". */
+    var order = [], byKind = {};
+    hits.forEach(function (h) {
+      var k = h.doc.k;
+      if (!byKind[k]) { byKind[k] = []; order.push(k); }
+      byKind[k].push(h);
+    });
     if (!hits.length) {
-      results.innerHTML = '<p class="search__empty">No matches for “' + esc(query) +
+      message('<p class="search__empty">No matches for “' + esc(query) +
         '”. Try a shorter word, or one of these: ' +
         SEEDS.map(function (s) {
           return '<button class="search__seed" type="button">' + esc(s) + "</button>";
-        }).join("") + "</p>";
+        }).join("") + "</p>");
       input.setAttribute("aria-expanded", "false");
       status.textContent = "No results";
       return;
     }
 
-    var html = "", lastKind = "", n = 0;
-    for (var i = 0; i < hits.length; i++) {
-      var h = hits[i], doc = h.doc;
-      var re = buildRegex(h.terms);
-      if (doc.k !== lastKind) {
-        lastKind = doc.k;
-        html += '<p class="search__group">' + esc(KIND_LABEL[doc.k] || doc.k) + "</p>";
-      }
-      html +=
-        '<a class="search__row" role="option" id="sr' + n + '" aria-selected="false" ' +
-          'tabindex="-1" href="' + attr(hrefFor(doc, re)) + '">' +
-          '<span class="search__where">' +
-            highlight(doc.t.replace(/\s*—\s*Solar System$/, ""), re) + "</span>" +
-          '<span class="search__title">' + highlight(doc.s, re) + "</span>" +
-          '<span class="search__snippet">' + snippet(doc.b, re) + "</span>" +
-        "</a>";
-      n++;
-    }
-    results.innerHTML = html;
+    /* One role="group" per kind, labelled by its heading, which is
+       role="presentation" so the group's only real children are options --
+       the WAI-ARIA APG grouped-listbox pattern. A bare heading between
+       options was a non-option inside the listbox. */
+    var html = "", n = 0;
+    order.forEach(function (k, g) {
+      html += '<div class="search__grp" role="group" aria-labelledby="sg' + g + '">' +
+        '<div class="search__group" role="presentation" id="sg' + g + '">' + esc(KIND_LABEL[k] || k) + "</div>";
+      byKind[k].forEach(function (h) {
+        var doc = h.doc, re = buildRegex(h.terms);
+        html +=
+          '<a class="search__row" role="option" id="sr' + n + '" aria-selected="false" ' +
+            'tabindex="-1" href="' + attr(hrefFor(doc, re)) + '">' +
+            '<span class="search__where">' +
+              highlight(doc.t.replace(/\s*—\s*Solar System$/, ""), re) + "</span>" +
+            '<span class="search__title">' + highlight(doc.s, re) + "</span>" +
+            '<span class="search__snippet">' + snippet(doc.b, re) + "</span>" +
+          "</a>";
+        n++;
+      });
+      html += "</div>";
+    });
+    msg.innerHTML = "";
+    list.innerHTML = html;
     results.scrollTop = 0;
-    rows = results.querySelectorAll(".search__row");
+    rows = list.querySelectorAll(".search__row");
     input.setAttribute("aria-expanded", "true");
     status.textContent = n + (n === 1 ? " result" : " results");
   }
@@ -375,33 +425,57 @@
     var v = input.value;
     /* 120ms. The whole search is in-memory, so this is about not re-rendering
        the result list on every keystroke of a burst, not about latency. */
-    debounce = window.setTimeout(function () { render(v); }, 120);
+    debounce = window.setTimeout(function () { debounce = null; render(v); }, 120);
   });
 
   results.addEventListener("click", function (e) {
     var seed = e.target.closest(".search__seed");
-    if (!seed) return;
-    input.value = seed.textContent;
-    render(input.value);
-    input.focus();
+    if (seed) {
+      input.value = seed.textContent;
+      render(input.value);
+      input.focus();
+      return;
+    }
+    /* Picking a result navigates — close first, or a result on THIS page
+       scrolled invisibly behind the still-open dialog and looked like nothing
+       had happened. Modifier clicks open a new tab, so search stays open. */
+    if (e.metaKey || e.ctrlKey || e.shiftKey || (e.button && e.button > 0)) return;
+    if (e.target.closest(".search__row")) close();
   });
 
   dlg.addEventListener("keydown", function (e) {
-    if (e.key === "ArrowDown") { e.preventDefault(); setActive(active + 1); }
-    else if (e.key === "ArrowUp") { e.preventDefault(); setActive(active - 1); }
-    else if (e.key === "Enter" && active > -1 && rows[active]) {
+    /* The search box drives the list -- and so does anywhere in the results
+       that is not a button, so a click into a gap or a Ctrl-click on a result
+       does not leave ↑/↓ dead. Buttons (Close, "All shortcuts", the
+       suggestions) keep their own keys: the handler sits on the whole dialog,
+       and Enter on Close used to open the top result instead of closing. */
+    var inList = e.target === dlg ||
+      (results.contains(e.target) && !(e.target.closest && e.target.closest("button")));
+    if (e.target !== input && !inList) return;
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
       e.preventDefault();
-      rows[active].click();
+      if (e.target !== input) input.focus();   // a combobox keeps focus in its box
+      setActive(active + (e.key === "ArrowDown" ? 1 : -1));
+    }
+    else if (e.key === "Enter") {
+      // a focused result is a real link, and Enter opens it natively
+      if (e.target !== input) return;
+      /* Typing then pressing Enter within the 120 ms debounce acted on the
+         PREVIOUS query's list. Render now; then open the highlighted row, or
+         the top result when none is highlighted. */
+      if (debounce) {
+        window.clearTimeout(debounce);
+        debounce = null;
+        render(input.value);
+      }
+      var row = rows[active > -1 ? active : 0];
+      if (row) { e.preventDefault(); row.click(); }
     }
   });
   dlg.querySelector(".search__close").addEventListener("click", close);
   dlg.addEventListener("click", function (e) {
-    /* Backdrop only. e.target === dialog is also true for its own padding —
-       the same trap js/sections.js hit with the mission dialog. */
-    if (e.target !== dlg || !e.detail) return;
-    var r = dlg.getBoundingClientRect();
-    if (e.clientX < r.left || e.clientX > r.right ||
-        e.clientY < r.top || e.clientY > r.bottom) close();
+    // backdrop only, not the dialog's own padding (SolarUtil.backdropHit)
+    if (window.SolarUtil.backdropHit(dlg, e)) close();
   });
 
   /* ---------- lazy index load -------------------------------------------
@@ -439,8 +513,8 @@
     };
     tag.onerror = function () {
       indexState = "failed";
-      results.innerHTML = '<p class="search__empty">Search could not load. ' +
-        "Please reload the page and try again.</p>";
+      message('<p class="search__empty">Search could not load. ' +
+        "Please reload the page and try again.</p>");
       status.textContent = "Search unavailable";
     };
     document.head.appendChild(tag);
@@ -454,31 +528,39 @@
     if (indexState === "ready") {
       render(input.value);
     } else {
-      results.innerHTML = '<p class="search__empty">Loading…</p>';
+      message('<p class="search__empty">Loading…</p>');
       loadIndex(function () { render(input.value); });
     }
     input.focus();
   }
   function close() {
+    // a pending keystroke render would otherwise land after reopening, showing
+    // results for a query that is no longer in the box
+    window.clearTimeout(debounce);
+    debounce = null;
     if (dlg.close) dlg.close();
     else dlg.removeAttribute("open");
   }
 
   /* ---------- triggers ---------------------------------------------------
      "/" and Cmd/Ctrl+K were both verified unbound on this site. Escape is
-     handled by <dialog> itself, which also stops it reaching js/explorer.js's
-     document-level handler — so opening search inside Explorer mode and
-     pressing Escape closes the search, not both at once. */
+     handled by <dialog> itself — but the keydown still bubbles to the
+     document first, so js/explorer.js checks SolarUtil.dialogOpen() before
+     leaving: one Escape closes the search, not search and Explorer at once. */
   document.addEventListener("keydown", function (e) {
-    var tag = (e.target && e.target.tagName) || "";
-    var typing = /^(INPUT|TEXTAREA|SELECT)$/.test(tag) ||
-      !!(e.target && e.target.isContentEditable);
+    var typing = window.SolarUtil.isTyping(e);
+    /* Another dialog (a mission, the shortcut list, the tab-bar sheet) owns the
+       keyboard: opening search over it stacked two modals, and Escape then
+       closed only the top one. Search itself being open is fine -- open()
+       just returns. */
+    if (!dlg.open && window.SolarUtil.dialogOpen()) return;
     if ((e.key === "k" || e.key === "K") && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       open();
       return;
     }
-    if (e.key === "/" && !typing && !e.metaKey && !e.ctrlKey && !e.altKey) {
+    // "/" is a single-character shortcut, so it obeys the WCAG 2.1.4 switch
+    if (e.key === "/" && !typing && !e.metaKey && !e.ctrlKey && !e.altKey && window.SolarUtil.singleKeys()) {
       e.preventDefault();
       open();
     }
@@ -486,8 +568,13 @@
 
   window.SolarSearch = { open: open, close: close };
 
+  /* Leaving through a result left the dialog open in the back/forward-cache
+     snapshot, so Back returned to a page still covered by search. */
+  window.addEventListener("pagehide", function () { if (dlg.open) close(); });
+
   /* Topbar trigger, added as a sibling of .nav__links so the mobile rule that
-     hides those links leaves it alone. js/mobile-nav.js adds the tab-bar one. */
+     hides those links leaves it alone. js/mobile-nav.js adds the tab-bar one.
+     Every page carries the same .topbar now, planet pages included. */
   var topbar = document.querySelector(".topbar__inner");
   if (topbar) {
     var btn = document.createElement("button");

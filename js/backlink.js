@@ -2,7 +2,7 @@
    Solar System — return link on a planet page
    ------------------------------------------------------------
    A planet page reached from a mission dialog has no idea what sent it there:
-   "Back to the Solar System" returns to the index, not to the mission you were
+   "Back to the map" returns to the index, not to the mission you were
    reading. So the dialog appends ?from=<mission id> and this renders a matching
    return link that reopens that mission.
 

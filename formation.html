@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script>document.documentElement.classList.add("js");</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <script>document.documentElement.classList.add("js");document.addEventListener("DOMContentLoaded",function(){if(!window.SolarReveal)document.documentElement.classList.add("no-reveal")});</script>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='6.5' fill='%23f5b942'/><ellipse cx='16' cy='16' rx='13' ry='6' fill='none' stroke='%232a7d8c' stroke-width='2' transform='rotate(-24 16 16)'/></svg>" />
   <title>How the Solar System formed — Solar System</title>
   <meta name="description" content="From a collapsing molecular cloud to eight worlds: the nebular hypothesis, stage by stage, with real dates from meteorite dating — and honest about what is still argued over." />
@@ -17,12 +17,12 @@
   <meta property="og:image" content="https://tigerkossk.github.io/Solar-System-Exploration/assets/og-cover.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Earth seen from space, the Sun cresting beyond its horizon." />
+  <meta property="og:image:alt" content="Earth photographed by the Artemis II crew from the Orion spacecraft, April 2026." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="How the Solar System formed — Solar System" />
   <meta name="twitter:description" content="From a collapsing molecular cloud to eight worlds: the nebular hypothesis, stage by stage, with real dates from meteorite dating — and honest about what is still argued over." />
   <meta name="twitter:image" content="https://tigerkossk.github.io/Solar-System-Exploration/assets/og-cover.jpg" />
-  <meta name="twitter:image:alt" content="Earth seen from space, the Sun cresting beyond its horizon." />
+  <meta name="twitter:image:alt" content="Earth photographed by the Artemis II crew from the Orion spacecraft, April 2026." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
@@ -34,6 +34,7 @@
   <link rel="stylesheet" href="css/responsive.css" />
   <link rel="stylesheet" href="css/mobile-nav.css" />
   <link rel="stylesheet" href="css/search.css" />
+  <link rel="stylesheet" href="css/print.css" media="print" />
 </head>
 <body>
   <div class="cosmos" aria-hidden="true">
@@ -57,7 +58,7 @@
         <span class="brand__word">Solar&nbsp;System</span>
       </a>
       <nav class="nav__links" aria-label="Primary">
-        <a href="index.html#menu">Explore</a>
+        <a href="index.html#menu">Map</a>
         <a href="formation.html" aria-current="page">Formation</a>
         <a href="exploration.html">Exploration</a>
         <a href="instruments.html">Instruments</a>
@@ -82,7 +83,7 @@
         <section class="article__section reveal">
           <h2 id="we-know-when-it-started-almost-exactly">We know when it started, almost exactly</h2>
           <p>
-            The Solar System is <strong>4.5682 ± 0.0016 billion years</strong> old. That number does
+            The Solar System is <strong>4.5673 ± 0.0002 billion years</strong> old. That number does
             not come from theory — it comes from lead-isotope dating of
             <strong>calcium–aluminium-rich inclusions</strong>, millimetre-scale white specks inside
             primitive meteorites. They were the first solids to condense out of the cooling nebula,
@@ -166,7 +167,7 @@
 
           <div class="timeline__item">
             <span class="timeline__when">Throughout</span>
-            <h3 class="timeline__title" id="the-frost-line-decided-what-kind-of-world-you-ge">The frost line decided what kind of world you get</h3>
+            <h3 class="timeline__title" id="the-frost-line-decided-what-kind-of-world-you-get">The frost line decided what kind of world you get</h3>
             <p class="timeline__body">
               Somewhere near <strong>2.7 AU</strong> — out in what is now the asteroid belt — lay the frost line:
               the boundary beyond which water, ammonia and methane could freeze. Inside it only
@@ -213,7 +214,7 @@
               debris thrown into orbit accreted into the Moon — which is why the Moon is
               depleted in iron and matches Earth's isotopic composition so closely.
               <span class="unsettled"><span class="sr-only">Caveat: </span>Age contested</span>
-              Dates from the hafnium–tungsten and calcium–magnesium systems span
+              Dates from different radioactive-decay clocks span
               <strong>4.51 to 4.35 billion years</strong>, and different minerals give different
               answers, so the timing remains open.
             </p>
@@ -225,7 +226,7 @@
             <p class="timeline__body">
               Two influential models say yes. The <strong>Grand Tack</strong> has Jupiter migrate
               inward to about 1.5 AU and then reverse outward with Saturn, truncating the inner disc
-              and explaining why Mars and Mercury are so small. The <strong>Nice model</strong> adds
+              and explaining why Mars is so small. The <strong>Nice model</strong> adds
               a later instability, in which Jupiter and Saturn cross a resonance and scatter the
               outer planets into today's orbits.
               <span class="unsettled"><span class="sr-only">Caveat: </span>Models</span>
@@ -274,10 +275,12 @@
 
         <figure class="figure figure--wide reveal">
           <img src="assets/media/formation-protoplanetary-disk.webp" width="1500" height="1063"
-               alt="A dusty disc of gas and debris encircling a young star."
+               alt="A spectrum chart: a jagged yellow line of infrared brightness that dips sharply at three points labelled acetylene, hydrogen cyanide and carbon dioxide."
                loading="lazy" decoding="async" />
           <figcaption class="figure__caption">
-            Life's starting materials detected in a dusty disc around a young star.
+            Not a photograph but a spectrum: Spitzer's 2005 reading of the planet-forming disc around
+            the young Sun-like star IRS 46. Each dip is light absorbed by a molecule &mdash; among the
+            most basic ingredients of DNA and protein.
             <span class="figure__credit">NASA/JPL-Caltech/Leiden/SRON</span>
           </figcaption>
         </figure>
@@ -319,9 +322,9 @@
         </nav>
 
         <footer class="planet-foot">
-          <a class="back" href="index.html">
+          <a class="back" href="index.html#menu">
             <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Back to the Solar System
+            Back to the map
           </a>
           <span class="source-tag">
             Ages from CAI lead-isotope dating · Sources:
@@ -335,9 +338,14 @@
   </main>
 
   <script src="js/util.js"></script>
+  <script src="js/motion.js"></script>
   <script src="js/background.js"></script>
+  <script src="js/toc.js"></script>
   <script src="js/reveal.js"></script>
   <script src="js/search.js"></script>
+  <script src="js/share.js"></script>
+  <script src="js/keyboard.js"></script>
+  <script src="js/glossary.js"></script>
   <script src="js/mobile-nav.js"></script>
 </body>
 </html>

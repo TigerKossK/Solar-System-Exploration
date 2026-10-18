@@ -128,7 +128,7 @@
      every load: the web fonts land after this script runs, which changes the
      button's width. Under reduced motion there is no loop to repaint, so the
      metallic surface would be wiped within a second of load. */
-  function onResize() { if (resize() && reduce) draw(1200); }
+  function onResize() { if (resize() && (reduce || !raf)) draw(1200); }   // !raf: paused/off screen
   if (window.ResizeObserver) new ResizeObserver(onResize).observe(btn); else window.addEventListener("resize", onResize);
   resize();
 
@@ -141,8 +141,17 @@
   }
 
   var raf = null;
+  var onScreen = !window.IntersectionObserver;   // no observer: assume visible
   function loop(t) { draw(t); raf = window.requestAnimationFrame(loop); }
-  function start() { if (!raf && !document.hidden) raf = window.requestAnimationFrame(loop); }
+  /* ONE gate for every reason to be stopped: off screen, a hidden tab, the
+     visitor's "Pause motion" switch (js/motion.js), a lost context. Before,
+     start() checked only the tab -- so returning to it restarted the loop at
+     60fps for a button scrolled thousands of pixels away. */
+  function userPaused() { return !!(window.SolarMotion && window.SolarMotion.paused()); }
+  function start() {
+    if (raf || !onScreen || document.hidden || userPaused() || gl.isContextLost()) return;
+    raf = window.requestAnimationFrame(loop);
+  }
   function stop() { if (raf) { window.cancelAnimationFrame(raf); raf = null; } }
 
   if (reduce) {
@@ -155,13 +164,16 @@
        cancels properly; this now matches it. */
     if (window.IntersectionObserver) {
       new IntersectionObserver(function (e) {
-        if (e[0].isIntersecting) start(); else stop();
+        onScreen = e[0].isIntersecting;
+        if (onScreen) start(); else stop();
       }).observe(btn);
-    } else {
-      start();
     }
+    if (userPaused()) draw(1200); else start();
     document.addEventListener("visibilitychange", function () {
       if (document.hidden) stop(); else start();
+    });
+    document.addEventListener("solar:motion", function (e) {
+      if (e.detail && e.detail.paused) stop(); else start();
     });
   }
 
@@ -173,7 +185,7 @@
   }, false);
   canvas.addEventListener("webglcontextrestored", function () {
     if (!setupGL()) { btn.classList.remove("has-liquid"); return; }
-    if (reduce) draw(1200);
+    if (reduce || userPaused()) draw(1200);
     else start();
   }, false);
 })();

@@ -9,7 +9,8 @@
 
    Motion: a single scroll progress --p (0→1, js/journey.js) drives layered
    parallax — Earth scales / rises / turns as you fly in while the headline
-   and bar clear — opacity + transform only, GPU-friendly, no layout.
+   clears — opacity + transform only, GPU-friendly, no layout. The control
+   bar holds still: "Enter the map" is visible for the whole beat.
 
    Degrades cleanly:
    - No JS  → the full static hero (Earth + headline + bar), one viewport.
@@ -31,12 +32,27 @@
   isolation: isolate;
 }
 
-/* focal object — cinematic Earth, full-bleed behind the composition */
+/* focal object — Earth photographed by the Artemis II crew (NASA art002e023506),
+   full-bleed behind the composition. The 16:9 file extends the 3:2 photograph
+   to the LEFT with its own space colour (nothing invented), so Earth's disc sits
+   at x 31-85%, y 7.5-84% of the frame -- centre 58% 46%, which is where the
+   fly-in zooms. Swapping the image means re-measuring these numbers. */
 .journey__earth {
   position: absolute; inset: 0; z-index: 0;
   width: 100%; height: 100%;
   object-fit: cover; object-position: 54% 50%;
-  transform-origin: 56% 46%;
+  transform-origin: 58% 46%;
+}
+
+/* The photograph's credit. Imagery on this site always carries one
+   (css/content.css); the hero was the one image that did not. Top-right sits on
+   empty space in every crop, below the fixed topbar. */
+.journey__credit {
+  position: absolute; z-index: 4; right: var(--pad);
+  top: calc(84px + env(safe-area-inset-top, 0px));
+  max-width: min(34ch, 60%); text-align: right;
+  color: var(--text-lo); font-size: .75rem; line-height: 1.4;
+  text-shadow: 0 1px 8px rgba(0,0,0,.9);
 }
 
 /* dark diagonal seat — carries the headline at ≥4.5:1 and gives the
@@ -55,11 +71,11 @@
   opacity: var(--wedge-op, 1);
   background:
     linear-gradient(102deg, rgba(30,110,126,.16) 0%, rgba(30,110,126,.05) 34%, transparent 52%),
-    linear-gradient(102deg, transparent 46%, rgba(245,185,66,.10) 49.5%, transparent 53%);
+    linear-gradient(102deg, transparent 46%, rgb(var(--accent-rgb) / .10) 49.5%, transparent 53%);
 }
 
 /* soft edge vignette + a bottom fade to the site's void so the hero melts
-   into the Intro's dark field on hand-off (no hard cut) */
+   into the map band's dark field on hand-off (no hard cut) */
 .journey__vignette {
   position: absolute; inset: 0; z-index: 3; pointer-events: none;
   background:
@@ -105,15 +121,18 @@
   padding: 11px 22px; border-radius: var(--r-pill);
   font-family: var(--font-ui); font-weight: 600;
   background: linear-gradient(180deg, var(--accent), var(--accent-deep)); color: var(--accent-ink);
-  box-shadow: 0 10px 26px -12px rgba(245,185,66,.45), 0 1px 0 rgba(255,255,255,.35) inset;
+  box-shadow: 0 10px 26px -12px rgb(var(--accent-rgb) / .45), 0 1px 0 rgba(255,255,255,.35) inset;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease);
 }
-.journey__enter:hover { transform: translateY(-2px); box-shadow: 0 16px 32px -12px rgba(245,185,66,.55), 0 1px 0 rgba(255,255,255,.4) inset; }
+.journey__enter:hover { transform: translateY(-2px); box-shadow: 0 16px 32px -12px rgb(var(--accent-rgb) / .55), 0 1px 0 rgba(255,255,255,.4) inset; }
 .journey__enter svg { transition: transform .2s var(--ease); }
 .journey__enter:hover svg { transform: translateX(3px); }
 
-/* ── JS-enhanced: tall runway + pinned stage + scroll scrub ── */
-.js .journey { height: 300svh; }                /* runway the beat spans */
+/* ── JS-enhanced: tall runway + pinned stage + scroll scrub ──
+   200svh = one screen of fly-in while the stage is pinned, then one screen as
+   it scrolls away and the map arrives. It was 300svh, followed by a full-height
+   intro band: about four screens of scrolling before the map. */
+.js .journey { height: 200svh; }                /* runway the beat spans */
 .js .journey__stage { position: sticky; top: 0; height: 100vh; height: 100svh; }
 
 .js .journey__earth {
@@ -127,8 +146,7 @@
    resident as its own composited layer for the life of the page, which on a 3x DPR
    phone is several megabytes of GPU texture held while it is 6,000px behind you. */
 .js .journey.is-scrubbing .journey__earth { will-change: transform; }
-.js .journey.is-scrubbing .journey__copy,
-.js .journey.is-scrubbing .journey__bar { will-change: transform, opacity; }
+.js .journey.is-scrubbing .journey__copy { will-change: transform, opacity; }
 .js .journey__wedge { opacity: var(--wedge-op, 1); }
 .js .journey__copy {
   opacity: var(--copy-op, 1);
@@ -138,10 +156,7 @@
      scroll-intensive stretch of the page. Opacity plus the lift already read as
      depth. */
 }
-.js .journey__bar {
-  opacity: var(--bar-op, 1);
-  transform: translateX(-50%) translateY(calc(var(--bar-shift, 0) * 1px));
-}
+.js .journey__credit { opacity: var(--copy-op, 1); }   /* leaves with the headline */
 
 /* ── reduced motion: no pin, no scrub — a calm static hero ── */
 @media (prefers-reduced-motion: reduce) {
@@ -150,12 +165,13 @@
   .js .journey__earth { transform: none; }
   .js .journey__wedge { opacity: 1; }
   .js .journey__copy { opacity: 1; transform: none; }
-  .js .journey__bar  { opacity: 1; transform: translateX(-50%); }
 }
 
 /* ── narrower screens: headline leads at the top, gentler seat ── */
 @media (max-width: 820px) {
-  .journey__earth { object-position: 48% 42%; }
+  /* a portrait screen shows a narrow vertical slice of the 16:9 frame:
+     centre it on the sunlit side of the disc (brightness centroid ~53%) */
+  .journey__earth { object-position: 53% 42%; }
   .journey__veil {
     background: linear-gradient(168deg,
       rgba(6,14,12,.9) 0%, rgba(6,14,12,.55) 44%, rgba(6,14,12,.2) 72%, transparent 100%);
@@ -163,6 +179,18 @@
   .journey__inner { align-content: start; padding-block: clamp(104px, 20vh, 168px) 0; }
   .journey__title { font-size: clamp(2.4rem, 12vw, 4rem); }
   .journey__bar { padding: 10px 10px 10px 18px; }
+}
+/* ── a phone held sideways (~390px tall) ──
+   Every rule above is keyed on WIDTH, so an 844x390 phone got the desktop
+   composition: a ~78px two-line title plus subtitle (~260px) centred in a
+   ~230px box, running into the "Enter the map" bar. Start the copy near the
+   top, size the title by height, and leave the bar the CTA alone. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .journey__inner { align-content: start; padding-block: clamp(56px, 16vh, 72px) 0; }
+  .journey__title { font-size: clamp(1.9rem, 11vh, 3rem); }
+  .journey__sub { margin-top: 10px; font-size: .95rem; max-width: 48ch; }
+  .journey__meta { display: none; }
+  .journey__bar { justify-content: center; }
 }
 @media (max-width: 460px) {
   .journey__title { font-size: clamp(2.1rem, 13vw, 3rem); }

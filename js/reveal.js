@@ -1,37 +1,48 @@
 /* ============================================================
    Solar System — scroll reveals + nav active state
    Adds .is-visible to .reveal elements as they enter the viewport
-   (staggered by data-reveal-delay). Fully disabled under
-   prefers-reduced-motion — everything shows immediately.
+   (staggered by data-reveal-delay). Under prefers-reduced-motion
+   everything shows immediately — but the nav highlight still runs:
+   it is wayfinding, not motion.
+
+   Sets window.SolarReveal once the reveals are wired. The inline
+   script in each page's <head> checks it at DOMContentLoaded and,
+   if this file failed to load or threw first, adds .no-reveal so
+   css/sections.css stops hiding the content. Without that, one
+   failed request left every article section invisible.
    ============================================================ */
 (function () {
   "use strict";
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var each = function (list, fn) { Array.prototype.forEach.call(list, fn); };
   var targets = document.querySelectorAll(".reveal");
+  var hasIO = "IntersectionObserver" in window;
 
-  if (reduce || !("IntersectionObserver" in window)) {
+  if (reduce || !hasIO) {
     each(targets, function (t) { t.classList.add("is-visible"); });
-    return;
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var d = e.target.getAttribute("data-reveal-delay");
+        if (d) e.target.style.transitionDelay = (parseInt(d, 10) * 80) + "ms";
+        e.target.classList.add("is-visible");
+        io.unobserve(e.target);
+      });
+    /* threshold 0, NOT a ratio. intersectionRatio is visibleHeight/elementHeight, so
+       a .reveal wrapper taller than roughly 7.7x the viewport can never reach 0.12 and
+       would stay at opacity:0 permanently — which is exactly what happened to the whole
+       formation.html timeline at high zoom. rootMargin alone already delays the trigger.
+       Same failure mode as the nav observer below; both are now height-independent. */
+    }, { threshold: 0, rootMargin: "0px 0px -8% 0px" });
+    each(targets, function (t) { io.observe(t); });
   }
+  window.SolarReveal = true;
 
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (!e.isIntersecting) return;
-      var d = e.target.getAttribute("data-reveal-delay");
-      if (d) e.target.style.transitionDelay = (parseInt(d, 10) * 80) + "ms";
-      e.target.classList.add("is-visible");
-      io.unobserve(e.target);
-    });
-  /* threshold 0, NOT a ratio. intersectionRatio is visibleHeight/elementHeight, so
-     a .reveal wrapper taller than roughly 7.7x the viewport can never reach 0.12 and
-     would stay at opacity:0 permanently — which is exactly what happened to the whole
-     formation.html timeline at high zoom. rootMargin alone already delays the trigger.
-     Same failure mode as the nav observer below; both are now height-independent. */
-  }, { threshold: 0, rootMargin: "0px 0px -8% 0px" });
-  each(targets, function (t) { io.observe(t); });
-
-  /* nav active state — highlight the topbar link for the section in view */
+  /* nav active state — highlight the topbar link for the section in view.
+     Independent of the motion preference above: reduced-motion visitors
+     used to lose it entirely because the early exit came first. */
+  if (!hasIO) return;
   var links = {};
   each(document.querySelectorAll(".topbar .nav__links a[href^='#']"), function (a) {
     links[a.getAttribute("href").slice(1)] = a;

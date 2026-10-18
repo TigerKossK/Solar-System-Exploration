@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script>document.documentElement.classList.add("js");</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <script>document.documentElement.classList.add("js");document.addEventListener("DOMContentLoaded",function(){if(!window.SolarReveal)document.documentElement.classList.add("no-reveal")});</script>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='6.5' fill='%23f5b942'/><ellipse cx='16' cy='16' rx='13' ry='6' fill='none' stroke='%232a7d8c' stroke-width='2' transform='rotate(-24 16 16)'/></svg>" />
   <title>Solar System — explore the worlds of our Sun</title>
-  <meta name="description" content="A live, interactive map of the Solar System. Focus any planet to preview it, then open its page for real, sourced data — sizes, distances, moons and more." />
+  <meta name="description" content="An interactive map of the Solar System. Pick a planet to preview it, then open its page for NASA's figures — size, distance, moons, missions and more." />
   <link rel="canonical" href="https://tigerkossk.github.io/Solar-System-Exploration/" />
   <meta name="theme-color" content="#08110f" />
   <!-- Social cards. Without these a shared link renders as a bare grey URL —
@@ -14,17 +14,17 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Solar System Exploration" />
   <meta property="og:title" content="Solar System — explore the worlds of our Sun" />
-  <meta property="og:description" content="A live, interactive map of the Solar System. Focus any planet to preview it, then open its page for real, sourced data — sizes, distances, moons and more." />
+  <meta property="og:description" content="An interactive map of the Solar System. Pick a planet to preview it, then open its page for NASA's figures — size, distance, moons, missions and more." />
   <meta property="og:url" content="https://tigerkossk.github.io/Solar-System-Exploration/" />
   <meta property="og:image" content="https://tigerkossk.github.io/Solar-System-Exploration/assets/og-cover.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Earth seen from space, the Sun cresting beyond its horizon." />
+  <meta property="og:image:alt" content="Earth photographed by the Artemis II crew from the Orion spacecraft, April 2026." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Solar System — explore the worlds of our Sun" />
-  <meta name="twitter:description" content="A live, interactive map of the Solar System. Focus any planet to preview it, then open its page for real, sourced data — sizes, distances, moons and more." />
+  <meta name="twitter:description" content="An interactive map of the Solar System. Pick a planet to preview it, then open its page for NASA's figures — size, distance, moons, missions and more." />
   <meta name="twitter:image" content="https://tigerkossk.github.io/Solar-System-Exploration/assets/og-cover.jpg" />
-  <meta name="twitter:image:alt" content="Earth seen from space, the Sun cresting beyond its horizon." />
+  <meta name="twitter:image:alt" content="Earth photographed by the Artemis II crew from the Orion spacecraft, April 2026." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
@@ -37,17 +37,22 @@
   <link rel="stylesheet" href="css/responsive.css" />
   <link rel="stylesheet" href="css/mobile-nav.css" />
   <link rel="stylesheet" href="css/search.css" />
+  <link rel="stylesheet" href="css/print.css" media="print" />
 </head>
 <body>
 <!--
   DIRECTION CONTRACT — Solar System landing (multi-section evolution of the pinned brief)
   THESIS: The real Solar System is the interface. The orbital map is navigation.
   FLOW (single scrolling page): Cinematic intro (scroll-scrubbed flight to Earth) →
-        Intro/About → MAIN MENU (hero + orrery) → The Sun → System statistics →
-        Missions → Conclusion. A visible "Skip to the map" pill lets any visitor
-        reach the orrery immediately. Each content section = one floating glass card
-        on the shared fixed cosmic field. "Explore the planets" opens an in-page
-        EXPLORER mode (map goes full-screen, text recedes) — no reload.
+        MAIN MENU (hero + orrery) → The Sun → System statistics → You, on another
+        world → Missions → Conclusion. "Enter the map" stays visible through the
+        whole intro, and a "Skip to the map" link reaches the orrery immediately. Each
+        content section = one floating glass card on the shared fixed cosmic field.
+        "Full-screen map" opens an in-page EXPLORER mode (map goes full-screen, text
+        recedes) — no reload.
+  WORDS (one name per thing): "the map" = the orrery (topbar Map, tab bar Map,
+        Back to the map); "full-screen map" = Explorer mode (internal name only);
+        "Exploration" = the article; "Learn more" = the three articles.
   OWN-WORLD: deep teal / dark green-blue liquid glass; Sora display; amber Sun accent.
   PRESERVE: the entire .hero/.orrery/#orreryStage/#sun/#readout/#selectorList markup +
         IDs below is consumed by js/solar-system.js and js/liquid-chrome.js — do not rename.
@@ -55,7 +60,7 @@
   CLASS CONTRACT (for the visual CSS in css/sections.css — authored separately):
     .scroll                landing main; vertical flow of sections over the fixed .cosmos bg
     .topbar / .topbar__inner   fixed glass nav across the scroll (brand · links · CTA)
-    .section (+ --intro/--menu/--sun/--stats/--missions/--outro)
+    .section (+ --menu/--sun/--you/--stats/--missions/--outro)
                            full landing band; centres one .panel card; ~min-100vh rhythm
     .section__card         a .panel glass card (reuse .panel + .container)
     .section__head / .section__title / .section__lead   section heading block
@@ -71,12 +76,12 @@
     <div class="cosmos__stars"></div>
   </div>
 
-  <a class="skip-link" href="#menu">Skip to the Solar System</a>
+  <a class="skip-link" href="#menu">Skip to the map</a>
 
   <!-- ── fixed nav (restrained; supports the map, doesn't replace it) ── -->
   <header class="topbar">
     <div class="topbar__inner container">
-      <a class="brand" href="#intro" aria-label="Solar System — home">
+      <a class="brand" href="#journey" aria-label="Solar System — home">
         <span class="brand__mark" aria-hidden="true">
           <svg viewBox="0 0 32 32" width="26" height="26" fill="none">
             <circle cx="16" cy="16" r="4" fill="currentColor"/>
@@ -90,7 +95,7 @@
            The landing's own sections stay reachable by scrolling and by the cues;
            the three article pages cannot be found by scrolling, so they win the slots. -->
       <nav class="nav__links" aria-label="Primary">
-        <a href="#menu">Explore</a>
+        <a href="#menu">Map</a>
         <a href="formation.html">Formation</a>
         <a href="exploration.html">Exploration</a>
         <a href="instruments.html">Instruments</a>
@@ -98,6 +103,10 @@
       </nav>
     </div>
   </header>
+
+  <!-- <main> opens BEFORE the hero: the page's h1 lives in it, and content
+       outside every landmark is skipped by landmark navigation. -->
+  <main class="scroll">
 
   <!-- ── 0 · Opening hero — an editorial, cinematic first frame built on ONE
        focal object: Earth from space. An oversized headline bleeds toward the
@@ -120,8 +129,9 @@
                    assets/journey-earth.webp 2048w"
            sizes="(max-aspect-ratio: 16/9) 178vh, 100vw"
            width="2048" height="1152"
-           alt="Earth seen from space, the Sun cresting beyond its horizon."
+           alt="Earth glowing against the blackness of space, photographed by an Artemis II crew member through a window of the Orion spacecraft."
            decoding="async" fetchpriority="high" />
+      <p class="journey__credit">Photographed by the Artemis II crew from Orion, April 2026 &middot; NASA</p>
       <div class="journey__veil" aria-hidden="true"></div>
       <div class="journey__wedge" aria-hidden="true"></div>
       <div class="journey__vignette" aria-hidden="true"></div>
@@ -129,7 +139,7 @@
       <div class="journey__inner container">
         <div class="journey__copy">
           <h1 class="journey__title">Eight worlds.<br><span class="accent">One star.</span></h1>
-          <p class="journey__sub">A living, interactive map of the Solar System — scroll in toward Earth, or skip straight to the map.</p>
+          <p class="journey__sub">An interactive map of the Solar System — scroll in toward Earth, or skip straight to the map.</p>
         </div>
       </div>
 
@@ -143,33 +153,12 @@
     </div>
   </section>
 
-  <main class="scroll">
+    <!-- (An intro band used to sit here: a third headline, two more "go to the
+         map" buttons and a scroll cue between the hero and the map it promised.
+         It was removed; the hero hands straight off to the map, and its "What is
+         this?" answer now lives beside the map as .explainer.) -->
 
-    <!-- ── 1 · Intro / About (context before the map) ── -->
-    <section class="section section--intro" id="intro" aria-labelledby="intro-title">
-      <div class="panel container section__card">
-        <h2 class="intro__title display reveal" id="intro-title" data-reveal-delay="1">
-          Explore the <span class="accent">worlds</span> of our Sun.
-        </h2>
-        <p class="intro__lead reveal" data-reveal-delay="2">
-          A living map of the Solar System, built as the way you navigate it. Focus any planet to
-          preview it, open its page for real, sourced data — sizes, distances, moons, atmospheres
-          and missions — and pick up facts worth keeping along the way.
-        </p>
-        <div class="intro__actions reveal" data-reveal-delay="3">
-          <a class="btn btn--primary btn--lg" href="#menu">
-            Enter the Solar System
-            <svg class="btn__chev" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <a class="btn btn--ghost btn--lg" href="#about">What is this?</a>
-        </div>
-      </div>
-      <a class="scroll-cue" href="#menu" aria-label="Scroll to the map">
-        <span class="scroll-cue__dot"></span>
-      </a>
-    </section>
-
-    <!-- ── 2 · MAIN MENU — the redesigned hero (orrery dominant) ──
+    <!-- ── 1 · MAIN MENU — the redesigned hero (orrery dominant) ──
          PRESERVED MARKUP: js/solar-system.js + js/liquid-chrome.js depend on the IDs below. -->
     <!-- tabindex="-1": the skip link targets this section, and without a focusable
          target the browser only moves the scroll position in some engines, leaving
@@ -180,22 +169,42 @@
           <div class="hero__lede">
             <h2 class="hero__title" id="menu-title">Choose a <span class="accent">world</span> to explore.</h2>
             <p class="hero__sub">
-              A live map of the Solar System. Focus any planet to preview it, then dive into the
-              explorer or open its page for the real, sourced numbers.
+              Every planet is a link. Preview one on the map, then open its page for the full
+              NASA figures.
             </p>
             <div class="hero__actions">
-              <a class="btn btn--primary btn--lg" id="primaryCta" href="#planets">
-                Explore the planets
-                <svg class="btn__chev" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <!-- hidden until js/explorer.js wires it up: without that script there
+                   is no full-screen map for it to open. -->
+              <a class="btn btn--primary btn--lg" id="primaryCta" href="#explore" hidden>
+                Full-screen map
+                <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 6.5V3h3.5M9.5 3H13v3.5M13 9.5V13H9.5M6.5 13H3V9.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </a>
               <a class="btn btn--ghost btn--lg" href="#sun-section">Meet the Sun</a>
             </div>
+            <!-- The answer sits where the question comes up, beside the map, instead
+                 of a "What is this?" button that scrolled to the last band. -->
+            <details class="explainer">
+              <summary class="explainer__toggle">
+                What is this?
+                <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </summary>
+              <div class="explainer__body">
+                <p>A model of our Solar System you explore rather than read. Each planet's page
+                  covers its size, gravity, temperature, moons and the missions that went there.</p>
+                <p>The orbits are sped up so you can see them move. Earth laps the Sun in
+                  32&nbsp;seconds here, not 365&nbsp;days.</p>
+                <p>Below the map: the Sun, your weight on each world and landmark missions. Longer
+                  reads: how it <a href="formation.html">began</a>, how we
+                  <a href="exploration.html">explored it</a>, the
+                  <a href="instruments.html">machines that saw it</a>.</p>
+              </div>
+            </details>
           </div>
 
           <div class="hero__orrery">
             <div class="orrery">
               <div class="orrery__stage" id="orreryStage" role="group" aria-label="Interactive map of the Solar System. Use the planet list below to open any planet.">
-                <button class="sun" id="sun" type="button" aria-label="The Sun — the star at the centre; focus for details">
+                <button class="sun" id="sun" type="button" aria-label="The Sun, the star at the centre — open its section">
                   <span class="sun__core"></span>
                 </button>
                 <!-- orbit rings + planet links injected by js/solar-system.js -->
@@ -207,8 +216,8 @@
                    (render) and js/explorer.js (mode). -->
               <aside class="readout glass" id="readout">
                 <button class="readout__exit btn btn--ghost btn--sm" id="exitExplore" type="button" hidden>
-                  <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  Back to the Solar System
+                  <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path d="M6.5 3v3.5H3M9.5 3v3.5H13M13 9.5H9.5V13M3 9.5h3.5V13" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Exit full screen
                 </button>
                 <p class="readout__hint" id="readoutHint">Hover, tap, or tab a planet to preview it.</p>
                 <div class="readout__body" id="readoutBody" hidden>
@@ -252,7 +261,7 @@
 
     </section>
 
-    <!-- ── 3 · The Sun ── -->
+    <!-- ── 2 · The Sun ── -->
     <section class="section section--sun" id="sun-section" aria-labelledby="sun-title">
       <div class="panel container section__card">
         <div class="section__head">
@@ -276,7 +285,7 @@
       </div>
     </section>
 
-    <!-- ── 4 · Solar System statistics ── -->
+    <!-- ── 3 · Solar System statistics ── -->
     <section class="section section--stats" id="stats" aria-labelledby="stats-title">
       <div class="panel container section__card">
         <div class="section__head">
@@ -287,7 +296,7 @@
       </div>
     </section>
 
-    <!-- ── 5 · You, on another world ──
+    <!-- ── 4 · You, on another world ──
          The one place on the site where the numbers are about the reader. Every
          figure comes from the same NASA data as the rest (surface gravity and
          orbital period), applied to two values they type. Rendered by
@@ -315,7 +324,7 @@
             </div>
           </div>
           <div class="youform__field">
-            <label class="kicker-label" for="youAge">Your age</label>
+            <label class="kicker-label" for="youAge">Your age<span class="sr-only"> in Earth years</span></label>
             <div class="youform__row">
               <input class="youform__input" id="youAge" type="number" inputmode="decimal"
                      min="0" max="150" step="1" value="30" />
@@ -323,6 +332,7 @@
             </div>
           </div>
         </div>
+        <p class="youform__note" id="youNote" aria-live="polite"></p>
         <div class="you-grid reveal" id="youGrid" data-reveal-delay="3"></div>
         <p class="sr-only" id="youStatus" role="status" aria-live="polite"></p>
         <span class="source-tag">
@@ -331,7 +341,7 @@
       </div>
     </section>
 
-    <!-- ── 6 · Missions / exploration ── -->
+    <!-- ── 5 · Missions / exploration ── -->
     <section class="section section--missions" id="missions" aria-labelledby="missions-title">
       <div class="panel container section__card">
         <div class="section__head">
@@ -342,7 +352,7 @@
       </div>
     </section>
 
-    <!-- ── 7 · Educational conclusion ── -->
+    <!-- ── 6 · Educational conclusion ── -->
     <section class="section section--outro" id="about" aria-labelledby="outro-title">
       <div class="panel container section__card">
         <h2 class="section__title serif reveal" id="outro-title">Keep looking up.</h2>
@@ -362,7 +372,7 @@
              That was never true of .topbar itself — css/responsive.css hides only
              in-page anchor links after the first — so these cards are a deliberate
              second entrance, not a fallback.) -->
-        <nav class="content-next reveal" data-reveal-delay="3" aria-label="Go deeper">
+        <nav class="content-next reveal" data-reveal-delay="3" aria-label="Learn more">
           <a href="formation.html">
             <span class="content-next__label">Read</span>
             <span class="content-next__title">How it all began →</span>
@@ -384,6 +394,7 @@
   </main>
 
   <script src="js/util.js"></script>
+  <script src="js/motion.js"></script>
   <script src="js/background.js"></script>
   <script src="js/data.js"></script>
   <script src="js/solar-system.js"></script>
@@ -393,6 +404,8 @@
   <script src="js/liquid-chrome.js"></script>
   <script src="js/journey.js"></script>
   <script src="js/search.js"></script>
+  <script src="js/keyboard.js"></script>
+  <script src="js/glossary.js"></script>
   <script src="js/mobile-nav.js"></script>
 </body>
 </html>

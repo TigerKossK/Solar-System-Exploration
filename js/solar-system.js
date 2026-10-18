@@ -21,6 +21,12 @@
   var selectorLinks = {};
   var currentId = null;   // planet id last previewed — the arrow stepper's anchor
 
+  /* A planet link's accessible name; ", visited" once it has been opened
+     (SolarUtil.visited, marked further down). */
+  function planetLabel(p, seen) {
+    return p.name + ", " + p.type + ", planet " + p.order + " from the Sun" + (seen ? ", visited." : ".");
+  }
+
   /* ---- build orbits + planet links --------------------- */
   PLANETS.forEach(function (p, i) {
     var orbit = document.createElement("div");
@@ -56,10 +62,7 @@
     );
     link.style.setProperty("--c", p.color);
     link.dataset.planet = p.id;
-    link.setAttribute(
-      "aria-label",
-      p.name + ", " + p.type + ", planet " + p.order + " from the Sun."
-    );
+    link.setAttribute("aria-label", planetLabel(p, false));
     /* persistent, always-upright name tag: .planet__tagspin cancels the
        orbital spin, .planet__tagstart cancels the arm's start angle, so the
        label sits screen-below the node and travels with the planet without
@@ -177,8 +180,11 @@
     fillFunFacts(p.funFacts);
     el.explore.href = "planet/" + p.id + ".html";
     el.exploreName.textContent = p.name;
+    /* Spoken only on focus, when the node's own aria-label has JUST been read
+       ("Mars, Terrestrial planet, planet 4 from the Sun") — repeating the name
+       and type made every keystroke say it twice. Add only what the label lacks. */
     if (speak) {
-      announce(p.name + ", " + p.type + ". " + p.facts.distance.km + " from the Sun, " +
+      announce(p.facts.distance.km + " from the Sun, " +
         moons + (moons === 1 ? " moon." : " moons."));
     }
   }
@@ -197,8 +203,8 @@
     fillFunFacts(SUN.funFacts);
     el.explore.href = "#sun-section";
     el.exploreName.textContent = "the Sun";
-    if (speak) {
-      announce(SUN.name + ", " + SUN.type + ". " + SUN.facts.massShare.value +
+    if (speak) {   // the button's label already names the Sun (see showPlanet)
+      announce(SUN.type + ". " + SUN.facts.massShare.value +
         ", surface " + SUN.facts.surface.value + ".");
     }
   }
@@ -207,6 +213,19 @@
   if (sunBtn) {
     sunBtn.addEventListener("mouseenter", function () { showSun(); });
     sunBtn.addEventListener("focus", function () { showSun(true); });
+    /* Activating the Sun used to do nothing at all, while the same Enter or
+       click on any planet opened it. It now follows the readout's own "Open"
+       link, with the planets' touch rule: first tap previews, second opens. */
+    var sunTapActive = false, sunPointer = "";
+    sunBtn.addEventListener("pointerdown", function (e) {
+      sunPointer = e.pointerType || "";
+      sunTapActive = sunBtn.classList.contains("is-active");
+    });
+    sunBtn.addEventListener("click", function (e) {
+      showSun();
+      if (sunPointer === "touch" && e.detail > 0 && !sunTapActive) return;
+      if (el.explore) el.explore.click();
+    });
   }
 
   /* ---- prev / next planet stepper (arrow navigation) ----------
@@ -239,8 +258,14 @@
       '<button class="readout__arrow" type="button" data-dir="-1" aria-label="Preview the previous planet">' + chev(-1) + "</button>" +
       '<button class="readout__arrow" type="button" data-dir="1" aria-label="Preview the next planet">' + chev(1) + "</button>";
     readoutEl.appendChild(nav);
+    /* The motion switch sits right beside the thing that moves (WCAG 2.2.2) --
+       a second, synced copy of the one in the topbar (js/motion.js). */
+    if (window.SolarMotion && window.SolarMotion.offered) {
+      nav.appendChild(window.SolarMotion.button("readout__arrow readout__motion"));
+    }
     nav.addEventListener("click", function (e) {
-      var btn = e.target.closest(".readout__arrow");
+      // [data-dir]: the motion switch shares the arrow styling but must not step
+      var btn = e.target.closest(".readout__arrow[data-dir]");
       if (!btn) return;
       step(btn.getAttribute("data-dir") === "-1" ? -1 : 1);
     });
@@ -249,7 +274,7 @@
     // and the stage label no longer points at the (JS-hidden) list below
     if (stage) stage.setAttribute(
       "aria-label",
-      "Interactive map of the Solar System. Focus a planet or use the arrow buttons to preview it, then open it for its page."
+      "Interactive map of the Solar System. Tab to a planet or use the arrow buttons to preview it, then press Enter to open its page."
     );
   }
 
@@ -259,6 +284,9 @@
   document.addEventListener("keydown", function (e) {
     if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
+    /* Explorer counted as "in the map" wherever focus was — so ←/→ inside the
+       search box stepped the planets behind it instead of moving the cursor. */
+    if (window.SolarUtil.isTyping(e) || window.SolarUtil.dialogOpen()) return;
     var ae = document.activeElement;
     var inMap = document.body.classList.contains("is-exploring") ||
       (ae && ae.closest && ae.closest(".orrery, .readout__nav"));
@@ -289,6 +317,52 @@
       a.addEventListener("focus", function () { showPlanet(id, true); });
     });
   }
+
+  /* ---- visited marks -------------------------------------
+     Planets opened in this browser (SolarUtil.visited) get a quiet amber ring
+     on the map and on their pill, ", visited" in their accessible name, and a
+     line under the map that can forget them. Re-applied on pageshow: Back from
+     a planet page restores this page from the bfcache with its OLD marks. */
+  var visitedNote = null;
+  function markVisited() {
+    var V = window.SolarUtil.visited;
+    if (!V) return;
+    var seen = V.list(), count = 0;
+    PLANETS.forEach(function (p) {
+      var on = seen.indexOf(p.id) > -1;
+      if (on) count++;
+      if (nodes[p.id]) {
+        nodes[p.id].link.classList.toggle("is-visited", on);
+        nodes[p.id].link.setAttribute("aria-label", planetLabel(p, on));
+      }
+      if (selectorLinks[p.id]) selectorLinks[p.id].classList.toggle("is-visited", on);
+    });
+    if (!visitedNote) {
+      var tag = document.getElementById("scaleTag");
+      if (!tag || !tag.parentNode) return;
+      visitedNote = document.createElement("p");
+      visitedNote.className = "visited-note";
+      visitedNote.setAttribute("tabindex", "-1");     // focus lands here after Forget
+      tag.parentNode.insertBefore(visitedNote, tag);
+      visitedNote.addEventListener("click", function (e) {
+        if (!e.target.closest(".visited-note__forget")) return;
+        V.clear();
+        markVisited();
+        /* The button just disappeared with focus on it: say what happened, in
+           the place it happened, and keep focus there. */
+        visitedNote.hidden = false;
+        visitedNote.textContent = "Visited planets forgotten.";
+        visitedNote.focus();
+      });
+    }
+    visitedNote.hidden = count === 0;
+    visitedNote.innerHTML = count
+      ? "You have visited <strong>" + count + " of " + PLANETS.length + "</strong> planets. " +
+        '<button class="visited-note__forget" type="button">Forget</button>'
+      : "";
+  }
+  markVisited();
+  window.addEventListener("pageshow", function (e) { if (e.persisted) markVisited(); });
 
   /* ---- cross-document view transition -------------------
      Name the matching map planet so it morphs into (leaving) and back out

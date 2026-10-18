@@ -6,7 +6,7 @@
    ============================================================ */
 
 @media (max-width: 1080px) {
-  .orrery { --size: min(48vw, 500px); }
+  .orrery { --size: max(280px, min(48vw, 500px, calc(100svh - 300px))); }
 }
 
 /* tablet and below — stack, keep ordering / labels / selection / hierarchy */
@@ -28,7 +28,7 @@
        percentage in here is INVALID at computed-value time and silently falls back
        to the 480px initial value. The container clamp therefore lives in width
        below, where a percentage is both valid and unambiguous. */
-    --size: min(470px, 86vw);
+    --size: min(470px, 86vw, max(240px, calc(100svh - 120px)));   /* phones held sideways too */
     width: 100%; height: auto; margin-inline: auto;
     display: grid; grid-template-columns: 1fr; justify-items: center;
   }
@@ -79,7 +79,7 @@
 }
 
 @media (max-width: 460px) {
-  .stage { padding: 8px; }
+  .stage { padding-inline: 8px; padding-bottom: 8px; }   /* top clears the fixed topbar (css/planet.css) */
   /* Buy the map back some width: every pixel trimmed here is a pixel --size
      gains, since it is now measured from the container (see the 980px block). */
   .panel { padding: 14px; }
@@ -95,11 +95,11 @@
 @media (prefers-reduced-motion: reduce) {
   .orbit__spin, .planet__body, .planet__body::after, .planet__tagspin,
   .sun__core, .sun__core::before,
-  .sun-visual__core, .sun-visual__core::before, .sun-visual__core::after,
-  .scroll-cue__dot { animation: none !important; }
+  .sun-visual__core, .sun-visual__core::before, .sun-visual__core::after { animation: none !important; }
   .panel, .hero, .selector { animation: none !important; }
   .btn, .btn__chev, .planet__body, .back svg, .orbit,
-  .widget, .mission-item, .mission-item__more, .readout, .readout__arrow, .scroll-cue,
+  .widget, .mission-item, .mission-item__more, .readout, .readout__arrow,
+  .explainer__toggle, .explainer__toggle svg, .content-next a, .heading-link, .toast,
   .orrery, .section--menu > .section__card { transition: none !important; }
 }
 
@@ -122,12 +122,15 @@
    barely shifts on a dark ground — what disappears is the per-frame work.
    Desktop keeps the real thing (and Phase 3 tones it down there too).
 
+   The same opaque surfaces answer prefers-reduced-transparency: a visitor
+   who has asked the system for solid backgrounds gets exactly these.
+
    Opacity was raised alongside removing the blur, not just as a look:
    the blur was also doing the legibility work, muting the moving nebula
    behind body text. Drop one without the other and the canvas shows
    straight through the copy.
    ============================================================ */
-@media (max-width: 900px), (pointer: coarse) {
+@media (max-width: 900px), (pointer: coarse), (prefers-reduced-transparency: reduce) {
   .panel {
     background: linear-gradient(150deg, rgba(16,52,60,.94) 0%, rgba(10,28,35,.96) 44%, rgba(8,17,15,.98) 100%);
     backdrop-filter: none; -webkit-backdrop-filter: none;
@@ -223,10 +226,14 @@
   .back { min-height: 44px; padding: 10px 16px; }
   .mission-item { min-height: 44px; }
 
-  /* The scroll cue is a real link but only 26px wide. Widen the HIT AREA with
-     a pseudo-element instead of the element, so the slim pill design survives. */
-  .scroll-cue { position: relative; }
-  .scroll-cue::after { content: ""; position: absolute; inset: -6px -9px; }
+  /* 44px targets by INPUT, not by width. These lived only in the <=720px block,
+     so touch tablets (721-1366px) kept 40px arrows, ~37px neighbour links and
+     ~29px planet tap rings. */
+  .neighbors a { min-height: 44px; }
+  .readout__arrow { width: 44px; height: 44px; }
+  .planet::after { inset: -18px; }
+  .brand { min-height: 44px; }
+  .youform__unit { min-height: 44px; }
 }
 
 /* ── Explorer mode on a phone ──
@@ -310,7 +317,11 @@
   .orrery-ready .section--menu .selector__list { display: flex; }
   body.is-exploring .section--menu .selector { display: flex; }
 
-  .selector { padding-top: 14px; row-gap: 10px; }
+  /* The same weight as css/sections.css's `.orrery-ready .section--menu
+     .selector` (0,3,0), which zeroes padding-top for the desktop map. As a bare
+     `.selector` this 14px never applied once the map was built. */
+  .selector,
+  .orrery-ready .section--menu .selector { padding-top: 14px; row-gap: 10px; }
   .selector__label { width: 100%; }
 
   /* One scrollable row rather than a wrapped block: four rows of pills would
@@ -352,7 +363,10 @@
      size this to its CONTENT -- and a content-sized box never scrolls, it just
      overflows and gets clipped. The strip has to span the card to have
      somewhere to scroll inside. */
-  body.is-exploring .selector {
+  /* .section--menu included for weight (0,3,1): as `body.is-exploring
+     .selector` (0,2,1) the padding and margin here lost to the desktop
+     `.orrery-ready .section--menu .selector` (0,3,0) and never applied. */
+  body.is-exploring .section--menu .selector {
     border-top: 0; padding-top: 6px; margin-top: 0;
     justify-self: stretch; width: 100%;
   }
@@ -374,4 +388,66 @@
    this is a visual change only, not an information one. */
 @media (max-width: 560px) {
   .planet__label { display: none; }
+}
+
+/* ============================================================
+   PREFERENCES — more contrast; forced colours
+   (Reduced transparency shares the opaque-glass block above.)
+   ============================================================ */
+@media (prefers-contrast: more) {
+  :root {
+    --text-mid: #dfe9ea;
+    --text-lo:  #c7d5d6;
+    --glass-brd: rgba(170, 220, 225, 0.45);
+    --glass-brd-strong: rgba(190, 235, 240, 0.75);
+  }
+  .panel {
+    background: linear-gradient(150deg, rgba(14,46,54,.97), rgba(8,17,15,.99));
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+  .planet__label { opacity: 1; color: var(--text-hi); }
+}
+
+/* Forced colours (Windows contrast themes) swap every colour for the system
+   palette and drop background colours and gradients. Two kinds of thing here
+   would vanish outright: things that ARE colour -- the planets and the Sun on
+   the map, a planet's globe, the gravity bar -- and states shown only by a
+   tint -- the current tab, the current contents entry. The first keep their
+   own colours; the second get an underline. forced-color-adjust inherits, so
+   a planet's ::after banding comes along. */
+@media (forced-colors: active) {
+  .planet__body, .sun__core, .sun-visual__core, .planet-orb,
+  .readout__dot, .sheet__dot, .neighbors .dot, .selector__list a::before,
+  .cmp__fill, .cmp__earth { forced-color-adjust: none; }
+  .nav__links a[aria-current], .tabbar__item[aria-current], .toc a[aria-current],
+  .sheet__row[aria-current], .selector__list a.is-active {
+    text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px;
+  }
+  /* the calculator's error edge was colour + an inset shadow, both dropped */
+  .youform__row:has(.youform__input[aria-invalid="true"]) { outline: 2px dashed CanvasText; outline-offset: 2px; }
+  .youform__note::before { forced-color-adjust: none; background: CanvasText; }
+  .planet.is-visited::before { border-color: Highlight; }
+}
+
+/* ── Explorer on a phone held sideways ──
+   ~390px of height cannot stack a map AND the 42vh readout reserved under it:
+   the 520px map was centred into ~210px and clipped at both ends, and the
+   planet strip fell below a fold that body.is-exploring{overflow:hidden} will
+   not scroll to. Sideways, the readout goes BESIDE the map (it carries the
+   ◀ ▶ stepper, so the strip can go) and the map is sized by height. --size
+   leaves 80px: the ~31px painted overhang plus margin on each side.
+   LAST in the file on purpose: the strip rule it overrides (body.is-exploring
+   .section--menu .selector, above) has the same specificity. */
+@media (orientation: landscape) and (max-height: 500px) {
+  body.is-exploring .section--menu > .section__card {
+    padding: 8px calc(min(44vw, 380px) + 16px) 8px 8px;
+  }
+  body.is-exploring .orrery { --size: min(52vw, calc(100svh - 80px)); }
+  body.is-exploring .orrery__stage { margin-block: 8px; }
+  body.is-exploring .readout {
+    left: auto; right: 8px; top: 8px;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    width: min(44vw, 380px); max-height: none; overflow-y: auto;
+  }
+  body.is-exploring .section--menu .selector { display: none; }
 }

@@ -50,13 +50,12 @@
     }, { threshold: 0 }).observe(el);
   }
   pauseOffscreen(sunVisual);
-  pauseOffscreen(document.querySelector(".scroll-cue"));
   set("sunStats",
     tile("Type", sf.type.value, "", "") +
     tile("Diameter", sf.diameter.value, "", sf.diameter.vsEarth || "") +
     tile("Surface", sf.surface.value, "", "Photosphere") +
     tile("Core", sf.core.value, "", "Where fusion happens") +
-    tile("Composition", sf.composition.value, "", "By mass") +
+    tile("Composition", sf.composition.value, "", "By number of atoms") +
     tile("Age", sf.age.value, "", "About halfway through its life")
   );
   set("sunFunFacts", facts(sun.funFacts));
@@ -101,8 +100,15 @@
   var youStatus = document.getElementById("youStatus");
 
   if (youGrid && youMass && youAge && youUnit) {
-    var EARTH_G = 9.80665;       // standard gravity, m/s^2
-    var EARTH_YEAR = 365.25;     // days, matching facts.orbital.days
+    /* Earth's own figures from the data, not textbook constants. Scaling by
+       standard gravity (9.80665) while Earth's tile says 9.8 made the home card
+       disagree with what the reader typed: 100 kg came back as "99.9 kg" on
+       Earth. Using the same values the cards are built from makes Earth echo
+       the input exactly. */
+    var earth = window.getPlanet ? getPlanet("earth") : null;
+    var EARTH_G = earth ? parseFloat(earth.facts.gravity.value) : 9.8;   // m/s^2
+    var EARTH_YEAR = earth ? earth.facts.orbital.days : 365.2;           // days
+    var youNote = document.getElementById("youNote");
 
     function fmtMass(v) {
       if (!isFinite(v)) return "—";
@@ -110,17 +116,47 @@
     }
     function fmtYears(v) {
       if (!isFinite(v)) return "—";
+      if (v > 0 && v < 0.01) return "< 0.01";
       if (v >= 100) return v.toFixed(0);
       if (v >= 10) return v.toFixed(1);
       return v.toFixed(2);
+    }
+    /* The inputs' own min/max, so the limits live in one place (index.html).
+       Nothing submits this form, so the browser never enforced them: 1e25 kg
+       rendered as "2.355e+25" and overflowed every card. */
+    function inRange(input, v) {
+      var lo = parseFloat(input.min), hi = parseFloat(input.max);
+      return isFinite(v) && (!isFinite(lo) || v >= lo) && (!isFinite(hi) || v <= hi);
+    }
+    function flag(input, bad) {
+      input.setAttribute("aria-invalid", bad ? "true" : "false");
+      if (bad) input.setAttribute("aria-describedby", "youNote");
+      else input.removeAttribute("aria-describedby");
     }
 
     function renderYou() {
       var mass = parseFloat(youMass.value);
       var age = parseFloat(youAge.value);
       var unit = youUnit.value === "lb" ? "lb" : "kg";
-      var haveMass = isFinite(mass) && mass > 0;
-      var haveAge = isFinite(age) && age >= 0;
+      var haveMass = inRange(youMass, mass);
+      var haveAge = inRange(youAge, age);
+
+      /* An empty field means "still typing", not an error; only a value that is
+         there and out of range gets the message. */
+      var badMass = !haveMass && youMass.value.trim() !== "";
+      var badAge = !haveAge && youAge.value.trim() !== "";
+      flag(youMass, badMass);
+      flag(youAge, badAge);
+      if (youNote) {
+        var msgs = [];
+        if (badMass) msgs.push("a weight from " + youMass.min + " to " + youMass.max);
+        if (badAge) msgs.push("an age from " + youAge.min + " to " + youAge.max);
+        /* Never `hidden`: the note is a live region, and one that appears from
+           display:none already holding its text is not reliably announced.
+           Empty, it collapses to nothing (css/sections.css). */
+        var say = msgs.length ? "Enter " + msgs.join(" and ") + "." : "";
+        if (youNote.textContent !== say) youNote.textContent = say;
+      }
 
       /* Collected during the same pass that builds the grid, rather than looked
          up again afterwards. The announcement needs the heaviest and lightest
@@ -155,19 +191,67 @@
       youGrid.innerHTML = html;
 
       /* Screen readers get the two ends of the range rather than all eight
-         cards read out in sequence, which is the point the grid is making. */
-      if (youStatus && extremes) {
-        youStatus.textContent =
-          "Heaviest on " + extremes.hiName + " at " + fmtMass(extremes.hi) + " " + unit +
-          "; lightest on " + extremes.loName + " at " + fmtMass(extremes.lo) + " " + unit + ".";
-      } else if (youStatus) {
-        youStatus.textContent = "";
+         cards read out in sequence, which is the point the grid is making --
+         once typing pauses. Set on every keystroke, "70" was announced as the
+         result for 7 and then again for 70. */
+      if (youStatus) {
+        var say = extremes
+          ? "Heaviest on " + extremes.hiName + " at " + fmtMass(extremes.hi) + " " + unit +
+            "; lightest on " + extremes.loName + " at " + fmtMass(extremes.lo) + " " + unit + "."
+          : "";
+        window.clearTimeout(statusTimer);
+        statusTimer = window.setTimeout(function () { youStatus.textContent = say; }, 700);
       }
     }
+    var statusTimer = 0;
 
-    youMass.addEventListener("input", renderYou);
-    youAge.addEventListener("input", renderYou);
-    youUnit.addEventListener("change", renderYou);
+    /* Switching kg <-> lb converts the number already typed. Relabelling 70
+       from "kg" to "lb" silently made the reader 32 kg lighter. BOTH limits
+       follow the unit, converted the same way as the value (to 0.1): 1-1000 kg
+       is 2.2-2204.6 lb, so a value that is valid in one unit is still valid
+       after switching, at either end. (Converting only the maximum let 2 lb
+       become 0.9 kg -- "out of range" -- and 2205 lb become 1000.2 kg.) */
+    var LB_PER_KG = 2.20462;
+    var MIN_KG = parseFloat(youMass.min) || 1;
+    var MAX_KG = parseFloat(youMass.max) || 1000;
+    var lastUnit = youUnit.value === "lb" ? "lb" : "kg";
+    function toTenth(v) { return Math.round(v * 10) / 10; }
+    function setMassLimit(unit) {
+      var f = unit === "lb" ? LB_PER_KG : 1;
+      youMass.min = String(toTenth(MIN_KG * f));
+      youMass.max = String(toTenth(MAX_KG * f));
+    }
+
+    /* Remembered for this tab only (SolarUtil.session): open Mars, come back,
+       and your numbers are still there -- but a weight and an age are personal,
+       so they are not kept for the next person at a shared computer. */
+    var KEY = "solar.you";
+    var session = window.SolarUtil && SolarUtil.session;
+    function save() {
+      if (session) session.set(KEY, [youMass.value, youUnit.value, youAge.value].join("|"));
+    }
+    (function restore() {
+      var s = session && session.get(KEY);
+      if (!s) return;
+      var part = s.split("|");
+      if (part[1] === "kg" || part[1] === "lb") { youUnit.value = part[1]; lastUnit = part[1]; setMassLimit(part[1]); }
+      if (/^\d{1,4}(\.\d{1,2})?$/.test(part[0])) youMass.value = part[0];
+      if (/^\d{1,3}(\.\d{1,2})?$/.test(part[2])) youAge.value = part[2];
+    })();
+
+    youMass.addEventListener("input", function () { save(); renderYou(); });
+    youAge.addEventListener("input", function () { save(); renderYou(); });
+    youUnit.addEventListener("change", function () {
+      var unit = youUnit.value === "lb" ? "lb" : "kg";
+      var v = parseFloat(youMass.value);
+      if (unit !== lastUnit && isFinite(v)) {
+        youMass.value = String(toTenth(unit === "lb" ? v * LB_PER_KG : v / LB_PER_KG));
+      }
+      lastUnit = unit;
+      setMassLimit(unit);
+      save();
+      renderYou();
+    });
     renderYou();
     var youSection = document.getElementById("you");
     if (youSection) youSection.hidden = false;
@@ -186,7 +270,7 @@
 
   set("missionsList", missions.map(function (m, i) {
     return (
-      '<button class="mission-item" type="button" data-mission="' + i + '">' +
+      '<button class="mission-item" type="button" aria-haspopup="dialog" data-mission="' + i + '">' +
       '<span class="mission-item__name">' + esc(m.name) + "</span>" +
       '<span class="mission-item__years tnum">' + esc(m.year) + "</span>" +
       '<span class="mission-item__note">' + esc(m.agency) + " — " + esc(m.note) + "</span>" +
@@ -198,9 +282,15 @@
   var dlg = document.createElement("dialog");
   dlg.className = "mission-dialog";
   dlg.setAttribute("aria-labelledby", "missionDialogTitle");
+  /* Close comes FIRST. showModal() focuses the first focusable element, and
+     with Close at the end that was the first "Where this leads" link — below
+     the title, the note and every highlight, so a screen reader started there
+     and a phone opened the dialog already scrolled past its own heading. */
+  /* Share follows Close, for the same reason: Close stays the first stop. */
   dlg.innerHTML =
-    '<div id="missionDialogBody"></div>' +
-    '<button class="mission-dialog__close btn btn--ghost btn--sm" type="button">Close</button>';
+    '<button class="mission-dialog__close btn btn--ghost btn--sm" type="button">Close</button>' +
+    '<button class="mission-dialog__share btn btn--ghost btn--sm" type="button">Share</button>' +
+    '<div id="missionDialogBody"></div>';
   document.body.appendChild(dlg);
   var dlgBody = dlg.querySelector("#missionDialogBody");
 
@@ -212,6 +302,7 @@
   /* Did WE create the current #mission= history entry, or did we arrive at it?
      Closing must step back only in the first case — see the close handler. */
   var pushedByUs = false;
+  var openIdx = -1;      // index of the mission currently shown in the dialog
 
   function missionIndexById(id) {
     for (var k = 0; k < missions.length; k++) {
@@ -221,7 +312,11 @@
   }
   function missionIdFromHash() {
     var h = /^#mission=([A-Za-z0-9%_-]+)$/.exec(location.hash || "");
-    return h ? decodeURIComponent(h[1]) : null;
+    if (!h) return null;
+    /* The pattern admits a bare "%", which decodeURIComponent rejects with a
+       URIError: index.html#mission=% threw here, and the credit line below
+       never rendered. A malformed id is simply no mission. */
+    try { return decodeURIComponent(h[1]); } catch (e) { return null; }
   }
   function closeDialog() {
     if (dlg.close) dlg.close();
@@ -237,13 +332,22 @@
        at #mission=... — a deep link, or the return trip from a planet page — the
        previous entry is that planet page, and going back would send the visitor
        forwards instead of closing. Strip the hash in place instead. */
-    if (pushedByUs && history.length > 1) history.back();
-    else history.replaceState({}, "", location.pathname + location.search);
+    if (pushedByUs) { history.back(); return; }
+    history.replaceState({}, "", location.pathname + location.search);
+    /* Arrived via a planet page's "Back to <mission>": the landing loaded at
+       its very top, behind the dialog. Closing should leave the visitor at the
+       mission they came back for, not at the opening hero. */
+    var row = document.querySelector('#missionsList [data-mission="' + openIdx + '"]');
+    if (row) {
+      row.scrollIntoView({ block: "center" });
+      row.focus({ preventScroll: true });
+    }
   });
 
   function openMission(i, push) {
     var m = missions[i];
     if (!m) return;
+    openIdx = i;
 
     var meta = [esc(m.agency), "Launched " + esc(m.year)];
     if (m.status) meta.push(esc(m.status));
@@ -310,17 +414,19 @@
   }
   dlg.addEventListener("click", function (e) {
     if (e.target.closest(".mission-dialog__close")) { closeDialog(); return; }
-    /* A backdrop click reports the <dialog> itself as the target — but so does a
-       click on the dialog's OWN padding (clamp(20px,3vw,32px)), because that is
-       inside its box. Testing e.target === dlg alone therefore closed the dialog
-       when you clicked the gutter beside the title or next to a link row.
-       Hit-test the border box instead. e.detail guards against synthetic clicks,
-       whose clientX/Y are 0 and would read as "outside". */
-    if (e.target !== dlg || !e.detail) return;
-    var r = dlg.getBoundingClientRect();
-    var inside = e.clientX >= r.left && e.clientX <= r.right &&
-                 e.clientY >= r.top && e.clientY <= r.bottom;
-    if (!inside) closeDialog();
+    if (e.target.closest(".mission-dialog__share")) {
+      var shown = missions[openIdx];
+      if (shown && shown.id && window.SolarUtil && SolarUtil.share) {
+        SolarUtil.share({
+          title: shown.name + " — Solar System",
+          url: SolarUtil.pageUrl("mission=" + encodeURIComponent(shown.id)),
+        });
+      }
+      return;
+    }
+    /* Backdrop only — not the dialog's own padding, which also reports the
+       <dialog> as the target (SolarUtil.backdropHit tests the border box). */
+    if (window.SolarUtil.backdropHit(dlg, e)) closeDialog();
   });
 
   function syncFromHash() {

@@ -28,18 +28,18 @@
     "url": "https://images.nasa.gov/details/PIA00452"
   },
   "exploration-perseverance": {
-    "center": "HQ",
-    "creator": "NASA/Bill Ingalls",
-    "nasa_id": "NHQ202102180045",
-    "title": "NASA Perseverance Rover Lands on Mars",
-    "url": "https://images.nasa.gov/details/NHQ202102180045"
+    "center": "JPL",
+    "creator": "NASA/JPL-Caltech/MSSS",
+    "nasa_id": "PIA25681",
+    "title": "Perseverance's Three Forks Sample Depot Selfie",
+    "url": "https://images.nasa.gov/details/PIA25681"
   },
   "exploration-shuttle": {
-    "center": "HQ",
-    "creator": "NASA/Bill Ingalls",
-    "nasa_id": "201102240008HQ",
-    "title": "Space Shuttle Discovery Launch",
-    "url": "https://images.nasa.gov/details/201102240008HQ"
+    "center": "JSC",
+    "creator": "",
+    "nasa_id": "s29-s-026",
+    "title": "STS-29 Discovery, Orbiter Vehicle (OV) 103, lifts off from KSC LC Pad 39B",
+    "url": "https://images.nasa.gov/details/s29-s-026"
   },
   "formation-moon-impact": {
     "center": "JSC",
@@ -77,25 +77,27 @@
     "url": "https://images.nasa.gov/details/PIA12530"
   },
   "image-hubble-pillars": {
-    "center": "GSFC",
-    "creator": "",
-    "nasa_id": "GSFC_20171208_Archive_e000842",
-    "title": "Hubble Goes High Def to Revisit the Iconic 'Pillars of Creation'",
-    "url": "https://images.nasa.gov/details/GSFC_20171208_Archive_e000842"
+    "center": "ESA/Hubble",
+    "creator": "NASA, ESA/Hubble and the Hubble Heritage Team",
+    "license": "CC BY 4.0",
+    "nasa_id": "",
+    "title": "New view of the Pillars of Creation — visible (Hubble, 2014; released 5 January 2015)",
+    "url": "https://esahubble.org/images/heic1501a/"
   },
-  "image-jwst-carina": {
-    "center": "STScI (Webb)",
-    "creator": "NASA ESA CSA STScI",
-    "nasa_id": "carina_nebula",
-    "title": "James Webb Space Telescope NIRCam Image of the “Cosmic Cliffs” in Carina Nebula",
-    "url": "https://images.nasa.gov/details/carina_nebula"
+  "image-jwst-pillars": {
+    "center": "ESA/Webb",
+    "creator": "NASA, ESA, CSA, STScI; J. DePasquale, A. Koekemoer, A. Pagan (STScI)",
+    "license": "CC BY 4.0",
+    "nasa_id": "",
+    "title": "Webb Takes a Stunning, Star-Filled Portrait of the Pillars of Creation (Cropped) — NIRCam, 19 October 2022",
+    "url": "https://esawebb.org/images/weic2216a/"
   },
   "instrument-chandra": {
     "center": "KSC",
     "creator": "",
-    "nasa_id": "KSC-99pc0180",
-    "title": "KSC-99pc0180",
-    "url": "https://images.nasa.gov/details/KSC-99pc0180"
+    "nasa_id": "KSC-99pp0772",
+    "title": "KSC-99pp0772",
+    "url": "https://images.nasa.gov/details/KSC-99pp0772"
   },
   "instrument-hubble": {
     "center": "JSC",
@@ -113,10 +115,10 @@
   },
   "instrument-parker": {
     "center": "KSC",
-    "creator": "NASA/Ben Smegelsky",
-    "nasa_id": "KSC-20180403-PH_JBS01_0008",
-    "title": "Parker Solar Probe Spacecraft Arrival, Offload and Transport",
-    "url": "https://images.nasa.gov/details/KSC-20180403-PH_JBS01_0008"
+    "creator": "NASA/Kim Shiflett",
+    "nasa_id": "KSC-20180419-PH_KLS01_0009",
+    "title": "Parker Solar Probe Antenna Deployment",
+    "url": "https://images.nasa.gov/details/KSC-20180419-PH_KLS01_0009"
   },
   "instrument-voyager": {
     "center": "JPL",

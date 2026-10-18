@@ -21,6 +21,7 @@
   transition: color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
 }
 .search-trigger:hover { color: var(--text-hi); border-color: var(--glass-brd-strong); background: rgba(255,255,255,.06); }
+.no-single-keys .search-trigger__kbd { display: none; }   /* "/" switched off (js/keyboard.js) */
 .search-trigger__kbd {
   font-family: var(--font-ui); font-size: .74rem; font-weight: 600;
   color: var(--text-lo); border: 1px solid var(--glass-brd);
@@ -60,13 +61,16 @@
   font-size: 1rem;
 }
 .search__input::placeholder { color: var(--text-lo); }
+/* The input drops its own outline (it sits in a bar), so the bar shows focus
+   instead -- without this, Tabbing back into the field showed nothing (2.4.7). */
+.search__bar:focus-within { box-shadow: inset 0 -2px 0 var(--accent); }
 .search__input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
 .search__close { flex: none; }
 
 .search__results { overflow-y: auto; overscroll-behavior: contain; padding: 8px; max-height: 52vh; }
 .search__group {
   font-family: var(--font-display); font-weight: 700;
-  font-size: .74rem; letter-spacing: .09em; text-transform: uppercase;
+  font-size: .75rem; letter-spacing: .09em; text-transform: uppercase;
   color: var(--text-lo);
   padding: 12px 10px 6px;
 }
@@ -77,8 +81,11 @@
   text-decoration: none; color: var(--text-hi);
   transition: background .15s var(--ease), border-color .15s var(--ease);
 }
-.search__row:hover,
-.search__row.is-active { background: rgba(255,255,255,.06); border-color: var(--glass-brd); }
+.search__row:hover { background: rgba(255,255,255,.06); border-color: var(--glass-brd); }
+/* The highlighted row is the ONLY sign of what Enter will open -- focus stays in
+   the input (aria-activedescendant) -- so it must clear 3:1 (WCAG 1.4.11). The
+   old white wash measured 1.19:1. */
+.search__row.is-active { background: rgb(var(--accent-rgb) / .10); border-color: var(--accent); }
 .search__where { color: var(--text-lo); font-size: .76rem; font-weight: 600; letter-spacing: .02em; }
 .search__title { font-family: var(--font-display); font-weight: 600; font-size: 1.02rem; letter-spacing: -.01em; }
 .search__snippet { color: var(--text-mid); font-size: .88rem; line-height: 1.5; }
@@ -87,7 +94,7 @@
    Amber echoes ::selection in css/main.css, and the underline carries the
    signal for anyone who cannot separate the two colours. */
 .search mark {
-  background: rgba(245,185,66,.2);
+  background: rgb(var(--accent-rgb) / .2);
   color: var(--text-hi);
   border-radius: 3px;
   padding: 0 2px;
@@ -118,6 +125,11 @@
   border: 1px solid var(--glass-brd); border-radius: 4px;
   padding: 0 5px; margin: 0 1px;
 }
+.search__keys {
+  color: var(--text-mid); font-size: inherit; font-weight: 600;
+  text-decoration: underline; text-underline-offset: 2px; text-decoration-color: var(--glass-brd-strong);
+}
+.search__keys:hover { color: var(--text-hi); text-decoration-color: var(--accent); }
 
 /* ── phones: a full-height sheet, and no keyboard hints ──
    The palette is a comfortable floating card on a desktop, but on a phone the
@@ -141,7 +153,10 @@
     height: 100dvh; max-height: 100dvh;
     border: 0; border-radius: 0;
     padding-top: env(safe-area-inset-top, 0px);
+    padding-left: env(safe-area-inset-left, 0px);    /* sideways: clear the notch */
+    padding-right: env(safe-area-inset-right, 0px);
   }
+  .search__seed { min-height: 44px; }
   .search__bar { flex: 0 0 auto; }
   /* min-height:0 overrides the flex default of min-content, which would
      otherwise stop this from ever shrinking enough to scroll. */

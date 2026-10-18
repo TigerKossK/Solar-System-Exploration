@@ -16,7 +16,82 @@
 
 /* ── page scaffold ──────────────────────────────────────── */
 .content-page { padding-block: clamp(96px, 12vh, 150px) clamp(48px, 8vh, 90px); }
-.content-page > .panel { gap: clamp(28px, 4vw, 48px); }
+.content-page > .panel {
+  gap: clamp(28px, 4vw, 48px);
+  /* clip, not hidden: it rounds and clips exactly the same, but hidden makes the
+     card a scroll container, and position:sticky inside one sticks to the card
+     (which never scrolls) instead of the page -- the contents rail below would
+     simply scroll away. Browsers without clip keep hidden; the rail then
+     scrolls with the text, nothing worse. */
+  overflow: clip;
+}
+
+/* ── "On this page" (js/toc.js) ─────────────────────────────
+   A closed disclosure above the article on narrower screens; a sticky rail
+   beside it from 1200px. The current section is marked with the same amber
+   as every other "you are here" on the site. */
+.article-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(20px, 3vw, 28px); }
+.toc {
+  border: 1px solid var(--glass-brd); border-radius: var(--r-md);
+  background: var(--glass-fill); padding: 0 16px;
+}
+.toc__summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  min-height: 48px; list-style: none; cursor: pointer;
+  font-family: var(--font-display); font-weight: 600; font-size: .95rem; color: var(--text-hi);
+}
+.toc__summary::-webkit-details-marker { display: none; }
+.toc__summary svg { flex: none; color: var(--text-mid); transition: transform .2s var(--ease); }
+.toc[open] .toc__summary svg { transform: rotate(180deg); }
+.toc nav { padding-bottom: 12px; }
+.toc__list { display: grid; gap: 2px; border-left: 1px solid var(--glass-brd); }
+.toc a {
+  display: block; margin-left: -1px; padding: 7px 12px;
+  border-left: 1px solid transparent;
+  color: var(--text-mid); font-size: .92rem; line-height: 1.35;
+  transition: color .2s var(--ease), border-color .2s var(--ease);
+}
+.toc a:hover { color: var(--text-hi); }
+.toc a[aria-current] { color: var(--text-hi); font-weight: 600; border-left-color: var(--accent); }
+/* stages and instruments: only on the rail, and only under the section being
+   read -- the phone list stays a short list of sections */
+.toc__sub { display: none; padding-bottom: 4px; }
+.toc__sub a { padding: 5px 12px 5px 24px; font-size: .86rem; color: var(--text-lo); }
+.toc__sub a:hover { color: var(--text-hi); }
+
+@media (min-width: 1200px) {
+  .article-layout {
+    display: grid; grid-template-columns: minmax(0, 1fr) 232px;
+    gap: clamp(32px, 4vw, 56px); align-items: start;
+  }
+  .article-layout > .article { grid-column: 1; grid-row: 1; }
+  .article-layout > .toc {
+    grid-column: 2; grid-row: 1;
+    position: sticky; top: 100px;   /* below the fixed topbar */
+    max-height: calc(100vh - 124px); overflow-y: auto; overscroll-behavior: contain;
+    border: 0; background: none; padding: 0;
+  }
+  .toc__item.is-current .toc__sub { display: block; }
+}
+
+/* back to top: bottom-right, above the phone tab bar when there is one */
+.to-top {
+  position: fixed; z-index: 40;
+  right: var(--pad);
+  bottom: calc(var(--tabbar-h, env(safe-area-inset-bottom, 0px)) + 16px);
+  width: 46px; height: 46px; border-radius: 50%;
+  display: grid; place-items: center;
+  color: var(--text-hi);
+  background: linear-gradient(150deg, rgba(16,52,60,.95), rgba(8,17,15,.97));
+  border: 1px solid var(--glass-brd-strong); box-shadow: var(--shadow-soft);
+  opacity: 0; visibility: hidden; transform: translateY(8px);
+  transition: opacity .25s var(--ease), transform .25s var(--ease), visibility 0s linear .25s, border-color .2s var(--ease);
+}
+.to-top.is-shown {
+  opacity: 1; visibility: visible; transform: none;
+  transition: opacity .25s var(--ease), transform .25s var(--ease), visibility 0s, border-color .2s var(--ease);
+}
+.to-top:hover { border-color: var(--accent); }
 
 .content-hero { display: grid; gap: 18px; max-width: 62ch; }
 .content-hero__title {
@@ -113,8 +188,8 @@
 .unsettled {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 2px 9px; border-radius: var(--r-pill);
-  background: rgba(245, 185, 66, .1); border: 1px solid rgba(245, 185, 66, .3);
-  color: var(--accent); font-size: .74rem; font-weight: 600;
+  background: rgb(var(--accent-rgb) / .1); border: 1px solid rgb(var(--accent-rgb) / .3);
+  color: var(--accent); font-size: .75rem; font-weight: 600;
   text-transform: uppercase; letter-spacing: .06em; white-space: nowrap;
   vertical-align: middle;
 }
@@ -154,8 +229,8 @@
   transition: border-color .3s var(--ease), background .3s var(--ease);
 }
 .instrument:hover { border-color: var(--glass-brd-strong); background: rgba(255,255,255,.045); }
-/* each card is a link target from the landing's mission dialog; clear the fixed topbar */
-.instrument { scroll-margin-top: 90px; }
+/* each card is a link target from the landing's mission dialog; the fixed
+   topbar is cleared by the html scroll-padding in css/sections.css */
 /* brief highlight so a deep link makes obvious which card you were sent to */
 .instrument:target { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
 /* no photograph for this one — do not leave half the card empty */
@@ -180,27 +255,11 @@
   color: var(--text-hi); font-weight: 600; text-align: right;
   font-variant-numeric: tabular-nums;
 }
-.chip--live { color: var(--accent); border-color: rgba(245,185,66,.35); }
+.chip--live { color: var(--accent); border-color: rgb(var(--accent-rgb) / .35); }
 .chip--retired { color: var(--text-lo); }
 
-/* ── cross-page navigation at the foot ──────────────────── */
-.content-next {
-  display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  margin-top: 4px;
-}
-.content-next a {
-  display: grid; gap: 4px; padding: 16px 18px; border-radius: var(--r-md);
-  background: var(--glass-fill); border: 1px solid var(--glass-brd);
-  transition: border-color .25s var(--ease), background .25s var(--ease), transform .25s var(--ease);
-}
-.content-next a:hover {
-  border-color: var(--glass-brd-strong); background: rgba(255,255,255,.05);
-  transform: translateY(-2px);
-}
-.content-next__label {
-  font-size: .74rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-lo);
-}
-.content-next__title { font-family: var(--font-display); font-weight: 600; font-size: 1.02rem; }
+/* (.content-next, the cross-page cards at the foot, lives in
+   css/components.css: the planet pages' pager uses it too.) */
 
 /* ── responsive ─────────────────────────────────────────── */
 @media (max-width: 820px) {
@@ -212,5 +271,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .instrument, .content-next a { transition: none !important; }
+  .instrument, .toc a, .toc__summary svg, .to-top { transition: none !important; }
 }

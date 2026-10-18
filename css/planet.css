@@ -5,9 +5,14 @@
    into the teal palette. Each page sets --pc to its planet colour.
    ============================================================ */
 
-/* ── top bar: return + neighbour nav ────────────────────── */
-.planet-topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-.neighbors { display: flex; gap: 6px; }
+/* The shared fixed .topbar (css/components.css) sits over the top of the page,
+   so the stage starts below it — the article pages' top rhythm. */
+.stage { padding-top: clamp(96px, 12vh, 150px); }
+
+/* ── position + neighbour nav ("‹ Venus · Planet 3 of 8 · Mars ›") ── */
+.planet-topbar { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.neighbors { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.neighbors__pos { padding: 8px 6px; color: var(--text-lo); font-size: .86rem; font-variant-numeric: tabular-nums; }
 .neighbors a { display: inline-flex; align-items: center; gap: 6px; padding: 8px 13px; border-radius: var(--r-pill); font-size: .86rem; color: var(--text-mid); transition: color .2s, background .2s; }
 .neighbors a:hover { color: var(--text-hi); background: rgba(255,255,255,.05); }
 .neighbors .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--nc, var(--text-lo)); box-shadow: 0 0 8px var(--nc, transparent); flex: none; }
@@ -91,12 +96,12 @@ body[data-planet="neptune"] .planet-orb { --tex: url("../assets/textures/neptune
 
 /* ── dashboard ──────────────────────────────────────────── */
 .dash-section { margin-top: clamp(30px, 4vw, 56px); }
-.dash-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
-.dash-grid--wide { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.dash-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); }
+.dash-grid--wide { grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
 
 .widget {
   background: var(--glass-fill); border: 1px solid var(--glass-brd); border-radius: var(--r-md);
-  padding: 20px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  padding: 20px;   /* no backdrop-filter: always inside a .panel that already blurs */
   display: flex; flex-direction: column; gap: 8px;
   transition: transform .3s var(--ease), border-color .3s var(--ease), background .3s var(--ease);
 }
@@ -114,7 +119,7 @@ body[data-planet="neptune"] .planet-orb { --tex: url("../assets/textures/neptune
 .cmp__track { position: relative; height: 10px; border-radius: 999px; background: rgba(255,255,255,.06); overflow: hidden; margin-top: 6px; }
 .cmp__fill { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: linear-gradient(90deg, var(--teal-400), var(--pc)); box-shadow: 0 0 8px -4px var(--pc); }
 .cmp__earth { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--accent); box-shadow: 0 0 6px -1px var(--accent); }
-.cmp__scale { display: flex; justify-content: space-between; color: var(--text-lo); font-size: .72rem; margin-top: 6px; }
+.cmp__scale { display: flex; justify-content: space-between; color: var(--text-lo); font-size: .75rem; margin-top: 6px; }
 
 /* callout (composition / did you know) */
 .callout { background: linear-gradient(160deg, rgba(20,70,80,.32), rgba(9,24,30,.4)); border: 1px solid var(--glass-brd); border-radius: var(--r-md); padding: 20px 22px; }
@@ -133,7 +138,7 @@ body[data-planet="neptune"] .planet-orb { --tex: url("../assets/textures/neptune
 .feature-list li::before { content: ""; position: absolute; left: 0; top: .62em; width: 6px; height: 6px; border-radius: 50%; background: var(--pc); }
 
 /* fun-facts list */
-.fact-list { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.fact-list { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); }
 .fact-item {
   position: relative; padding: 15px 18px 15px 40px; border-radius: var(--r-md);
   background: var(--glass-fill); border: 1px solid var(--glass-brd);
@@ -156,6 +161,12 @@ body[data-planet="neptune"] .planet-orb { --tex: url("../assets/textures/neptune
 .mission-item__name { font-family: var(--font-display); font-weight: 600; color: var(--text-hi); }
 .mission-item__years { color: var(--text-lo); font-size: .82rem; font-variant-numeric: tabular-nums; }
 .mission-item__note { grid-column: 1 / -1; color: var(--text-mid); font-size: .92rem; }
+
+/* previous / next at the end of the page (cards are .content-next, in
+   css/components.css). Two fixed columns, so Mercury's lone "Next" still sits
+   on the right and Neptune's lone "Previous" on the left. */
+.planet-pager { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: clamp(28px, 4vw, 48px); }
+.planet-pager a[rel="next"] { grid-column: 2; text-align: right; }
 
 /* page footer: source + back */
 .planet-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: clamp(28px, 4vw, 48px); padding-top: 22px; border-top: 1px solid rgba(150,205,210,.12); }

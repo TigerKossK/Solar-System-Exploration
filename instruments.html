@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script>document.documentElement.classList.add("js");</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <script>document.documentElement.classList.add("js");document.addEventListener("DOMContentLoaded",function(){if(!window.SolarReveal)document.documentElement.classList.add("no-reveal")});</script>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='6.5' fill='%23f5b942'/><ellipse cx='16' cy='16' rx='13' ry='6' fill='none' stroke='%232a7d8c' stroke-width='2' transform='rotate(-24 16 16)'/></svg>" />
   <title>The instruments — Solar System</title>
   <meta name="description" content="The machines behind every number on this site: Hubble, Webb, Chandra, Spitzer, Parker, the Voyagers, Cassini and Galileo — what they are, and what they showed us." />
@@ -17,12 +17,12 @@
   <meta property="og:image" content="https://tigerkossk.github.io/Solar-System-Exploration/assets/og-cover.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Earth seen from space, the Sun cresting beyond its horizon." />
+  <meta property="og:image:alt" content="Earth photographed by the Artemis II crew from the Orion spacecraft, April 2026." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="The instruments — Solar System" />
   <meta name="twitter:description" content="The machines behind every number on this site: Hubble, Webb, Chandra, Spitzer, Parker, the Voyagers, Cassini and Galileo — what they are, and what they showed us." />
   <meta name="twitter:image" content="https://tigerkossk.github.io/Solar-System-Exploration/assets/og-cover.jpg" />
-  <meta name="twitter:image:alt" content="Earth seen from space, the Sun cresting beyond its horizon." />
+  <meta name="twitter:image:alt" content="Earth photographed by the Artemis II crew from the Orion spacecraft, April 2026." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
@@ -34,6 +34,7 @@
   <link rel="stylesheet" href="css/responsive.css" />
   <link rel="stylesheet" href="css/mobile-nav.css" />
   <link rel="stylesheet" href="css/search.css" />
+  <link rel="stylesheet" href="css/print.css" media="print" />
 </head>
 <body>
   <div class="cosmos" aria-hidden="true">
@@ -57,7 +58,7 @@
         <span class="brand__word">Solar&nbsp;System</span>
       </a>
       <nav class="nav__links" aria-label="Primary">
-        <a href="index.html#menu">Explore</a>
+        <a href="index.html#menu">Map</a>
         <a href="formation.html">Formation</a>
         <a href="exploration.html">Exploration</a>
         <a href="instruments.html" aria-current="page">Instruments</a>
@@ -105,7 +106,7 @@
                 <div><span class="k">Launched</span><span class="v">24 April 1990</span></div>
                 <div><span class="k">Primary mirror</span><span class="v">2.4 m</span></div>
                 <div><span class="k">Mass at launch</span><span class="v">11,110 kg</span></div>
-                <div><span class="k">Orbit</span><span class="v">~600 km, low Earth orbit</span></div>
+                <div><span class="k">Orbit</span><span class="v">Low Earth orbit, under 500 km and slowly sinking</span></div>
                 <div><span class="k">Observations</span><span class="v">over 1.5 million</span></div>
               </div>
             </div>
@@ -144,7 +145,7 @@
             </div>
             <figure class="figure instrument__figure">
               <img src="assets/media/instrument-jwst.webp" width="1280" height="959"
-                   alt="The James Webb Space Telescope's gold-coated hexagonal primary mirror segments."
+                   alt="The James Webb Space Telescope's hexagonal primary-mirror segments, still under black protective covers, in a clean room as engineers look on."
                    loading="lazy" decoding="async" />
               <figcaption class="figure__caption">
                 Webb's primary mirror, fully assembled before launch.
@@ -176,11 +177,11 @@
               </div>
             </div>
             <figure class="figure instrument__figure">
-              <img src="assets/media/instrument-chandra.webp" width="904" height="1280"
-                   alt="The Chandra X-ray Observatory before launch."
+              <img src="assets/media/instrument-chandra.webp" width="859" height="1280"
+                   alt="The Chandra X-ray Observatory, wrapped in reflective thermal blankets, inside Space Shuttle Columbia's payload bay."
                    loading="lazy" decoding="async" />
               <figcaption class="figure__caption">
-                Photographed at Kennedy Space Center, 1999.
+                In Columbia's payload bay at Kennedy Space Center, June 1999 &mdash; a month before launch.
                 <span class="figure__credit">NASA / KSC</span>
               </figcaption>
             </figure>
@@ -195,8 +196,8 @@
               </div>
               <p class="instrument__desc">
                 A modest 0.85 m infrared telescope designed for two and a half years, which ran for
-                <strong>sixteen</strong>. Spitzer pioneered the technique of measuring an exoplanet's
-                atmosphere as it passes in front of its star, and quietly found an enormous, faint
+                <strong>sixteen</strong>. Spitzer was the first telescope to capture light emitted by
+                planets around other stars, and quietly found an enormous, faint
                 outer ring around Saturn that nobody had noticed in four centuries of looking. It was
                 switched off on 30 January 2020; its data archive is still producing results.
               </p>
@@ -225,8 +226,9 @@
               </div>
               <p class="instrument__desc">
                 The fastest object humans have ever built, and the closest anything of ours has come
-                to a star. A 4.24 m carbon-composite heat shield takes the full force of the Sun at
-                around 1,400 K while the instruments behind it sit near room temperature. It is
+                to a star. A carbon-composite heat shield 2.4 m across and 11.4 cm thick takes the full
+                force of the Sun, near 1,370 °C on its front face, while the instruments behind it sit
+                near room temperature. It is
                 flying <em>through</em> the corona to find out why the Sun's outer atmosphere is
                 hundreds of times hotter than its surface.
               </p>
@@ -234,17 +236,17 @@
                 <div><span class="k">Launched</span><span class="v">12 August 2018</span></div>
                 <div><span class="k">Closest approach</span><span class="v">6.1 million km</span></div>
                 <div><span class="k">Top speed</span><span class="v">~192 km/s</span></div>
-                <div><span class="k">Shield front face</span><span class="v">~1,400 K</span></div>
+                <div><span class="k">Shield front face</span><span class="v">~1,370 °C</span></div>
                 <div><span class="k">Dry mass</span><span class="v">~559 kg</span></div>
               </div>
             </div>
             <figure class="figure instrument__figure">
-              <img src="assets/media/instrument-parker.webp" width="1500" height="1000"
-                   alt="The Parker Solar Probe spacecraft before launch."
+              <img src="assets/media/instrument-parker.webp" width="1280" height="1920"
+                   alt="The Parker Solar Probe spacecraft in a clean room before launch, its antennas deployed for testing."
                    loading="lazy" decoding="async" />
               <figcaption class="figure__caption">
-                Arriving at Kennedy Space Center for launch processing.
-                <span class="figure__credit">NASA / Ben Smegelsky</span>
+                Antennas deployed for testing at the Astrotech facility near Kennedy Space Center, April 2018.
+                <span class="figure__credit">NASA / Kim Shiflett</span>
               </figcaption>
             </figure>
           </article>
@@ -257,8 +259,8 @@
                 <span class="chip">Interstellar</span>
               </div>
               <p class="instrument__desc">
-                Built with 1970s electronics and still returning data from beyond the Sun's
-                influence. Between them they gave us our only close looks at Uranus and Neptune,
+                Built with 1970s electronics and still returning data from interstellar space,
+                past the edge of the solar wind. Between them they gave us our only close looks at Uranus and Neptune,
                 discovered volcanoes on Io and the smooth ice shell of Europa, and are now measuring
                 the interstellar medium directly. Their plutonium is running out; instruments are
                 being retired one at a time to keep the rest alive.
@@ -336,8 +338,8 @@
           <p>
             Space is not always the answer. In the Atacama Desert, the
             <strong>Very Large Telescope</strong> runs four 8.2 m mirrors at 2,635 m altitude, each
-            flexed by around 150 actuators to cancel out atmospheric distortion in real time — and
-            able to combine into a single interferometer. Higher up at 5,000 m,
+            held in shape by 150 actuators while separate adaptive optics cancel the atmosphere's
+            blur in real time — and able to combine into a single interferometer. Higher up at 5,000 m,
             <strong>ALMA</strong> operates 66 movable dishes as one radio instrument, spread from
             150 m to 16 km apart. ALMA's images of gaps and rings in protoplanetary discs are the
             closest thing we have to watching planets being born.
@@ -354,26 +356,25 @@
         </section>
 
         <figure class="figure figure--wide reveal">
-          <img src="assets/media/image-hubble-pillars.webp" width="1500" height="1405"
-               alt="The Pillars of Creation: towering columns of dark dust and gas in the Eagle Nebula, lit from above."
+          <img src="assets/media/image-hubble-pillars.webp" width="1280" height="1335"
+               alt="The Pillars of Creation in visible light: towering, opaque columns of dark brown dust and gas in the Eagle Nebula, edged with glowing gas."
                loading="lazy" decoding="async" />
           <figcaption class="figure__caption">
             <strong>Hubble, visible light.</strong> The Pillars of Creation in the Eagle Nebula,
-            first imaged in 1995 and revisited in high definition in 2015. The pillars are opaque
-            towers of dust light-years tall.
-            <span class="figure__credit">NASA / GSFC</span>
+            first imaged in 1995 and revisited in high definition twenty years later. In visible
+            light the pillars are opaque towers of dust, light-years tall.
+            <span class="figure__credit">NASA, ESA/Hubble and the Hubble Heritage Team</span>
           </figcaption>
         </figure>
 
         <figure class="figure figure--wide reveal">
-          <img src="assets/media/image-jwst-carina.webp" width="1500" height="868"
-               alt="The Cosmic Cliffs in the Carina Nebula, a glowing ridge of gas studded with newborn stars."
+          <img src="assets/media/image-jwst-pillars.webp" width="1200" height="1200"
+               alt="The same Pillars of Creation in Webb's near-infrared view: translucent golden-brown columns with thousands of stars visible through and around them."
                loading="lazy" decoding="async" />
           <figcaption class="figure__caption">
-            <strong>Webb, infrared.</strong> The Cosmic Cliffs in the Carina Nebula. At these
-            wavelengths the dust turns translucent and hundreds of young stars appear that are
-            invisible to Hubble.
-            <span class="figure__credit">NASA / ESA / CSA / STScI</span>
+            <strong>Webb, near-infrared, 2022.</strong> The same pillars. At these wavelengths the
+            dust turns translucent, and thousands of stars appear that visible light cannot show.
+            <span class="figure__credit">NASA, ESA, CSA, STScI; J. DePasquale, A. Koekemoer, A. Pagan (STScI)</span>
           </figcaption>
         </figure>
 
@@ -413,9 +414,9 @@
         </nav>
 
         <footer class="planet-foot">
-          <a class="back" href="index.html">
+          <a class="back" href="index.html#menu">
             <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Back to the Solar System
+            Back to the map
           </a>
           <span class="source-tag">
             Sources:
@@ -430,9 +431,14 @@
   </main>
 
   <script src="js/util.js"></script>
+  <script src="js/motion.js"></script>
   <script src="js/background.js"></script>
+  <script src="js/toc.js"></script>
   <script src="js/reveal.js"></script>
   <script src="js/search.js"></script>
+  <script src="js/share.js"></script>
+  <script src="js/keyboard.js"></script>
+  <script src="js/glossary.js"></script>
   <script src="js/mobile-nav.js"></script>
 </body>
 </html>

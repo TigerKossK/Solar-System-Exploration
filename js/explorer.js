@@ -1,14 +1,15 @@
 /* ============================================================
    Solar System — in-page Explorer mode
-   "Explore the planets" opens a focused, full-screen version of the SAME
+   "Full-screen map" opens a focused, full-screen version of the SAME
    map without a reload: body.is-exploring lets CSS grow the orrery and
    recede the surrounding page, and reveals the shared preview panel's
    Return control + fun-facts. Planet interaction is unchanged from the
    menu (hover / focus / tap previews, via js/solar-system.js) — Explorer
    only changes the layout, so the map behaves identically in both places.
    Browser Back / Esc / the Return button all leave. Reflected in the URL
-   (#explore) so history works. Without JS the CTA scrolls to the planet
-   list, which still navigates.
+   (#explore) so history works, and a modifier-click opens it in a new tab.
+   The CTA is hidden in the markup until this script shows it: without JS
+   there is no full-screen map to open.
    ============================================================ */
 (function () {
   "use strict";
@@ -19,6 +20,12 @@
   var funFacts = document.getElementById("readoutFunFacts");
   var explore = document.getElementById("readoutExplore");
   if (!cta || !panel) return;
+  /* Only a BUILT map can go full screen. js/solar-system.js (which runs first)
+     sets .orrery-ready once the planets exist; if js/data.js failed, the CTA
+     used to appear anyway and open an empty full-screen box. Without the map,
+     the CTA stays hidden and a #explore link simply shows the page. */
+  if (!document.documentElement.classList.contains("orrery-ready")) return;
+  cta.hidden = false;
 
   var isOn = function () { return body.classList.contains("is-exploring"); };
 
@@ -74,6 +81,8 @@
   }
 
   cta.addEventListener("click", function (e) {
+    // modifier / middle clicks keep their browser meaning (new tab), as on every other link here
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || (e.button && e.button > 0)) return;
     e.preventDefault();
     enter();
   });
@@ -96,6 +105,10 @@
   }
   document.addEventListener("keydown", function (e) {
     if (e.key !== "Escape" || !isOn()) return;
+    /* An open dialog (search, the tab-bar sheet) is what this Escape is for —
+       it closes itself. The keydown still bubbles here first, and leaving too
+       used to close search AND Explorer with one press. */
+    if (window.SolarUtil && SolarUtil.dialogOpen()) return;
     leave();
   });
   window.addEventListener("popstate", function () {

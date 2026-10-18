@@ -31,6 +31,8 @@
     background: linear-gradient(180deg, rgba(12,38,45,.97), rgba(8,17,15,.99));
     border-top: 1px solid var(--glass-brd);
     padding-bottom: env(safe-area-inset-bottom, 0px);   /* clear the home indicator */
+    padding-left: env(safe-area-inset-left, 0px);       /* and the notch, held sideways */
+    padding-right: env(safe-area-inset-right, 0px);
     box-shadow: 0 -12px 30px -18px rgba(0,0,0,.9);
   }
   .tabbar__item {
@@ -38,11 +40,11 @@
     background: none; border: 0; cursor: pointer;
     display: grid; justify-items: center; align-content: center; gap: 3px;
     min-height: 56px; padding: 8px 4px;           /* comfortably past the 44px floor */
-    color: var(--text-mid); font: inherit; font-size: .72rem; font-weight: 600;
+    color: var(--text-mid); font: inherit; font-size: .75rem; font-weight: 600;
     letter-spacing: .01em; text-decoration: none;
     transition: color .2s var(--ease);
   }
-  .tabbar__item span { font-size: .72rem; }
+  .tabbar__item span { font-size: .75rem; }
   .tabbar__item:hover { color: var(--text-hi); }
   .tabbar__item[aria-current] { color: var(--accent); }
   .tabbar__item:active { color: var(--accent); }
@@ -51,14 +53,22 @@
      the last element sits permanently underneath it. */
   body { padding-bottom: calc(var(--tabbar-h) + 8px); }
   body.is-exploring { padding-bottom: 0; }
+  /* ...and keep keyboard focus and anchor targets from landing under it
+     (WCAG 2.4.11) — the bottom twin of the scroll-padding-top that clears the
+     fixed topbar in css/components.css. */
+  html { scroll-padding-bottom: calc(var(--tabbar-h) + 8px); }
+
+  /* The topbar slides away while scrolling down (js/mobile-nav.js adds
+     .is-tucked) and returns on any scroll up or focus inside it. */
+  .topbar { transition: transform .3s var(--ease); }
+  .topbar.is-tucked { transform: translateY(-100%); }
 
   /* Elements already anchored to the bottom of the viewport would otherwise sit
      BEHIND the new bar. The journey bar carries "Enter the map" -- the hero's
-     primary action and the advertised fast path past the intro -- so this is
-     not cosmetic. (Explorer hides the bar, the hero and the cue together, so
-     none of these three ever compete.) */
+     primary action and the fast path to the map -- so this is
+     not cosmetic. (Explorer hides the tab bar and the hero together, so the
+     two never compete.) */
   .journey__bar { bottom: calc(var(--tabbar-h) + clamp(12px, 2vh, 24px)); }
-  .scroll-cue { bottom: calc(var(--tabbar-h) + 14px); }
 
   /* ── the sheet ────────────────────────────────────────────
      Rises from the bottom edge so it belongs to the bar that opened it. */
@@ -94,7 +104,7 @@
   }
   .sheet__row--stack { flex-direction: column; align-items: flex-start; gap: 2px; }
   .sheet__row:hover { background: rgba(255,255,255,.07); }
-  .sheet__row[aria-current] { border-color: var(--accent); background: rgba(245,185,66,.1); }
+  .sheet__row[aria-current] { border-color: var(--accent); background: rgb(var(--accent-rgb) / .1); }
   .sheet__dot {
     width: 14px; height: 14px; border-radius: 50%; flex: none;
     background: var(--c, var(--accent));
@@ -105,6 +115,13 @@
      these are real reading labels, not decoration. */
   .sheet__meta { color: var(--text-lo); font-size: .78rem; margin-left: auto; }
   .sheet__row--stack .sheet__meta { margin-left: 0; }
+  /* visited planets: a tick by the name, and a count with Forget above the list */
+  .sheet__seen { display: inline-flex; color: var(--accent); }
+  .sheet__sub { margin: -4px 0 6px; color: var(--text-lo); font-size: .82rem; }
+  .sheet__forget {
+    color: var(--text-mid); font-weight: 600; min-height: 44px; padding: 0 4px;
+    text-decoration: underline; text-underline-offset: 2px; text-decoration-color: var(--glass-brd-strong);
+  }
   .sheet__close { width: 100%; justify-content: center; margin-top: 14px; min-height: 48px; }
 
   /* Planet dot colours, mirroring js/data.js `color`. Hard-coded because the
@@ -120,5 +137,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tabbar__item, .sheet__row { transition: none; }
+  .tabbar__item, .sheet__row, .topbar { transition: none; }
 }

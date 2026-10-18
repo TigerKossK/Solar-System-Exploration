@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "node scripts/build-planets.js && python scripts/build-search-index.py",
-    "check": "node scripts/build-planets.js && git add -A -- planet/ && git diff --cached --exit-code -- planet/",
+    "check": "node scripts/build-planets.js && python scripts/build-search-index.py && git diff --exit-code --stat -- planet/ js/search-index.js",
     "serve": "python scripts/serve.py",
     "build:search": "python scripts/build-search-index.py"
   }

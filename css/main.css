@@ -7,6 +7,11 @@
    ============================================================ */
 
 :root {
+  /* The whole site is dark, so the browser's own controls must be too: without
+     this the kg/lb <select> opened a white system dropdown on Windows/Linux, and
+     scrollbars and form autofill painted light. */
+  color-scheme: dark;
+
   /* surfaces — deep teal / dark green-blue */
   --bg-void:  #08110f;
   --bg-deep:  #0a1e26;
@@ -19,7 +24,16 @@
   /* text (tinted from the hue, never flat grey) */
   --text-hi:  #eaf1f1;
   --text-mid: #b7c9cb;
-  --text-lo:  #8fa6a8;
+  /* #9db2b4, up from #8fa6a8. Desktop cards are partly see-through over the
+     animated canvas, and the old value fell to 4.0:1 in a card's top sheen and
+     4.3:1 on a widget over a typical frame (3.0:1 at the shader's peak) --
+     below WCAG AA. Paired with the firmer .panel fill in css/components.css it
+     computes >= 4.9:1 on every card surface over a typical frame and >= 4.2:1
+     even at peak, while staying a clear step below --text-mid. */
+  --text-lo:  #9db2b4;
+  /* Form-field boundary: >= 3:1 against a card (WCAG 1.4.11). --glass-brd is
+     ~1.4:1 -- fine for decorative edges, too faint to show where an input is. */
+  --field-brd: rgba(150, 205, 210, .5);
 
   /* liquid glass */
   --glass-fill:       rgba(228, 246, 246, 0.045);
@@ -29,6 +43,9 @@
 
   /* accent — PLACEHOLDER (solar amber ≙ the Sun); TBD by user */
   --accent:      #f5b942;
+  /* the same amber as channels, for every tint: rgb(var(--accent-rgb) / .2).
+     Change the two together -- they were 22 hand-copied rgba()s. */
+  --accent-rgb:  245 185 66;
   /* --accent-warm is the Sun's own orange: correct inside the plasma gradients
      (.sun__core, .sun-visual__core), where it sits between amber and a deep
      ember and reads as heat. It is NOT right as half of a flat button fill --
@@ -39,6 +56,12 @@
   --accent-warm: #ff9b3d;
   --accent-deep: #e9a62c;
   --accent-ink:  #241703;
+
+  /* errors — coral, so "this needs fixing" never looks like amber "this has
+     focus". 4.6:1 on the lightest desktop panel over the brightest canvas
+     (the --text-lo contrast model); always paired with an icon or a thicker
+     edge, never colour alone. */
+  --danger:      #ff9b8f;
 
   /* geometry */
   --r-card: 30px;
@@ -61,7 +84,9 @@
   --font-serif:   "Spectral", Georgia, "Times New Roman", serif;
 
   --maxw: 1360px;
-  --pad:  clamp(14px, 2.4vw, 34px);
+  /* Never less than the device's side safe areas: with viewport-fit=cover a
+     phone held sideways puts the notch and rounded corners inside the page. */
+  --pad:  max(clamp(14px, 2.4vw, 34px), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
 
   /* rhythm — shared vertical spacing scale for the landing sections */
   --space-section-y: clamp(96px, 12vh, 150px);
@@ -129,7 +154,7 @@ img, canvas { display: block; max-width: 100%; }
 }
 
 /* ── themed browser surfaces (the cheap tell of a built page) ── */
-::selection { background: rgba(245,185,66,.26); color: #fff; }
+::selection { background: rgb(var(--accent-rgb) / .26); color: #fff; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
 /* Skip-link landmark targets carry tabindex="-1" so focus actually lands there.
    They are not in the tab order and are not operable, so WCAG's visible-focus
@@ -140,7 +165,9 @@ img, canvas { display: block; max-width: 100%; }
 #article[tabindex="-1"]:focus,
 #article[tabindex="-1"]:focus-visible,
 #dashboard[tabindex="-1"]:focus,
-#dashboard[tabindex="-1"]:focus-visible { outline: none; }
+#dashboard[tabindex="-1"]:focus-visible,
+main h1[tabindex="-1"]:focus,
+main h1[tabindex="-1"]:focus-visible { outline: none; }   /* "Back to top" lands here (js/toc.js) */
 * { scrollbar-width: thin; scrollbar-color: var(--teal-600) transparent; }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-thumb { background: var(--teal-600); border-radius: 999px; border: 2px solid var(--bg-void); }
@@ -192,11 +219,6 @@ img, canvas { display: block; max-width: 100%; }
 .container { width: 100%; max-width: var(--maxw); margin-inline: auto; }
 
 /* ── typography scale ───────────────────────────────────── */
-.eyebrow-none { display: none; } /* no kickers/eyebrows — banned */
-.display {
-  font-family: var(--font-display); font-weight: 800; letter-spacing: -.035em; line-height: .98;
-  text-wrap: balance;
-}
 .serif {
   font-family: var(--font-serif); font-weight: 500; letter-spacing: -.01em; line-height: 1.04;
   text-wrap: balance;
@@ -220,7 +242,6 @@ img, canvas { display: block; max-width: 100%; }
    avoiding orphans and bad hyphen breaks. Both degrade to normal wrapping
    where unsupported, so no fallback is needed. */
 .section__title,
-.intro__title,
 .journey__title,
 .hero__title,
 .planet-hero__name,
@@ -233,7 +254,6 @@ img, canvas { display: block; max-width: 100%; }
 .sheet__title { text-wrap: balance; }
 
 .section__lead,
-.intro__lead,
 .journey__sub,
 .hero__sub,
 .planet-hero__desc,

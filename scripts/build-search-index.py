@@ -55,9 +55,20 @@ VOID_TAGS = {
 }
 SKIP_CLASSES = {
     "topbar", "tabbar", "sheet", "skip-link", "cosmos", "nav__links",
-    "neighbors", "content-next", "source-tag", "backlink-bar", "scroll-cue",
+    "neighbors", "content-next", "source-tag", "backlink-bar",
     "selector__list", "figure__credit", "planet-orb__note",
+    # Interface, not content: the map's preview panel ships placeholder text
+    # ("Hover, tap, or tab a planet… Open Earth →") and the calculator's labels
+    # ("Your weight kg lb") — both were being returned as search results.
+    "readout", "youform", "youform__note",
 }
+
+# A timeline entry's date sits BEFORE its heading in the markup:
+#   <span class="timeline__when">4 October 1957</span><h3>Sputnik 1</h3>
+# Accumulated naively, every date landed in the PREVIOUS record — "Sputnik 1"
+# carried Gagarin's 1961, and the section heading's record was just the first
+# date. Dates are held back and given to the heading they belong to.
+CARRY_CLASSES = {"timeline__when"}
 
 
 class Extractor(HTMLParser):
@@ -74,6 +85,9 @@ class Extractor(HTMLParser):
         self.heading_buf = []
         self.heading_id = None
         self.open_tags = []
+        self.carry_depth = None      # open_tags depth of a CARRY_CLASSES element
+        self.carry_buf = []
+        self.pending_carry = ""      # held-back text for the NEXT record
 
     # -- helpers ----------------------------------------------------------
     @staticmethod
@@ -95,7 +109,8 @@ class Extractor(HTMLParser):
 
     def _start_record(self, heading, anchor):
         self._flush()
-        self.cur = {"s": heading, "a": anchor or "", "b": ""}
+        self.cur = {"s": heading, "a": anchor or "", "b": self.pending_carry + " "}
+        self.pending_carry = ""
 
     # -- parser hooks -----------------------------------------------------
     def handle_starttag(self, tag, attrs):
@@ -116,6 +131,9 @@ class Extractor(HTMLParser):
             return
         self._gap()
         self.id_stack.append((len(self.open_tags), a.get("id")))
+        if classes & CARRY_CLASSES and self.carry_depth is None:
+            self.carry_depth = len(self.open_tags)
+            self.carry_buf = []
         if tag in ("h1", "h2", "h3"):
             self.in_heading = tag
             self.heading_buf = []
@@ -131,6 +149,9 @@ class Extractor(HTMLParser):
         if self.skip_stack and self.skip_stack[-1] == len(self.open_tags):
             self.skip_stack.pop()
             self.depth_skip -= 1
+        if self.carry_depth is not None and self.carry_depth == len(self.open_tags):
+            self.pending_carry = self._tidy("".join(self.carry_buf))
+            self.carry_depth = None
         while self.id_stack and self.id_stack[-1][0] >= len(self.open_tags):
             self.id_stack.pop()
         if self.open_tags:
@@ -145,6 +166,9 @@ class Extractor(HTMLParser):
 
     def handle_data(self, data):
         if self.depth_skip:
+            return
+        if self.carry_depth is not None:
+            self.carry_buf.append(data)
             return
         if self.in_heading:
             self.heading_buf.append(data)
