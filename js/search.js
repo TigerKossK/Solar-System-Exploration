@@ -444,14 +444,22 @@
   });
 
   dlg.addEventListener("keydown", function (e) {
-    /* Only the search box drives the list. The handler sits on the whole
-       dialog, so Enter on Close or "All shortcuts" used to open the top result
-       instead of pressing the button. A result row that took focus from a
-       click is a real link: Enter opens it natively. */
-    if (e.target !== input) return;
-    if (e.key === "ArrowDown") { e.preventDefault(); setActive(active + 1); }
-    else if (e.key === "ArrowUp") { e.preventDefault(); setActive(active - 1); }
+    /* The search box drives the list -- and so does anywhere in the results
+       that is not a button, so a click into a gap or a Ctrl-click on a result
+       does not leave ↑/↓ dead. Buttons (Close, "All shortcuts", the
+       suggestions) keep their own keys: the handler sits on the whole dialog,
+       and Enter on Close used to open the top result instead of closing. */
+    var inList = e.target === dlg ||
+      (results.contains(e.target) && !(e.target.closest && e.target.closest("button")));
+    if (e.target !== input && !inList) return;
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      if (e.target !== input) input.focus();   // a combobox keeps focus in its box
+      setActive(active + (e.key === "ArrowDown" ? 1 : -1));
+    }
     else if (e.key === "Enter") {
+      // a focused result is a real link, and Enter opens it natively
+      if (e.target !== input) return;
       /* Typing then pressing Enter within the 120 ms debounce acted on the
          PREVIOUS query's list. Render now; then open the highlighted row, or
          the top result when none is highlighted. */

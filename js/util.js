@@ -155,7 +155,7 @@
   /* One short confirmation at a time ("Link copied"), announced politely.
      The region is created on first use; its first message is set a beat later,
      because a live region that appears already holding text is not read. */
-  var toastEl = null, toastTimer = 0, clearTimer = 0;
+  var toastEl = null, toastTimer = 0, clearTimer = 0, toastHost = null;
   function toast(msg) {
     var fresh = !toastEl;
     if (fresh) {
@@ -168,8 +168,10 @@
     if (toastEl.parentNode !== h) h.appendChild(toastEl);
     /* Shown inside a dialog that then closes (Share, then Close at once), the
        toast would vanish with it. Hand it back to <body> to finish there. */
-    if (h !== document.body) {
+    if (h !== document.body && h !== toastHost) {    // once per dialog, not per toast
+      toastHost = h;
       h.addEventListener("close", function () {
+        toastHost = null;
         if (toastEl.parentNode === h) document.body.appendChild(toastEl);
       }, { once: true });
     }
