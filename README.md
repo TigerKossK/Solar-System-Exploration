@@ -122,10 +122,6 @@ Navigate to the previous planet.
 
 Navigate to the next planet.
 
-?
-
-Open the keyboard-shortcut list.
-
 <sub>Shortcuts may be unavailable while a text field or another interactive control has focus.</sub>
 
 📖 Learning content
