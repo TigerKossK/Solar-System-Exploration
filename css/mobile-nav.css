@@ -115,6 +115,13 @@
      these are real reading labels, not decoration. */
   .sheet__meta { color: var(--text-lo); font-size: .78rem; margin-left: auto; }
   .sheet__row--stack .sheet__meta { margin-left: 0; }
+  /* visited planets: a tick by the name, and a count with Forget above the list */
+  .sheet__seen { display: inline-flex; color: var(--accent); }
+  .sheet__sub { margin: -4px 0 6px; color: var(--text-lo); font-size: .82rem; }
+  .sheet__forget {
+    color: var(--text-mid); font-weight: 600; min-height: 44px; padding: 0 4px;
+    text-decoration: underline; text-underline-offset: 2px; text-decoration-color: var(--glass-brd-strong);
+  }
   .sheet__close { width: 100%; justify-content: center; margin-top: 14px; min-height: 48px; }
 
   /* Planet dot colours, mirroring js/data.js `color`. Hard-coded because the

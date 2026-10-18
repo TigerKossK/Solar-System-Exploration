@@ -89,14 +89,28 @@
   var sheetTitle = sheet.querySelector(".sheet__title");
   var sheetBody = sheet.querySelector(".sheet__body");
 
+  /* Opened planets (SolarUtil.visited) get a tick, and the list says how many,
+     with a way to forget them -- the same marks the landing's map shows. */
+  var TICK = '<svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path d="M3.5 8.5 6.5 11.5 12.5 4.5" ' +
+    'stroke="currentColor" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   function planetRows() {
-    return PLANETS.map(function (p, i) {
+    var seen = SolarUtil.visited ? SolarUtil.visited.list() : [];
+    var count = 0;
+    var rows = PLANETS.map(function (p, i) {
       var current = here === p[0] + ".html" ? ' aria-current="page"' : "";
+      var been = seen.indexOf(p[0]) > -1;
+      if (been) count++;
       return '<a class="sheet__row" href="' + P + "planet/" + p[0] + '.html"' + current + ">" +
         '<span class="sheet__dot" data-planet="' + p[0] + '"></span>' +
         '<span class="sheet__label">' + p[1] + "</span>" +
+        (been ? '<span class="sheet__seen">' + TICK + '<span class="sr-only">visited</span></span>' : "") +
         '<span class="sheet__meta">' + (i + 1) + " from the Sun</span></a>";
     }).join("");
+    var head = count
+      ? '<p class="sheet__sub">' + count + " of " + PLANETS.length + " visited · " +
+        '<button class="sheet__forget" type="button">Forget</button></p>'
+      : "";
+    return head + rows;
   }
   function articleRows() {
     return ARTICLES.map(function (a) {
@@ -130,6 +144,15 @@
   });
   sheet.addEventListener("click", function (e) {
     if (e.target.closest(".sheet__close")) { closeSheet(); return; }
+    if (e.target.closest(".sheet__forget")) {
+      SolarUtil.visited.clear();
+      sheetBody.innerHTML = planetRows();
+      // the button is gone; keep focus in the list and say what happened
+      var first = sheetBody.querySelector(".sheet__row");
+      if (first) first.focus();
+      if (SolarUtil.toast) SolarUtil.toast("Visited planets forgotten");
+      return;
+    }
     /* Backdrop only. e.target === dialog is ALSO true for clicks on the
        dialog's own padding, so hit-test the border box -- the same trap
        js/sections.js hit with the mission dialog. */

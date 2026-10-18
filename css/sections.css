@@ -61,6 +61,23 @@
 }
 .section--menu .selector { margin-top: clamp(20px, 4vh, 40px); }
 
+/* Visited planets (js/solar-system.js) — one quiet amber ring, the same on
+   the map and on the phone pills. It sits outside the body, under it, so a
+   hovered planet's glow simply covers it. */
+.planet.is-visited::before {
+  content: ""; position: absolute; inset: -4px; border-radius: 50%; pointer-events: none;
+  border: 1.5px solid rgba(245,185,66,.55);
+}
+.selector__list a.is-visited::before { box-shadow: 0 0 0 2px var(--bg-void), 0 0 0 3.5px rgba(245,185,66,.7); }
+.visited-note { width: 100%; color: var(--text-lo); font-size: .82rem; }
+.visited-note strong { color: var(--text-mid); font-weight: 600; }
+.visited-note:focus { outline: none; }    /* a status line, not a control */
+.visited-note__forget {
+  color: var(--text-mid); font-weight: 600; min-height: 32px;
+  text-decoration: underline; text-underline-offset: 2px; text-decoration-color: var(--glass-brd-strong);
+}
+.visited-note__forget:hover { color: var(--text-hi); text-decoration-color: var(--accent); }
+
 /* "What is this?" — answered in place, closed by default so the map leads. */
 .explainer { margin-top: 18px; color: var(--text-mid); }
 .explainer__toggle {

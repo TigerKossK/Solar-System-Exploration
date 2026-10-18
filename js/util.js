@@ -63,6 +63,26 @@
     remove: function (k) { try { window.localStorage.removeItem(k); } catch (e) { /* nothing to do */ } },
   };
 
+  /* Planets this browser has opened: a quiet "where have I been?" mark on the
+     map and in the Planets sheet. A convenience kept in localStorage only,
+     never sent anywhere, and clearable. Consumers only ever COMPARE stored
+     ids against the known planet ids; a stored string is never rendered. */
+  var visited = {
+    list: function () {
+      var v = store.get("solar.visited");
+      return v ? v.split(",").filter(function (id) { return /^[a-z]{1,20}$/.test(id); }) : [];
+    },
+    has: function (id) { return visited.list().indexOf(id) > -1; },
+    add: function (id) {
+      if (!/^[a-z]{1,20}$/.test(id || "") || visited.has(id)) return;
+      store.set("solar.visited", visited.list().concat(id).join(","));
+    },
+    clear: function () { store.remove("solar.visited"); },
+  };
+  /* A planet page counts as opened as soon as it loads. */
+  var here = document.body && document.body.getAttribute && document.body.getAttribute("data-planet");
+  if (here) visited.add(here);
+
   /* Single-character shortcuts ("/" for search, "?" for the shortcut list)
      can be switched off -- WCAG 2.1.4: a speech-input user saying a word can
      fire them by accident. The switch lives in the shortcut list
@@ -171,7 +191,7 @@
   window.SolarUtil = {
     esc: esc, attr: attr,
     isTyping: isTyping, dialogOpen: dialogOpen, pageName: pageName,
-    store: store, singleKeys: singleKeys, backdropHit: backdropHit,
+    store: store, visited: visited, singleKeys: singleKeys, backdropHit: backdropHit,
     pageUrl: pageUrl, copyText: copyText, toast: toast, share: share,
   };
 })();

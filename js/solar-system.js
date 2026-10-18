@@ -21,6 +21,12 @@
   var selectorLinks = {};
   var currentId = null;   // planet id last previewed — the arrow stepper's anchor
 
+  /* A planet link's accessible name; ", visited" once it has been opened
+     (SolarUtil.visited, marked further down). */
+  function planetLabel(p, seen) {
+    return p.name + ", " + p.type + ", planet " + p.order + " from the Sun" + (seen ? ", visited." : ".");
+  }
+
   /* ---- build orbits + planet links --------------------- */
   PLANETS.forEach(function (p, i) {
     var orbit = document.createElement("div");
@@ -56,10 +62,7 @@
     );
     link.style.setProperty("--c", p.color);
     link.dataset.planet = p.id;
-    link.setAttribute(
-      "aria-label",
-      p.name + ", " + p.type + ", planet " + p.order + " from the Sun."
-    );
+    link.setAttribute("aria-label", planetLabel(p, false));
     /* persistent, always-upright name tag: .planet__tagspin cancels the
        orbital spin, .planet__tagstart cancels the arm's start angle, so the
        label sits screen-below the node and travels with the planet without
@@ -314,6 +317,52 @@
       a.addEventListener("focus", function () { showPlanet(id, true); });
     });
   }
+
+  /* ---- visited marks -------------------------------------
+     Planets opened in this browser (SolarUtil.visited) get a quiet amber ring
+     on the map and on their pill, ", visited" in their accessible name, and a
+     line under the map that can forget them. Re-applied on pageshow: Back from
+     a planet page restores this page from the bfcache with its OLD marks. */
+  var visitedNote = null;
+  function markVisited() {
+    var V = window.SolarUtil.visited;
+    if (!V) return;
+    var seen = V.list(), count = 0;
+    PLANETS.forEach(function (p) {
+      var on = seen.indexOf(p.id) > -1;
+      if (on) count++;
+      if (nodes[p.id]) {
+        nodes[p.id].link.classList.toggle("is-visited", on);
+        nodes[p.id].link.setAttribute("aria-label", planetLabel(p, on));
+      }
+      if (selectorLinks[p.id]) selectorLinks[p.id].classList.toggle("is-visited", on);
+    });
+    if (!visitedNote) {
+      var tag = document.getElementById("scaleTag");
+      if (!tag || !tag.parentNode) return;
+      visitedNote = document.createElement("p");
+      visitedNote.className = "visited-note";
+      visitedNote.setAttribute("tabindex", "-1");     // focus lands here after Forget
+      tag.parentNode.insertBefore(visitedNote, tag);
+      visitedNote.addEventListener("click", function (e) {
+        if (!e.target.closest(".visited-note__forget")) return;
+        V.clear();
+        markVisited();
+        /* The button just disappeared with focus on it: say what happened, in
+           the place it happened, and keep focus there. */
+        visitedNote.hidden = false;
+        visitedNote.textContent = "Visited planets forgotten.";
+        visitedNote.focus();
+      });
+    }
+    visitedNote.hidden = count === 0;
+    visitedNote.innerHTML = count
+      ? "You have visited <strong>" + count + " of " + PLANETS.length + "</strong> planets. " +
+        '<button class="visited-note__forget" type="button">Forget</button>'
+      : "";
+  }
+  markVisited();
+  window.addEventListener("pageshow", function (e) { if (e.persisted) markVisited(); });
 
   /* ---- cross-document view transition -------------------
      Name the matching map planet so it morphs into (leaving) and back out
