@@ -335,6 +335,7 @@ ${TOPBAR}
   <script src="../js/search.js"></script>
   <script src="../js/share.js"></script>
   <script src="../js/keyboard.js"></script>
+  <script src="../js/glossary.js"></script>
   <script src="../js/mobile-nav.js"></script>
 </body>
 </html>

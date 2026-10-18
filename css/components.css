@@ -478,6 +478,28 @@ button.mission-item:focus-visible .mission-item__more { opacity: 1; transform: t
 .planet-topbar .share-btn { margin-left: auto; }
 .content-hero .share-btn { justify-self: start; }
 
+/* ── glossary (js/glossary.js) ─────────────────────────────
+   A term still reads as a word, with a dotted underline; its definition
+   opens in one shared box placed by script. NO `display` rule on .term-pop:
+   the browser hides a closed popover with display:none, and a class rule
+   would override that in both directions (the same trap as <dialog>). */
+.term {
+  display: inline; padding: 0; margin: 0; border: 0; background: none;
+  font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; line-height: inherit;
+  text-decoration: underline dotted; text-decoration-thickness: 1.5px; text-underline-offset: 3px;
+  text-decoration-color: var(--text-lo); cursor: help;
+}
+.term:hover, .term[aria-expanded="true"] { text-decoration-style: solid; text-decoration-color: var(--accent); }
+.term-pop {
+  position: fixed; inset: auto; margin: 0; z-index: 85;   /* z-index matters only for the no-popover fallback */
+  width: max-content; max-width: min(320px, calc(100vw - 24px));
+  padding: 12px 14px; border: 1px solid var(--glass-brd-strong); border-radius: var(--r-md);
+  background: linear-gradient(150deg, rgba(16,52,60,.98), rgba(8,17,15,.99));
+  color: var(--text-mid); font-size: .9rem; line-height: 1.5;
+  box-shadow: var(--shadow-soft);
+}
+.term-pop__title { color: var(--text-hi); font-weight: 700; }
+
 /* ── toast (SolarUtil.toast) — one short confirmation, above the tab bar ── */
 .toast {
   position: fixed; left: 50%; z-index: 80;

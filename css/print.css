@@ -32,7 +32,8 @@ body { background: #fff !important; color: #111; padding: 0 !important; overflow
 .journey, .section--menu, .explainer, .readout,
 .planet-topbar, .planet-hero__cta, .planet-pager, .backlink-bar, .planet-foot .back,
 .mission-dialog, .content-next, .intro__actions, .mission-item__more,
-.liquid-canvas { display: none !important; }
+.liquid-canvas, .term-pop { display: none !important; }
+.term { text-decoration: none !important; }   /* a definition cannot be opened on paper */
 
 /* surfaces: no glass, no shadows, no full-height bands */
 .panel, .widget, .callout, .instrument, .mission-item, .you-card, .stat {
