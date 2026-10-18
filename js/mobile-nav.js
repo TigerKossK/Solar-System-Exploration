@@ -64,11 +64,11 @@
   bar.innerHTML =
     '<a class="tabbar__item" href="' + mapHref + '" data-tab="map">' +
       icon(ICONS.map) + "<span>Map</span></a>" +
-    '<button class="tabbar__item" type="button" data-sheet="planets">' +
+    '<button class="tabbar__item" type="button" data-sheet="planets" aria-haspopup="dialog">' +
       icon(ICONS.planets) + "<span>Planets</span></button>" +
-    '<button class="tabbar__item" type="button" data-sheet="learn">' +
+    '<button class="tabbar__item" type="button" data-sheet="learn" aria-haspopup="dialog">' +
       icon(ICONS.learn) + "<span>Learn</span></button>" +
-    '<button class="tabbar__item" type="button" data-search>' +
+    '<button class="tabbar__item" type="button" data-search aria-haspopup="dialog">' +
       icon(ICONS.search) + "<span>Search</span></button>";
   body.appendChild(bar);
 
@@ -140,11 +140,43 @@
     }
   });
 
-  /* Mark the Map tab current on the landing page. The sheets carry their own
-     aria-current on the row that matches this page. */
-  if (here === "index.html") {
-    var mapTab = bar.querySelector('[data-tab="map"]');
-    if (mapTab) mapTab.setAttribute("aria-current", "page");
+  /* "You are here" on every page, not only the landing: Map there, Planets on
+     a planet page, Learn on an article. The Map tab is a link to this very page
+     ("page"); the other two are buttons that open a list containing it, so they
+     are the current item of the bar ("true"). The sheets mark the matching row. */
+  var currentTab =
+    here === "index.html" ? ['[data-tab="map"]', "page"] :
+    P ? ['[data-sheet="planets"]', "true"] :
+    ARTICLES.some(function (a) { return a[0] === here; }) ? ['[data-sheet="learn"]', "true"] :
+    null;
+  if (currentTab) {
+    var tab = bar.querySelector(currentTab[0]);
+    if (tab) tab.setAttribute("aria-current", currentTab[1]);
+  }
+
+  /* ── tuck the topbar away while reading (phones) ──────────────
+     With the tab bar at the bottom, a phone carried ~120px of fixed chrome:
+     the topbar's row on top of the bar's. Scrolling down is reading, so the
+     topbar slides up out of the way; any scroll back up, the top of the page,
+     or keyboard focus landing inside it brings it straight back. Desktop keeps
+     it pinned -- there is room, and no tab bar duplicates it. */
+  var topbar = document.querySelector(".topbar");
+  var narrow = window.matchMedia && window.matchMedia("(max-width: 820px), (pointer: coarse)");
+  if (topbar && narrow) {
+    var lastY = window.scrollY, tuckQueued = false;
+    var tuck = function (on) { topbar.classList.toggle("is-tucked", on); };
+    var onScroll = function () {
+      tuckQueued = false;
+      var y = window.scrollY;
+      if (!narrow.matches || y < 80) { tuck(false); lastY = y; return; }
+      if (Math.abs(y - lastY) < 8) return;     // ignore jitter and momentum tails
+      tuck(y > lastY && !topbar.contains(document.activeElement));
+      lastY = y;
+    };
+    window.addEventListener("scroll", function () {
+      if (!tuckQueued) { tuckQueued = true; window.requestAnimationFrame(onScroll); }
+    }, { passive: true });
+    topbar.addEventListener("focusin", function () { tuck(false); });
   }
 
   /* Explorer mode takes over the whole screen and hides the topbar; the tab bar

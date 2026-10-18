@@ -55,8 +55,13 @@
   body.is-exploring { padding-bottom: 0; }
   /* ...and keep keyboard focus and anchor targets from landing under it
      (WCAG 2.4.11) — the bottom twin of the scroll-padding-top that clears the
-     fixed topbar in css/sections.css. */
+     fixed topbar in css/components.css. */
   html { scroll-padding-bottom: calc(var(--tabbar-h) + 8px); }
+
+  /* The topbar slides away while scrolling down (js/mobile-nav.js adds
+     .is-tucked) and returns on any scroll up or focus inside it. */
+  .topbar { transition: transform .3s var(--ease); }
+  .topbar.is-tucked { transform: translateY(-100%); }
 
   /* Elements already anchored to the bottom of the viewport would otherwise sit
      BEHIND the new bar. The journey bar carries "Enter the map" -- the hero's
@@ -125,5 +130,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tabbar__item, .sheet__row { transition: none; }
+  .tabbar__item, .sheet__row, .topbar { transition: none; }
 }
