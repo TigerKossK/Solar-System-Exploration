@@ -79,7 +79,7 @@
 }
 
 @media (max-width: 460px) {
-  .stage { padding: 8px; }
+  .stage { padding-inline: 8px; padding-bottom: 8px; }   /* top clears the fixed topbar (css/planet.css) */
   /* Buy the map back some width: every pixel trimmed here is a pixel --size
      gains, since it is now measured from the container (see the 980px block). */
   .panel { padding: 14px; }

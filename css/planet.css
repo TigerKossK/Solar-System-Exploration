@@ -5,9 +5,14 @@
    into the teal palette. Each page sets --pc to its planet colour.
    ============================================================ */
 
-/* ── top bar: return + neighbour nav ────────────────────── */
-.planet-topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-.neighbors { display: flex; gap: 6px; }
+/* The shared fixed .topbar (css/components.css) sits over the top of the page,
+   so the stage starts below it — the article pages' top rhythm. */
+.stage { padding-top: clamp(96px, 12vh, 150px); }
+
+/* ── position + neighbour nav ("‹ Venus · Planet 3 of 8 · Mars ›") ── */
+.planet-topbar { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.neighbors { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.neighbors__pos { padding: 8px 6px; color: var(--text-lo); font-size: .86rem; font-variant-numeric: tabular-nums; }
 .neighbors a { display: inline-flex; align-items: center; gap: 6px; padding: 8px 13px; border-radius: var(--r-pill); font-size: .86rem; color: var(--text-mid); transition: color .2s, background .2s; }
 .neighbors a:hover { color: var(--text-hi); background: rgba(255,255,255,.05); }
 .neighbors .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--nc, var(--text-lo)); box-shadow: 0 0 8px var(--nc, transparent); flex: none; }

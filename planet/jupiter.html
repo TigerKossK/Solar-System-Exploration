@@ -42,22 +42,34 @@
 
   <a class="skip-link" href="#dashboard">Skip to the data</a>
 
+  <header class="topbar">
+    <div class="topbar__inner container">
+      <a class="brand" href="../index.html" aria-label="Solar System — home">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="26" height="26" fill="none">
+            <circle cx="16" cy="16" r="4" fill="currentColor"/>
+            <ellipse cx="16" cy="16" rx="13" ry="6.2" stroke="currentColor" stroke-width="1.3" opacity=".65" transform="rotate(-24 16 16)"/>
+            <circle cx="27" cy="10.2" r="1.9" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="brand__word">Solar&nbsp;System</span>
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="../index.html#menu">Map</a>
+        <a href="../formation.html">Formation</a>
+        <a href="../exploration.html">Exploration</a>
+        <a href="../instruments.html">Instruments</a>
+      </nav>
+    </div>
+  </header>
+
   <main class="stage">
     <div class="panel container planet-page" style="--pc: #d8b48a">
-      <!-- top bar: home + neighbour navigation -->
+      <!-- position in the sequence + neighbour navigation (site nav is the topbar) -->
       <div class="planet-topbar">
-        <a class="brand" href="../index.html" aria-label="Solar System — home">
-          <span class="brand__mark" aria-hidden="true">
-            <svg viewBox="0 0 32 32" width="22" height="22" fill="none">
-              <circle cx="16" cy="16" r="4" fill="currentColor"/>
-              <ellipse cx="16" cy="16" rx="13" ry="6.2" stroke="currentColor" stroke-width="1.3" opacity=".65" transform="rotate(-24 16 16)"/>
-              <circle cx="27" cy="10.2" r="1.9" fill="currentColor"/>
-            </svg>
-          </span>
-          <span class="brand__word">Solar&nbsp;System</span>
-        </a>
         <nav class="neighbors" aria-label="Nearby planets">
           <a href="mars.html"><span class="dot" style="--nc:#d1603a"></span>Mars</a>
+          <span class="neighbors__pos">Planet 5 of 8</span>
           <a href="saturn.html">Saturn<span class="dot" style="--nc:#e6ce96"></span></a>
         </nav>
       </div>

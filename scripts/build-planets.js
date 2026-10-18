@@ -36,17 +36,30 @@ function attr(s) {
 }
 const CHEV =
   '<svg class="btn__chev" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-const BRAND = `
-        <a class="brand" href="../index.html" aria-label="Solar System — home">
-          <span class="brand__mark" aria-hidden="true">
-            <svg viewBox="0 0 32 32" width="22" height="22" fill="none">
-              <circle cx="16" cy="16" r="4" fill="currentColor"/>
-              <ellipse cx="16" cy="16" rx="13" ry="6.2" stroke="currentColor" stroke-width="1.3" opacity=".65" transform="rotate(-24 16 16)"/>
-              <circle cx="27" cy="10.2" r="1.9" fill="currentColor"/>
-            </svg>
-          </span>
-          <span class="brand__word">Solar&nbsp;System</span>
-        </a>`;
+/* The same fixed topbar as the landing and the three articles, so a planet page
+   is no longer the one place without the site's navigation. js/search.js and
+   js/motion.js add their buttons to it, as they do on every other page. */
+const TOPBAR = `
+  <header class="topbar">
+    <div class="topbar__inner container">
+      <a class="brand" href="../index.html" aria-label="Solar System — home">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="26" height="26" fill="none">
+            <circle cx="16" cy="16" r="4" fill="currentColor"/>
+            <ellipse cx="16" cy="16" rx="13" ry="6.2" stroke="currentColor" stroke-width="1.3" opacity=".65" transform="rotate(-24 16 16)"/>
+            <circle cx="27" cy="10.2" r="1.9" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="brand__word">Solar&nbsp;System</span>
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="../index.html#menu">Map</a>
+        <a href="../formation.html">Formation</a>
+        <a href="../exploration.html">Exploration</a>
+        <a href="../instruments.html">Instruments</a>
+      </nav>
+    </div>
+  </header>`;
 
 function statWidget(label, value, unit, context, span2) {
   const unitHtml = unit ? `<span class="unit">${esc(unit)}</span>` : "";
@@ -112,6 +125,8 @@ function render(p) {
   const nextLink = nb.next
     ? `<a href="${nb.next.id}.html">${esc(nb.next.name)}<span class="dot" style="--nc:${attr(nb.next.color)}"></span></a>`
     : "";
+  // where this world sits in the sequence: "you are here", between its neighbours
+  const position = `<span class="neighbors__pos">Planet ${p.order} of ${SOLAR_SYSTEM.planets.length}</span>`;
   const nextCta = nb.next
     ? `\n            <a class="btn btn--ghost btn--lg" href="${nb.next.id}.html">Next: ${esc(nb.next.name)} →</a>`
     : "";
@@ -243,13 +258,14 @@ function render(p) {
   </div>
 
   <a class="skip-link" href="#dashboard">Skip to the data</a>
+${TOPBAR}
 
   <main class="stage">
     <div class="panel container planet-page" style="--pc: ${attr(p.color)}">
-      <!-- top bar: home + neighbour navigation -->
-      <div class="planet-topbar">${BRAND}
+      <!-- position in the sequence + neighbour navigation (site nav is the topbar) -->
+      <div class="planet-topbar">
         <nav class="neighbors" aria-label="Nearby planets">
-          ${[prevLink, nextLink].filter(Boolean).join("\n          ")}
+          ${[prevLink, position, nextLink].filter(Boolean).join("\n          ")}
         </nav>
       </div>
 

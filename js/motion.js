@@ -85,8 +85,7 @@
   apply();
 
   if (reduce) return;
-  /* One switch on every page, in the same bar as search. (Planet pages carry
-     their own .planet-topbar.) */
-  var bar = document.querySelector(".topbar__inner") || document.querySelector(".planet-topbar");
+  /* One switch on every page, in the same topbar as search. */
+  var bar = document.querySelector(".topbar__inner");
   if (bar) bar.appendChild(button("motion-toggle"));
 })();

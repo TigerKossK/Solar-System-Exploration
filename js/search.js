@@ -534,9 +534,8 @@
 
   /* Topbar trigger, added as a sibling of .nav__links so the mobile rule that
      hides those links leaves it alone. js/mobile-nav.js adds the tab-bar one.
-     Planet pages have their own .planet-topbar — without it, 8 of 12 pages had
-     no visible way into search on a desktop (only the unadvertised "/"). */
-  var topbar = document.querySelector(".topbar__inner") || document.querySelector(".planet-topbar");
+     Every page carries the same .topbar now, planet pages included. */
+  var topbar = document.querySelector(".topbar__inner");
   if (topbar) {
     var btn = document.createElement("button");
     btn.className = "search-trigger";
