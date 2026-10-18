@@ -47,8 +47,8 @@ Select any screenshot to view it at full size.
   </tr>
   <tr>
     <td width="50%" align="center">
-      <a href="assets/Screenshots/Searchbox.png">
-        <img src="assets/Screenshots/Searchbox.png" alt="Search across Solar System Exploration" width="100%">
+      <a href="assets/Screenshots/SearchBox.png">
+        <img src="assets/Screenshots/SearchBox.png" alt="Search across Solar System Exploration" width="100%">
       </a>
       <strong>03 · Search</strong><br>
       <sub>Find available information across the website.</sub>
